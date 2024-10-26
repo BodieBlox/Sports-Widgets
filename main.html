@@ -12,6 +12,15 @@
             margin: 0;
             padding: 0;
         }
+        .refresh-button {
+            background-color: green;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+        }
         .scoreboard {
             padding: 30px;
             border: 2px solid #333;
@@ -105,7 +114,7 @@
             <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
             <br>
-            <a class="refresh-button" href="https://churchillathletics.com/2024/10/18/live-scoring/">Refresh</a>
+            <button class="refresh-button" onclick="location.reload();">Refresh</button>
         </div>
         
 
