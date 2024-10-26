@@ -6,50 +6,70 @@
     <title>Scoreboard - Game Title</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #f9f9f9;
+            background-color: #eaeaea;
+            margin: 0;
+            padding: 0;
         }
         .scoreboard {
-            padding: 20px;
+            padding: 30px;
             border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
         }
         h1 {
             color: #333;
+            font-size: 2.5em;
         }
         .playoffs {
-            background: linear-gradient(90deg, blue, green, blue, green, blue, green, blue, green, blue, green, blue, green);
+            background: linear-gradient(90deg, #007bff, #28a745);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            font-size: 2em;
         }
         h2 {
             color: #ffcc00;
+            font-size: 1.8em;
         }
         .score {
-            font-size: 24px;
+            font-size: 2em;
             color: #333;
         }
         .goal-logs {
             list-style-type: none;
             padding: 0;
             color: #333;
+            font-size: 1.1em;
         }
         .refresh-button {
-            padding: 10px 20px;
-            background-color: #4caf50;
+            padding: 12px 24px;
+            background-color: #28a745;
             color: white;
             text-align: center;
             text-decoration: none;
-            font-size: 16px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .refresh-button:hover {
+            background-color: #218838;
         }
         .footer {
             margin-top: 20px;
+        }
+        #current-time {
+            font-size: 1.5em;
+            color: #333;
         }
     </style>
 </head>
 <body>
     <div class="scoreboard">
-        <h1>Scoreboard - Game Title -</h1>
+        <h1>Scoreboard - Game Title</h1>
         <h1 class="playoffs">Playoffs</h1>
         
         <div>
@@ -86,20 +106,18 @@
             <a class="refresh-button" href="https://churchillathletics.com/2024/10/18/live-scoring/">Refresh</a>
         </div>
         
-        <h3>Last updated: (Time Of Update)</h3>
-        <script src="https://raw.githubusercontent.com/BodieBlox/Sports-Widgets/refs/heads/main/currenttime.js"></script>
-        <h3 id="current-time">Test</h3>
+        <h3>Last updated: <span id="current-time">Loading...</span></h3>
         <h6>*Scoreboard updates score updates and quarter updates; Page will not automatically reload</h6>
     </div>
     <script>
         function displayTime() {
-  const now = new Date();
-  const timeString = now.toLocaleTimeString(); // 12-hour format by default
+            const now = new Date();
+            const timeString = now.toLocaleTimeString(); // 12-hour format by default
+            document.getElementById("current-time").textContent = timeString;
+        }
 
-  document.getElementById("current-time").textContent = timeString;
-}
-
-setInterval(displayTime, 1000); // Update every second
+        setInterval(displayTime, 1000); // Update every second
+        displayTime(); // Initial call to display time immediately
     </script>
 </body>
 </html>
