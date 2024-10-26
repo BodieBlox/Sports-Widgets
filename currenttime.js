@@ -1,7 +1,8 @@
-function updateTime() {
-    const options = { timeZone: 'America/New_York', hour: 'numeric', minute: 'numeric', hour12: true };
-    const timeString = new Intl.DateTimeFormat('en-US', options).format(new Date());
-    document.getElementById('current-time').textContent = timeString;
-}
-setInterval(updateTime, 1000);
-updateTime();
+function displayTime() {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString(); // 12-hour format by default
+  
+    document.getElementById("current-time").textContent = timeString;
+  }
+  
+  setInterval(displayTime, 1000); // Update every second
