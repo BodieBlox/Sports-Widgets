@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scoreboard - Game Title</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f9f9f9;
+        }
+        .scoreboard {
+            padding: 20px;
+            border: 2px solid #333;
+        }
+        h1 {
+            color: #333;
+        }
+        .playoffs {
+            background: linear-gradient(90deg, blue, green, blue, green, blue, green, blue, green, blue, green, blue, green);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2 {
+            color: #ffcc00;
+        }
+        .score {
+            font-size: 24px;
+            color: #333;
+        }
+        .goal-logs {
+            list-style-type: none;
+            padding: 0;
+            color: #333;
+        }
+        .refresh-button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: white;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .footer {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="scoreboard">
+        <h1>Scoreboard - Game Title -</h1>
+        <h1 class="playoffs">Playoffs</h1>
+        
+        <div>
+            <h2>Bulldogs</h2>
+            <p class="score">Score: <strong>1</strong></p>
+        </div>
+        
+        <div>
+            <h2>Guest Team</h2>
+            <p class="score">Score: <strong>1</strong></p>
+        </div>
+        
+        <hr />
+        
+        <div>
+            <h3>Quarter: <strong>1</strong></h3>
+            <hr />
+        </div>
+        
+        <div>
+            <h3>Goal Logs</h3>
+            <ul class="goal-logs">
+                <li>Bulldogs scored a goal at 10:00</li>
+                <li>Guest Team scored a goal at 5:00</li>
+            </ul>
+        </div>
+        
+        <hr />
+        
+        <div class="footer">
+            <img style="width: 100px;" src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" />
+            <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
+            <hr />
+            <a class="refresh-button" href="https://churchillathletics.com/2024/10/18/live-scoring/">Refresh</a>
+        </div>
+        
+        <h3>Last updated: (Time Of Update)</h3>
+        <script src="https://raw.githubusercontent.com/BodieBlox/Sports-Widgets/refs/heads/main/currenttime.js"></script>
+        <h3 id="current-time">Test</h3>
+        <h6>*Scoreboard updates score updates and quarter updates; Page will not automatically reload</h6>
+    </div>
+</body>
+</html>
