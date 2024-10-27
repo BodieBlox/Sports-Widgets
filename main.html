@@ -13,13 +13,17 @@
             padding: 0;
         }
         .refresh-button {
-            background-color: green;
+            background-color: #28a745;
             color: white;
             border: none;
-            border-radius: 12px;
-            padding: 10px 20px;
+            border-radius: 5px;
+            padding: 12px 24px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1.2em;
+            transition: background-color 0.3s;
+        }
+        .refresh-button:hover {
+            background-color: #218838;
         }
         .scoreboard {
             padding: 30px;
@@ -54,25 +58,37 @@
             color: #333;
             font-size: 1.1em;
         }
-        .refresh-button {
-            padding: 12px 24px;
-            background-color: #28a745;
-            color: white;
-            text-align: center;
-            text-decoration: none;
-            font-size: 1.2em;
-            border-radius: 5px;
-            transition: background-color 0.3s;
-        }
-        .refresh-button:hover {
-            background-color: #218838;
-        }
         .footer {
             margin-top: 20px;
         }
         #current-time {
             font-size: 1.5em;
             color: #333;
+        }
+        .admin-stats {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #333;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .admin-stats h3 {
+            margin: 0;
+        }
+        .close-button {
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-size: 1em;
         }
     </style>
 </head>
@@ -116,19 +132,44 @@
             <br>
             <button class="refresh-button" onclick="location.reload();">Refresh</button>
         </div>
-        
 
         <h3>Last updated: Never</h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
 
         <h6>*Scoreboard updates score updates and quarter updates; Page will not automatically reload</h6>
     </div>
+
+    <div class="admin-stats" id="admin-stats">
+        <h3>Admin Stats</h3>
+        <p>HTTP Protocol: <strong><span id="http-protocol"></span></strong></p>
+        <p>Last Page Refresh: <strong><span id="last-refresh"></span></strong></p>
+        <p>Hostname: <strong><span id="hostname"></span></strong></p>
+        <button class="close-button" onclick="closeAdminStats()">Close</button>
+    </div>
+
     <script>
         function displayTime() {
             const now = new Date();
             const timeString = now.toLocaleTimeString(); // 12-hour format by default
             document.getElementById("current-time").textContent = timeString;
         }
+
+        function showAdminStats() {
+            document.getElementById("http-protocol").textContent = window.location.protocol;
+            document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
+            document.getElementById("hostname").textContent = window.location.hostname;
+            document.getElementById("admin-stats").style.display = 'block';
+        }
+
+        function closeAdminStats() {
+            document.getElementById("admin-stats").style.display = 'none';
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'f') {
+                showAdminStats();
+            }
+        });
 
         setInterval(displayTime, 1000); // Update every second
         displayTime(); // Initial call to display time immediately
