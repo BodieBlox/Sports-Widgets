@@ -1,0 +1,48 @@
+# Touchdown Animation
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Touchdown Animation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #282c34;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+        #touchdown {
+            position: absolute;
+            font-size: 3em;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: transform 0.5s ease, opacity 0.5s ease;
+        }
+        .show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="touchdown">Touchdown! Player Name</div>
+
+    <script>
+        function showTouchdown(playerName) {
+            const touchdownElement = document.getElementById('touchdown');
+            touchdownElement.textContent = `Touchdown! ${playerName}`;
+            touchdownElement.classList.add('show');
+            setTimeout(() => {
+                touchdownElement.classList.remove('show');
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>
