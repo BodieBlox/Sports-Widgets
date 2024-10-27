@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="refresh" content="60">
     <title>Scoreboard - Game Title</title>
     <style>
         body {
@@ -155,10 +154,10 @@
             <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
             <br>
-            <button class="refresh-button" onclick="location.reload();">Refresh</button>
+            <button class="refresh-button" id="refresh-button">Refresh</button>
         </div>
 
-        <h3>Last updated: Never</h3>
+        <h3>Last updated: <span id="last-updated">Never</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
 
         <h6>*Scoreboard updates score updates and quarter updates; Page will not automatically reload</h6>
@@ -172,6 +171,7 @@
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function displayTime() {
             const now = new Date();
@@ -195,15 +195,24 @@
             document.getElementById("scoreboard").style.display = 'block'; // Show scoreboard
         }
 
+        function refreshScoreboard() {
+            // Simulate fetching new data
+            $('#scoreboard').load(location.href + " #scoreboard > *");
+            document.getElementById("last-updated").textContent = new Date().toLocaleTimeString();
+        }
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
                 showAdminStats();
             }
         });
 
-        setTimeout(showScoreboard, 2000); // Show scoreboard after 5 seconds
+        setTimeout(showScoreboard, 2000); // Show scoreboard after 2 seconds
         setInterval(displayTime, 1000);
+        setInterval(refreshScoreboard, 1000); // Refresh scoreboard every second
         displayTime();
+
+        document.getElementById("refresh-button").addEventListener("click", refreshScoreboard);
     </script>
 </body>
 </html>
