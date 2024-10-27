@@ -224,6 +224,7 @@
                         $('#goal-logs').append('<li>' + log + '</li>');
                     });
                     $('#last-updated').text(new Date().toLocaleTimeString());
+                    showScoreboard();
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
