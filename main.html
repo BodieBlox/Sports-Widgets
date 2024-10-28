@@ -165,7 +165,7 @@
         <h3>Last updated: <span id="last-updated">Never</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
 
-        <h6>*Scoreboard updates automatically for the score, quater, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
+        <h6>*Scoreboard updates automatically for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
 
     <div class="error-screen" id="error-screen">
@@ -185,8 +185,7 @@
     <script>
         function displayTime() {
             const now = new Date();
-            const timeString = now.toLocaleTimeString();
-            document.getElementById("current-time").textContent = timeString;
+            document.getElementById("current-time").textContent = now.toLocaleTimeString();
         }
 
         function showAdminStats() {
@@ -203,11 +202,11 @@
         function showScoreboard() {
             document.querySelector('.loading').style.display = 'none'; // Hide loading
             document.getElementById("scoreboard").style.display = 'block'; // Show scoreboard
-            document.getElementById("error-screen").style.display = 'none'; // Show error screen
+            document.getElementById("error-screen").style.display = 'none'; // Hide error screen
         }
 
         function showErrorScreen() {
-            document.getElementById("scoreboard").style.display = 'none'; // Show scoreboard
+            document.getElementById("scoreboard").style.display = 'none'; // Hide scoreboard
             document.getElementById("error-screen").style.display = 'block'; // Show error screen
         }
 
@@ -220,9 +219,13 @@
                     $('#guest-score').text(data.guestScore);
                     $('#quarter').text(data.quarter);
                     $('#goal-logs').empty();
-                    data.goalLogs.forEach(function(log) {
-                        $('#goal-logs').append('<li>' + log + '</li>');
-                    });
+                    if (Array.isArray(data.goalLogs)) {
+                        data.goalLogs.forEach(function(log) {
+                            $('#goal-logs').append('<li>' + log + '</li>');
+                        });
+                    } else {
+                        console.error('goalLogs is not an array');
+                    }
                     $('#last-updated').text(new Date().toLocaleTimeString());
                     showScoreboard();
                 },
@@ -241,32 +244,8 @@
 
         setTimeout(showScoreboard, 2000); // Show scoreboard after 2 seconds
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 2000); // Update scoreboard every second
+        setInterval(updateScoreboard, 2000); // Update scoreboard every 2 seconds
         displayTime();
     </script>
-    <script type="module">
-        // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-analytics.js";
-        // TODO: Add SDKs for Firebase products that you want to use
-        // https://firebase.google.com/docs/web/setup#available-libraries
-      
-        // Your web app's Firebase configuration
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-        const firebaseConfig = {
-          apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
-          authDomain: "test-71ecd.firebaseapp.com",
-          databaseURL: "https://test-71ecd-default-rtdb.firebaseio.com",
-          projectId: "test-71ecd",
-          storageBucket: "test-71ecd.appspot.com",
-          messagingSenderId: "426214403781",
-          appId: "1:426214403781:web:ad4e3a213d3e1fb31d4aac",
-          measurementId: "G-GQPWG17VWH"
-        };
-      
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-      </script>
 </body>
 </html>
