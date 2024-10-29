@@ -181,6 +181,7 @@
         <p>HTTP Protocol: <strong><span id="http-protocol"></span></strong></p>
         <p>Last Page Refresh: <strong><span id="last-refresh"></span></strong></p>
         <p>Hostname: <strong><span id="hostname"></span></strong></p>
+        <p>Ping: <strong><span id="ping"></span></strong></p> <!-- Added Ping Stat -->
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
@@ -195,7 +196,9 @@
             document.getElementById("http-protocol").textContent = window.location.protocol;
             document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
             document.getElementById("hostname").textContent = window.location.hostname;
+            document.getElementById("ping").textContent = "Calculating..."; // Placeholder for ping
             document.getElementById("admin-stats").style.display = 'block';
+            calculatePing(); // Call function to calculate ping
         }
 
         function closeAdminStats() {
@@ -239,6 +242,22 @@
             });
         }
 
+        function calculatePing() {
+            const startTime = new Date().getTime();
+            $.ajax({
+                url: window.location.href,
+                method: 'GET',
+                success: function() {
+                    const endTime = new Date().getTime();
+                    const ping = endTime - startTime;
+                    document.getElementById("ping").textContent = ping + " ms";
+                },
+                error: function() {
+                    document.getElementById("ping").textContent = "Ping failed";
+                }
+            });
+        }
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
                 showAdminStats();
@@ -247,7 +266,7 @@
 
         setTimeout(showScoreboard, 2000); // Show scoreboard after 2 seconds
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 4000); // Update scoreboard every 2 seconds
+        setInterval(updateScoreboard, 4000); // Update scoreboard every 4 seconds
         displayTime();
     </script>
 </body>
