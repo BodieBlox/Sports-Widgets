@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
         }
-        .refresh-button {
+        .refresh-button, .open-db-button {
             background-color: #28a745;
             color: white;
             border: none;
@@ -22,7 +22,7 @@
             font-size: 1.2em;
             transition: background-color 0.3s;
         }
-        .refresh-button:hover {
+        .refresh-button:hover, .open-db-button:hover {
             background-color: #218838;
         }
         .scoreboard, .error-screen {
@@ -181,6 +181,12 @@
         <p>HTTP Protocol: <strong><span id="http-protocol"></span></strong></p>
         <p>Last Page Refresh: <strong><span id="last-refresh"></span></strong></p>
         <p>Hostname: <strong><span id="hostname"></span></strong></p>
+        <p>Ping: <strong><span id="ping"></span></strong></p>
+        <p>Browser: <strong><span id="browser"></span></strong></p>
+        <p>Device Name: <strong><span id="device-name"></span></strong></p>
+        <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
+        <p>IP Address: <strong><span id="ip-address"></span></strong></p>
+        <button class="open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
@@ -191,11 +197,22 @@
             document.getElementById("current-time").textContent = now.toLocaleTimeString();
         }
 
+        function openFirebaseDatabase() {
+            window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank'); // Open Firebase Database URL
+        }
+
         function showAdminStats() {
             document.getElementById("http-protocol").textContent = window.location.protocol;
             document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
             document.getElementById("hostname").textContent = window.location.hostname;
+            document.getElementById("ping").textContent = "Calculating...";
+            document.getElementById("browser").textContent = navigator.userAgent;
+            document.getElementById("device-name").textContent = navigator.platform;
+            document.getElementById("browser-version").textContent = navigator.appVersion;
+            document.getElementById("ip-address").textContent = "Fetching...";
             document.getElementById("admin-stats").style.display = 'block';
+            calculatePing();
+            fetchIP();
         }
 
         function closeAdminStats() {
@@ -203,19 +220,19 @@
         }
 
         function showScoreboard() {
-            document.querySelector('.loading').style.display = 'none'; // Hide loading
-            document.getElementById("scoreboard").style.display = 'block'; // Show scoreboard
-            document.getElementById("error-screen").style.display = 'none'; // Hide error screen
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById("scoreboard").style.display = 'block';
+            document.getElementById("error-screen").style.display = 'none';
         }
 
         function showErrorScreen() {
-            document.getElementById("scoreboard").style.display = 'none'; // Hide scoreboard
-            document.getElementById("error-screen").style.display = 'block'; // Show error screen
+            document.getElementById("scoreboard").style.display = 'none';
+            document.getElementById("error-screen").style.display = 'block';
         }
 
         function updateScoreboard() {
             $.ajax({
-                url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json', // Replace with your Firebase URL
+                url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json',
                 method: 'GET',
                 success: function(data) {
                     $('#bulldogs-score').text(data.bulldogsScore);
@@ -242,8 +259,30 @@
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
-                    showErrorScreen(); // Show error screen if there's an issue
+                    showErrorScreen();
                 }
+            });
+        }
+
+        function calculatePing() {
+            const startTime = new Date().getTime();
+            $.ajax({
+                url: window.location.href,
+                method: 'GET',
+                success: function() {
+                    const endTime = new Date().getTime();
+                    const ping = endTime - startTime;
+                    document.getElementById("ping").textContent = ping + " ms";
+                },
+                error: function() {
+                    document.getElementById("ping").textContent = "Ping failed";
+                }
+            });
+        }
+
+        function fetchIP() {
+            $.getJSON("https://api.ipify.org?format=json", function(data) {
+                document.getElementById("ip-address").textContent = data.ip;
             });
         }
 
@@ -253,7 +292,7 @@
             }
         });
 
-        setTimeout(showScoreboard, 2000); // Show scoreboard after 2 seconds
+        setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000); // Update scoreboard every 4 seconds
         displayTime();
