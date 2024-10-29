@@ -127,7 +127,7 @@
 
     <div class="scoreboard fade-in" id="scoreboard">
         <h1>Scoreboard - Game Title</h1>
-        <h1 class="playoffs">Playoffs</h1>
+        <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
         <div>
             <h2>Bulldogs</h2>
@@ -230,6 +230,14 @@
                         console.error('goalLogs is not an array');
                     }
                     $('#last-updated').text(new Date().toLocaleTimeString());
+                    
+                    // Check for Playoffs value
+                    if (data.playoffs) {
+                        document.getElementById("playoffs-label").style.display = 'block'; // Show playoffs label
+                    } else {
+                        document.getElementById("playoffs-label").style.display = 'none'; // Hide playoffs label
+                    }
+                    
                     showScoreboard();
                 },
                 error: function() {
@@ -247,7 +255,7 @@
 
         setTimeout(showScoreboard, 2000); // Show scoreboard after 2 seconds
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 4000); // Update scoreboard every 2 seconds
+        setInterval(updateScoreboard, 4000); // Update scoreboard every 4 seconds
         displayTime();
     </script>
 </body>
