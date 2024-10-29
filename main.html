@@ -182,6 +182,10 @@
         <p>Last Page Refresh: <strong><span id="last-refresh"></span></strong></p>
         <p>Hostname: <strong><span id="hostname"></span></strong></p>
         <p>Ping: <strong><span id="ping"></span></strong></p> <!-- Added Ping Stat -->
+        <p>Browser: <strong><span id="browser"></span></strong></p> <!-- Added Browser Stat -->
+        <p>Device Name: <strong><span id="device-name"></span></strong></p> <!-- Added Device Name Stat -->
+        <p>Browser Version: <strong><span id="browser-version"></span></strong></p> <!-- Added Browser Version Stat -->
+        <p>IP Address: <strong><span id="ip-address"></span></strong></p> <!-- Added IP Address Stat -->
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
@@ -197,8 +201,13 @@
             document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
             document.getElementById("hostname").textContent = window.location.hostname;
             document.getElementById("ping").textContent = "Calculating..."; // Placeholder for ping
+            document.getElementById("browser").textContent = navigator.userAgent; // Get browser info
+            document.getElementById("device-name").textContent = navigator.platform; // Get device name
+            document.getElementById("browser-version").textContent = navigator.appVersion; // Get browser version
+            document.getElementById("ip-address").textContent = "Fetching..."; // Placeholder for IP address
             document.getElementById("admin-stats").style.display = 'block';
             calculatePing(); // Call function to calculate ping
+            fetchIP(); // Call function to fetch IP address
         }
 
         function closeAdminStats() {
@@ -255,6 +264,12 @@
                 error: function() {
                     document.getElementById("ping").textContent = "Ping failed";
                 }
+            });
+        }
+
+        function fetchIP() {
+            $.getJSON("https://api.ipify.org?format=json", function(data) {
+                document.getElementById("ip-address").textContent = data.ip; // Fetch and display IP address
             });
         }
 
