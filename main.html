@@ -235,7 +235,7 @@
                 url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json',
                 method: 'GET',
                 success: function(data) {
-                    $('title').text(data.title);
+                    $('#title').text(data.game);
                     $('#bulldogs-score').text(data.bulldogsScore);
                     $('#guest-score').text(data.guestScore);
                     $('#quarter').text(data.quarter);
