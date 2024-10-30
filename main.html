@@ -126,7 +126,7 @@
     </div>
 
     <div class="scoreboard fade-in" id="scoreboard">
-        <h1>Scoreboard - Game Title</h1>
+        <h1>Scoreboard - <span id="title">Game Title</span></h1>
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
         <div>
@@ -235,6 +235,7 @@
                 url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json',
                 method: 'GET',
                 success: function(data) {
+                    $('title').text(data.title);
                     $('#bulldogs-score').text(data.bulldogsScore);
                     $('#guest-score').text(data.guestScore);
                     $('#quarter').text(data.quarter);
