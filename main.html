@@ -118,6 +118,10 @@
         .fade-in {
             animation: fadeIn 0.5s;
         }
+        .goal-logs-disabled {
+            color: red;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -146,9 +150,10 @@
             <hr />
         </div>
         
-        <div id="goal-logs-container" style="display: none;">
+        <div id="goal-logs-container">
             <h3>Goal Logs</h3>
             <ul class="goal-logs" id="goal-logs"></ul>
+            <p id="goal-logs-disabled" class="goal-logs-disabled" style="display: none;">Goal logs disabled</p>
         </div>
         
         <hr />
@@ -238,9 +243,8 @@
                     $('#quarter').text(data.quarter);
                     $('#goal-logs').empty();
                     
-                    // Check if logsEnabled is false
+                    // Check if goal logs are enabled
                     if (data.logsEnabled) {
-                        $('#goal-logs-container').show();
                         if (Array.isArray(data.goalLogs)) {
                             data.goalLogs.forEach(function(log) {
                                 $('#goal-logs').append('<li>' + log + '</li>');
@@ -248,8 +252,9 @@
                         } else {
                             console.error('goalLogs is not an array');
                         }
+                        $('#goal-logs-disabled').hide(); // Hide disabled message
                     } else {
-                        $('#goal-logs-container').hide();
+                        $('#goal-logs-disabled').show(); // Show disabled message
                     }
 
                     $('#last-updated').text(new Date().toLocaleTimeString());
