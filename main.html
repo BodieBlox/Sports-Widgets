@@ -146,12 +146,9 @@
             <hr />
         </div>
         
-        <div>
+        <div id="goal-logs-container" style="display: none;">
             <h3>Goal Logs</h3>
-            <ul class="goal-logs" id="goal-logs">
-                <li>Bulldogs scored a goal at 10:00</li>
-                <li>Guest Team scored a goal at 5:00</li>
-            </ul>
+            <ul class="goal-logs" id="goal-logs"></ul>
         </div>
         
         <hr />
@@ -240,13 +237,21 @@
                     $('#guest-score').text(data.guestScore);
                     $('#quarter').text(data.quarter);
                     $('#goal-logs').empty();
-                    if (Array.isArray(data.goalLogs)) {
-                        data.goalLogs.forEach(function(log) {
-                            $('#goal-logs').append('<li>' + log + '</li>');
-                        });
+                    
+                    // Check if logsEnabled is false
+                    if (data.logsEnabled) {
+                        $('#goal-logs-container').show();
+                        if (Array.isArray(data.goalLogs)) {
+                            data.goalLogs.forEach(function(log) {
+                                $('#goal-logs').append('<li>' + log + '</li>');
+                            });
+                        } else {
+                            console.error('goalLogs is not an array');
+                        }
                     } else {
-                        console.error('goalLogs is not an array');
+                        $('#goal-logs-container').hide();
                     }
+
                     $('#last-updated').text(new Date().toLocaleTimeString());
                     
                     // Check for Playoffs value
