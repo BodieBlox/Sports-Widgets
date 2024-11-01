@@ -280,11 +280,11 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            scoreElement.css('transform', 'rotateY(180deg)'); // Flip effect
+            scoreElement.css('transform', 'scale(1.2)'); // Scale effect
             setTimeout(() => {
                 scoreElement.text(newScore);
-                scoreElement.css('transform', 'rotateY(0deg)'); // Reset flip effect
-            }, 250); // Duration of the flip
+                scoreElement.css('transform', 'scale(1)'); // Reset scale effect
+            }, 250); // Duration of the scale
         }
 
         function calculatePing() {
