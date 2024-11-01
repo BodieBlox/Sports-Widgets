@@ -121,7 +121,8 @@
         }
         .goal-logs-disabled {
             color: red;
-            font-size: 1.2em;
+            font-size: 4.2em;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -154,7 +155,7 @@
         <div id="goal-logs-container">
             <h3>Goal Logs</h3>
             <ul class="goal-logs" id="goal-logs"></ul>
-            <p id="goal-logs-disabled" class="goal-logs-disabled" style="display: none;">Goal logs disabled</p>
+            <p id="goal-logs-disabled" class="goal-logs-disabled" style="display: none;">Goal Logs Disabled</p>
         </div>
         
         <hr />
@@ -171,12 +172,13 @@
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
 
-        <h6>*Scoreboard updates automatically for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
+        <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
-        <h1>No Active Game!</h1>
-        <p>Please check your connection or try again later.</p>
+        <h1 style="display: none;">No Active Game!</h1>
+        <p style="display: none;"> This could be due to your <strong>connection</strong> or <strong>no game is currently active</strong>!</p>
+        <iframe src="https://free.timeanddate.com/countdown/i9m78j29/n263/cf114/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fn2/fs200/szw576/szh243/tac000/tpc000/matGet%20HYPED!%20Game%20starting%20in%3A/mac000/mpc000/iso2024-11-01T18:30:00" allowtransparency="true" frameborder="0" width="576" height="243"></iframe>
     </div>
 
     <div class="admin-stats" id="admin-stats">
