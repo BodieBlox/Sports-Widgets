@@ -12,7 +12,7 @@
             margin: 0;
             padding: 0;
         }
-        .button {
+        .refresh-button, .open-db-button {
             background-color: #28a745;
             color: white;
             border: none;
@@ -22,7 +22,7 @@
             font-size: 1.2em;
             transition: background-color 0.3s;
         }
-        .button:hover {
+        .refresh-button:hover, .open-db-button:hover {
             background-color: #218838;
         }
         .scoreboard, .error-screen {
@@ -124,6 +124,19 @@
             font-size: 4.2em;
             font-weight: bold;
         }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 <body>
@@ -166,7 +179,7 @@
             <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
             <br>
-            <button class="button refresh-button" onclick="location.reload();">Refresh</button>
+            <button class="refresh-button" onclick="location.reload();">Refresh</button>
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
@@ -191,7 +204,7 @@
         <p>Device Name: <strong><span id="device-name"></span></strong></p>
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
-        <button class="button open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
+        <button class="open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
@@ -250,7 +263,7 @@
                     if (data.logsEnabled) {
                         if (Array.isArray(data.goalLogs)) {
                             data.goalLogs.forEach(function(log) {
-                                $('#goal-logs').append('<li>' + log + '</li>');
+                                $('#goal-logs').append('<li class="slide-in">' + log + '</li>'); // Add slide-in class
                             });
                         } else {
                             console.error('goalLogs is not an array');
@@ -280,11 +293,11 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            scoreElement.css('transform', 'scale(1.2)'); // Scale effect
+            scoreElement.css('transform', 'rotateY(180deg)'); // Flip effect
             setTimeout(() => {
                 scoreElement.text(newScore);
-                scoreElement.css('transform', 'scale(1)'); // Reset scale effect
-            }, 250); // Duration of the scale
+                scoreElement.css('transform', 'rotateY(0deg)'); // Reset flip effect
+            }, 250); // Duration of the flip
         }
 
         function calculatePing() {
