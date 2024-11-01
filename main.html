@@ -52,6 +52,7 @@
         .score {
             font-size: 2em;
             color: #333;
+            transition: transform 0.5s; /* Added transition for flip effect */
         }
         .goal-logs {
             list-style-type: none;
@@ -238,8 +239,8 @@
                 method: 'GET',
                 success: function(data) {
                     $('#title').text(data.game);
-                    $('#bulldogs-score').text(data.bulldogsScore);
-                    $('#guest-score').text(data.guestScore);
+                    updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
+                    updateScoreWithAnimation('#guest-score', data.guestScore);
                     $('#quarter').text(data.quarter);
                     $('#goal-logs').empty();
                     
@@ -273,6 +274,15 @@
                     showErrorScreen();
                 }
             });
+        }
+
+        function updateScoreWithAnimation(scoreId, newScore) {
+            const scoreElement = $(scoreId);
+            scoreElement.css('transform', 'rotateY(180deg)'); // Flip effect
+            setTimeout(() => {
+                scoreElement.text(newScore);
+                scoreElement.css('transform', 'rotateY(0deg)'); // Reset flip effect
+            }, 250); // Duration of the flip
         }
 
         function calculatePing() {
