@@ -210,6 +210,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        let existingGoalLogs = new Set(); // Track existing goal logs
+
         function displayTime() {
             const now = new Date();
             document.getElementById("current-time").textContent = now.toLocaleTimeString();
@@ -263,7 +265,10 @@
                     if (data.logsEnabled) {
                         if (Array.isArray(data.goalLogs)) {
                             data.goalLogs.forEach(function(log) {
-                                $('#goal-logs').append('<li class="slide-in">' + log + '</li>'); // Add slide-in class
+                                if (!existingGoalLogs.has(log)) { // Check for new log
+                                    $('#goal-logs').append('<li class="slide-in">' + log + '</li>'); // Add slide-in class
+                                    existingGoalLogs.add(log); // Add to existing logs
+                                }
                             });
                         } else {
                             console.error('goalLogs is not an array');
