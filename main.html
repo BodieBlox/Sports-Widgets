@@ -11,6 +11,7 @@
             background-color: #eaeaea;
             margin: 0;
             padding: 0;
+            overflow: hidden; /* Prevent scrollbars from appearing */
         }
         .refresh-button, .open-db-button {
             background-color: #28a745;
@@ -34,6 +35,8 @@
             max-width: 600px;
             margin: auto;
             display: none; /* Initially hidden */
+            position: relative; /* For absolute positioning of snow */
+            z-index: 1; /* Ensure scoreboard is above snow */
         }
         h1 {
             color: #333;
@@ -137,9 +140,34 @@
                 opacity: 1;
             }
         }
+        /* Snowfall effect */
+        .snow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allow clicks to pass through */
+            overflow: hidden;
+            z-index: 0; /* Behind scoreboard */
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="snow" id="snow-container"></div>
     <div class="loading">
         <img class="football" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Football_Icon.svg/658px-Football_Icon.svg.png?20091206063425" alt="Spinning Football" />
     </div>
@@ -258,7 +286,6 @@
                     updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
                     updateScoreWithAnimation('#guest-score', data.guestScore);
                     $('#quarter').text(data.quarter);
-                    //$('#goal-logs').empty();
                     
                     // Check if goal logs are enabled
                     if (data.logsEnabled) {
@@ -336,6 +363,24 @@
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000); // Update scoreboard every 4 seconds
         displayTime();
+
+        // Snowfall effect initialization
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            for (let i = 0; i < 100; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                const size = Math.random() * 10 + 5; // Random size between 5 and 15
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random duration between 2 and 5 seconds
+                snowflake.style.opacity = Math.random(); // Random opacity
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes();
     </script>
 </body>
 </html>
