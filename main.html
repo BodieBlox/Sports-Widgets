@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoreboard - Game Title</title>
+    <title>No active game!</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -234,6 +234,7 @@
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <button class="open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
+        <button class="close-button" onclick="closeAdminStats()">Test Scoreboard</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -365,7 +366,7 @@
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 4000); // Update scoreboard every 4 seconds
+        setInterval(updateScoreboard, 8000); // Update scoreboard every 4 seconds
         displayTime();
 
         // Snowfall effect initialization
