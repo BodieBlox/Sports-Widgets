@@ -314,7 +314,9 @@
                         document.getElementById("playoffs-label").style.display = 'none'; // Hide playoffs label
                     }
                     
-                    showScoreboard();
+                   //(season ended) showScoreboard();
+                    showErrorScreen();
+
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
