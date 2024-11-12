@@ -8,36 +8,13 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #f0f4f8;
+            background-color: #eaeaea;
             margin: 0;
             padding: 0;
-            overflow: auto;
+            overflow: auto; /* Allow scrolling */
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
-            padding: 20px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-        h1 {
-            color: #333;
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }
-        h2 {
-            color: #007bff;
-            font-size: 2em;
-            margin: 10px 0;
-        }
-        .score {
-            font-size: 2em;
-            color: #333;
-            transition: transform 0.5s;
-        }
-        .button {
-            background-color: #007bff;
+        .refresh-button, .open-db-button {
+            background-color: #28a745;
             color: white;
             border: none;
             border-radius: 5px;
@@ -45,52 +22,54 @@
             cursor: pointer;
             font-size: 1.2em;
             transition: background-color 0.3s;
-            margin: 10px;
         }
-        .button:hover {
-            background-color: #0056b3;
+        .refresh-button:hover, .open-db-button:hover {
+            background-color: #218838;
+        }
+        .scoreboard, .error-screen {
+            padding: 30px;
+            border: 2px solid #333;
+            border-radius: 10px;
+            background-color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+            display: none; /* Initially hidden */
+            position: relative; /* For absolute positioning of snow */
+            z-index: 1; /* Ensure scoreboard is above snow */
+        }
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+        }
+        .playoffs {
+            background: linear-gradient(90deg, #007bff, #28a745);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+        }
+        h2 {
+            color: #ffcc00;
+            font-size: 1.8em;
+        }
+        .score {
+            font-size: 2em;
+            color: #333;
+            transition: transform 0.5s; /* Added transition for flip effect */
+        }
+        .goal-logs {
+            list-style-type: none;
+            padding: 0;
+            color: #333;
+            font-size: 1.1em;
         }
         .footer {
             margin-top: 20px;
-            font-size: 1.2em;
-            color: #555;
         }
-        .fade-in {
-            animation: fadeIn 0.5s;
+        #current-time {
+            font-size: 1.5em;
+            color: #333;
         }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        /* Loading Screen */
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #f0f4f8;
-            position: absolute;
-            width: 100%;
-            top: 0;
-            left: 0;
-            z-index: 999;
-        }
-        .football {
-            width: 100px;
-            animation: spin 2s linear infinite;
-        }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        /* Error Screen */
-        .error-screen {
-            display: none;
-            color: red;
-            font-size: 2em;
-            padding: 20px;
-        }
-        /* Admin Stats Styling */
         .admin-stats {
             display: none;
             position: fixed;
@@ -103,6 +82,7 @@
             padding: 20px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            animation: fadeIn 0.5s;
         }
         .admin-stats h3 {
             margin: 0;
@@ -116,6 +96,50 @@
             cursor: pointer;
             font-size: 1em;
         }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .football {
+            width: 100px;
+            animation: spin 2s linear infinite;
+        }
+        .error-screen {
+            display: none;
+            color: red;
+            font-size: 2em;
+        }
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        .goal-logs-disabled {
+            color: red;
+            font-size: 4.2em;
+            font-weight: bold;
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
         /* Snowfall effect */
         .snow {
             position: absolute;
@@ -123,9 +147,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
+            pointer-events: none; /* Allow clicks to pass through */
             overflow: hidden;
-            z-index: 0;
+            z-index: 0; /* Behind scoreboard */
         }
         .snowflake {
             position: absolute;
@@ -144,37 +168,59 @@
 </head>
 <body>
     <div class="snow" id="snow-container"></div>
-    <div class="loading" id="loading-screen">
+    <div class="loading">
         <img class="football" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Football_Icon.svg/658px-Football_Icon.svg.png?20091206063425" alt="Spinning Football" />
     </div>
-    <div class="container fade-in" id="scoreboard">
+
+    <div class="scoreboard fade-in" id="scoreboard">
         <h1>Scoreboard - <span id="title">Game Title</span></h1>
-        <h2>Bulldogs</h2>
-        <p class="score">Score: <strong id="bulldogs-score">Connecting to database</strong></p>
-        <h2>Guest Team</h2>
-        <p class="score">Score: <strong id="guest-score">Connecting to database</strong></p>
+        <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
+        
+        <div>
+            <h2>Bulldogs</h2>
+            <p class="score">Score: <strong id="bulldogs-score">Connecting to database</strong></p>
+        </div>
+        
+        <div>
+            <h2>Guest Team</h2>
+            <p class="score">Score: <strong id="guest-score">Connecting to database</strong></p>
+        </div>
+        
         <hr />
+        
         <div>
             <h3>Quarter: <strong id="quarter">Connecting to database</strong></h3>
+            <hr />
         </div>
+        
         <div id="goal-logs-container">
             <h3>Goal Logs</h3>
             <ul class="goal-logs" id="goal-logs"></ul>
             <p id="goal-logs-disabled" class="goal-logs-disabled" style="display: none;">Goal Logs Disabled</p>
         </div>
+        
         <hr />
+        
         <div class="footer">
-            <button class="button" onclick="location.reload();">Refresh</button>
-            <h3>Last updated: <span id="last-updated">Loading...</span></h3>
-            <h3>Current Time: <span id="current-time">Loading...</span></h3>
-            <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
+            <img style="width: 100px;" src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" />
+            <br>
+            <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
+            <hr />
+            <br>
+            <button class="refresh-button" onclick="location.reload();">Refresh</button>
         </div>
+
+        <h3>Last updated: <span id="last-updated">Loading...</span></h3>
+        <h3>Current Time: <span id="current-time">Loading...</span></h3>
+
+        <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
         <h1>Happy Winter!</h1>
-        <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
-        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>
+       <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
+       <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>
+       <!--<iframe src="https://free.timeanddate.com/countdown/i9mg60gr/n419/cf114/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fs100/szw448/szh189/tatVarsity%20Football%20PLAYOFFS/tac000/tptTime%20since%20Event%20started%20in/tpc000/matGet%20HYPED!%20Kickoff%20in%3A/mac000/mpc000/iso2024-11-07T18:30:00/bas4/bac0f0/pd2" allowtransparency="true" frameborder="0" width="456" height="197"></iframe>-->
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -187,8 +233,9 @@
         <p>Device Name: <strong><span id="device-name"></span></strong></p>
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
-        <button class="button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
+        <button class="open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
+        <button class="close-button" onclick="closeAdminStats()">Test Scoreboard</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -223,13 +270,12 @@
         }
 
         function showScoreboard() {
-            document.getElementById("loading-screen").style.display = 'none';
+            document.querySelector('.loading').style.display = 'none';
             document.getElementById("scoreboard").style.display = 'block';
             document.getElementById("error-screen").style.display = 'none';
         }
 
         function showErrorScreen() {
-            document.getElementById("loading-screen").style.display = 'none';
             document.getElementById("scoreboard").style.display = 'none';
             document.getElementById("error-screen").style.display = 'block';
         }
@@ -270,7 +316,7 @@
                         document.getElementById("playoffs-label").style.display = 'none'; // Hide playoffs label
                     }
                     
-                    // (season ended) showScoreboard();
+                   //(season ended) showScoreboard();
                     showErrorScreen();
 
                 },
@@ -321,7 +367,7 @@
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 8000); // Update scoreboard every 8 seconds
+        setInterval(updateScoreboard, 8000); // Update scoreboard every 4 seconds
         displayTime();
 
         // Snowfall effect initialization
