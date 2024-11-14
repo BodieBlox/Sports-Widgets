@@ -1,5 +1,3 @@
-# Code Refactored
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,6 +164,23 @@
                 transform: translateY(100vh);
             }
         }
+        /* Mobile Specific Styles */
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2em;
+            }
+            h2, h3 {
+                font-size: 1.5em;
+            }
+            .button {
+                width: 100%;
+                padding: 10px;
+                font-size: 1em;
+            }
+            .admin-stats {
+                width: 90%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -210,6 +225,7 @@
             <hr />
             <br>
             <button class="button" onclick="location.reload();">Refresh</button>
+            <button class="button" onclick="promptForPassword()">View Admin Stats</button>
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
@@ -351,9 +367,18 @@
             });
         }
 
+        function promptForPassword() {
+            const password = prompt("Enter the password to view admin stats:");
+            if (password === "1234") {
+                showAdminStats();
+            } else {
+                alert("Incorrect password.");
+            }
+        }
+
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
-                showAdminStats();
+                promptForPassword();
                 console.log('Admin Stats Opened');
             }
         });
