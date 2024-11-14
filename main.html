@@ -11,9 +11,9 @@
             background-color: #eaeaea;
             margin: 0;
             padding: 0;
-            overflow: auto; /* Allow scrolling */
+            overflow: auto;
         }
-        .refresh-button, .open-db-button {
+        .button {
             background-color: #28a745;
             color: white;
             border: none;
@@ -23,7 +23,7 @@
             font-size: 1.2em;
             transition: background-color 0.3s;
         }
-        .refresh-button:hover, .open-db-button:hover {
+        .button:hover {
             background-color: #218838;
         }
         .scoreboard, .error-screen {
@@ -34,9 +34,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             max-width: 600px;
             margin: auto;
-            display: none; /* Initially hidden */
-            position: relative; /* For absolute positioning of snow */
-            z-index: 1; /* Ensure scoreboard is above snow */
+            display: none;
+            position: relative;
+            z-index: 1;
         }
         h1 {
             color: #333;
@@ -55,7 +55,7 @@
         .score {
             font-size: 2em;
             color: #333;
-            transition: transform 0.5s; /* Added transition for flip effect */
+            transition: transform 0.5s;
         }
         .goal-logs {
             list-style-type: none;
@@ -140,16 +140,15 @@
                 opacity: 1;
             }
         }
-        /* Snowfall effect */
         .snow {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Allow clicks to pass through */
+            pointer-events: none;
             overflow: hidden;
-            z-index: 0; /* Behind scoreboard */
+            z-index: 0;
         }
         .snowflake {
             position: absolute;
@@ -207,7 +206,7 @@
             <span style="font-size: 20px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
             <br>
-            <button class="refresh-button" onclick="location.reload();">Refresh</button>
+            <button class="button" onclick="location.reload();">Refresh</button>
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
@@ -218,9 +217,8 @@
 
     <div class="error-screen fade-in" id="error-screen">
         <h1>Happy Winter!</h1>
-       <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
-       <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>
-       <!--<iframe src="https://free.timeanddate.com/countdown/i9mg60gr/n419/cf114/cm0/cu4/ct0/cs0/ca0/cr0/ss0/cac000/cpc000/pcfff/tcfff/fs100/szw448/szh189/tatVarsity%20Football%20PLAYOFFS/tac000/tptTime%20since%20Event%20started%20in/tpc000/matGet%20HYPED!%20Kickoff%20in%3A/mac000/mpc000/iso2024-11-07T18:30:00/bas4/bac0f0/pd2" allowtransparency="true" frameborder="0" width="456" height="197"></iframe>-->
+        <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
+        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -233,14 +231,14 @@
         <p>Device Name: <strong><span id="device-name"></span></strong></p>
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
-        <button class="open-db-button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
+        <button class="button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
         <button class="close-button" onclick="closeAdminStats()">Test Scoreboard</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        let existingGoalLogs = new Set(); // Track existing goal logs
+        let existingGoalLogs = new Set();
 
         function displayTime() {
             const now = new Date();
@@ -248,7 +246,7 @@
         }
 
         function openFirebaseDatabase() {
-            window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank'); // Open Firebase Database URL
+            window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank');
         }
 
         function showAdminStats() {
@@ -290,35 +288,27 @@
                     updateScoreWithAnimation('#guest-score', data.guestScore);
                     $('#quarter').text(data.quarter);
                     
-                    // Check if goal logs are enabled
                     if (data.logsEnabled) {
                         if (Array.isArray(data.goalLogs)) {
                             data.goalLogs.forEach(function(log) {
-                                if (!existingGoalLogs.has(log)) { // Check for new log
-                                    $('#goal-logs').append('<li class="slide-in">' + log + '</li>'); // Add slide-in class
-                                    existingGoalLogs.add(log); // Add to existing logs
+                                if (!existingGoalLogs.has(log)) {
+                                    $('#goal-logs').append('<li class="slide-in">' + log + '</li>');
+                                    existingGoalLogs.add(log);
                                 }
                             });
                         } else {
                             console.error('goalLogs is not an array');
                         }
-                        $('#goal-logs-disabled').hide(); // Hide disabled message
+                        $('#goal-logs-disabled').hide();
                     } else {
-                        $('#goal-logs-disabled').show(); // Show disabled message
+                        $('#goal-logs-disabled').show();
                     }
 
                     $('#last-updated').text(new Date().toLocaleTimeString());
                     
-                    // Check for Playoffs value
-                    if (data.playoffs) {
-                        document.getElementById("playoffs-label").style.display = 'block'; // Show playoffs label
-                    } else {
-                        document.getElementById("playoffs-label").style.display = 'none'; // Hide playoffs label
-                    }
+                    document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
                     
-                   //(season ended) showScoreboard();
-                    showErrorScreen();
-
+                    showScoreboard();
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
@@ -329,11 +319,11 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            scoreElement.css('transform', 'rotateY(180deg)'); // Flip effect
+            scoreElement.css('transform', 'rotateY(180deg)');
             setTimeout(() => {
                 scoreElement.text(newScore);
-                scoreElement.css('transform', 'rotateY(0deg)'); // Reset flip effect
-            }, 250); // Duration of the flip
+                scoreElement.css('transform', 'rotateY(0deg)');
+            }, 250);
         }
 
         function calculatePing() {
@@ -367,21 +357,20 @@
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 8000); // Update scoreboard every 4 seconds
+        setInterval(updateScoreboard, 8000);
         displayTime();
 
-        // Snowfall effect initialization
         function createSnowflakes() {
             const snowContainer = document.getElementById('snow-container');
             for (let i = 0; i < 100; i++) {
                 const snowflake = document.createElement('div');
                 snowflake.className = 'snowflake';
-                const size = Math.random() * 10 + 5; // Random size between 5 and 15
+                const size = Math.random() * 10 + 5;
                 snowflake.style.width = `${size}px`;
                 snowflake.style.height = `${size}px`;
                 snowflake.style.left = `${Math.random() * 100}vw`;
-                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`; // Random duration between 2 and 5 seconds
-                snowflake.style.opacity = Math.random(); // Random opacity
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.opacity = Math.random();
                 snowContainer.appendChild(snowflake);
             }
         }
