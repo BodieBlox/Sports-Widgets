@@ -315,9 +315,9 @@
                 method: 'GET',
                 success: function(data) {
                     $('#title').text(data.game);
-                    updateScoreWithAnimation('bulldogs-score', data.bulldogsScore);
+                    updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
                     scoreb = data.bulldogsScore;
-                    updateScoreWithAnimation('guest-score', data.guestScore);
+                    updateScoreWithAnimation('#guest-score', data.guestScore);
                     scoreg = data.guestScore;
                     $('#quarter').text(data.quarter);
                     
