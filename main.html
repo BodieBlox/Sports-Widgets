@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>No Active Game!</title>
+    <title>No active game!</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -13,7 +13,6 @@
             padding: 0;
             overflow: auto;
         }
-        
         .button {
             background-color: #007bff;
             color: white;
@@ -24,13 +23,11 @@
             font-size: 1.2em;
             transition: background-color 0.3s, transform 0.2s;
         }
-        
         .button:hover {
             background-color: #0056b3;
             transform: scale(1.05);
         }
-
-        .scoreboard, .error-screen, .admin-stats {
+        .scoreboard, .error-screen {
             padding: 40px;
             border: 2px solid #007bff;
             border-radius: 12px;
@@ -42,58 +39,108 @@
             position: relative;
             z-index: 1;
         }
-
-        h1, h2, h3, h4, h6 {
-            color: #333;
-        }
-        
         h1 {
+            color: #333;
             font-size: 2.8em;
         }
-        
         .playoffs {
             background: linear-gradient(90deg, #007bff, #28a745);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-size: 2.2em;
         }
-        
+        h2 {
+            color: #ffcc00;
+            font-size: 2em;
+        }
         .score {
             font-size: 2.5em;
+            color: #333;
+            transition: transform 0.5s;
         }
-        
         .goal-logs {
             list-style-type: none;
             padding: 0;
+            color: #333;
             font-size: 1.2em;
         }
-
         .footer {
             margin-top: 30px;
         }
-
         #current-time {
             font-size: 1.8em;
+            color: #333;
         }
-        
+        .admin-stats {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            animation: fadeIn 0.5s;
+        }
+        .admin-stats h3 {
+            margin: 0;
+        }
+        .close-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         .loading {
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
         }
-        
         .football {
             width: 120px;
             animation: spin 2s linear infinite;
         }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
+        .error-screen {
+            display: none;
+            color: #dc3545;
+            font-size: 2.5em;
         }
-
-        /* Snowflake Styles */
+        .fade-in {
+            animation: fadeIn 0.5s;
+        }
+        .goal-logs-disabled {
+            color: #dc3545;
+            font-size: 4.5em;
+            font-weight: bold;
+        }
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
         .snow {
             position: absolute;
             top: 0;
@@ -104,7 +151,6 @@
             overflow: hidden;
             z-index: 0;
         }
-        
         .snowflake {
             position: absolute;
             top: -10px;
@@ -113,29 +159,45 @@
             opacity: 0.8;
             animation: fall linear infinite;
         }
-
         @keyframes fall {
-            to { transform: translateY(100vh); }
+            to {
+                transform: translateY(100vh);
+            }
         }
-
         /* Mobile Specific Styles */
         @media (max-width: 600px) {
-            h1 { font-size: 2em; }
-            h2, h3 { font-size: 1.5em; }
-            .button { width: 100%; padding: 10px; font-size: 1em; }
-            .admin-stats { width: 90%; }
+            h1 {
+                font-size: 2em;
+            }
+            h2, h3 {
+                font-size: 1.5em;
+            }
+            .button {
+                width: 100%;
+                padding: 10px;
+                font-size: 1em;
+            }
+            .admin-stats {
+                width: 90%;
+            }
+            .admin-button {
+                display: block; /* Show admin button on mobile */
+            }
+        }
+        @media (min-width: 601px) {
+            .admin-button {
+                display: none; /* Hide admin button on larger screens */
+            }
         }
     </style>
 </head>
-
 <body>
     <div class="snow" id="snow-container"></div>
-
-    <main class="loading">
+    <div class="loading">
         <img class="football" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Football_Icon.svg/658px-Football_Icon.svg.png?20091206063425" alt="Spinning Football" />
-    </main>
+    </div>
 
-    <section class="scoreboard fade-in" id="scoreboard">
+    <div class="scoreboard fade-in" id="scoreboard">
         <h1>Scoreboard - <span id="title">Game Title</span></h1>
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
@@ -164,22 +226,28 @@
         
         <hr />
         
-        <footer class="footer">
-            <img src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" style="width: 120px;" />
-            <span style="font-size: 22px;">WCHS Athletic Department</span>
+        <div class="footer">
+            <img style="width: 120px;" src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" />
+            <br>
+            <span style="font-size: 22px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
+            <br>
             <button class="button" onclick="location.reload();">Refresh</button>
             <button class="button admin-button" onclick="promptForPassword()">View Admin Stats</button>
-        </footer>
+        </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
+
         <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
-    </section>
+    </div>
 
     <div class="error-screen fade-in" id="error-screen">
         <h1>Upcoming Game</h1>
         <h4>Away Playoff game tonight! The scoreboard was updated to better support mobile viewing and faster updates! We hope to see you there to support the team!</h4>
+     <!--   <h1>Happy Winter!</h1>
+        <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
+        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>-->
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -199,161 +267,160 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        const app = {
-            existingGoalLogs: new Set(),
-            scoreb: 0,
-            scoreg: 0,
+        let existingGoalLogs = new Set();
+        var scoreb = 0;
+        var scoreg = 0;
 
-            init: function() {
-                setTimeout(app.showScoreboard, 2000);
-                setInterval(app.displayTime, 1000);
-                setInterval(app.updateScoreboard, 4000);
-                app.displayTime();
-                app.createSnowflakes();
-                document.addEventListener('keydown', app.handleKeydown);
-            },
+        function displayTime() {
+            const now = new Date();
+            document.getElementById("current-time").textContent = now.toLocaleTimeString();
+        }
 
-            displayTime: function() {
-                const now = new Date();
-                document.getElementById("current-time").textContent = now.toLocaleTimeString();
-            },
+        function openFirebaseDatabase() {
+            window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank');
+        }
 
-            openFirebaseDatabase: function() {
-                window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank');
-            },
+        function showAdminStats() {
+            document.getElementById("http-protocol").textContent = window.location.protocol;
+            document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
+            document.getElementById("hostname").textContent = window.location.hostname;
+            document.getElementById("ping").textContent = "Calculating...";
+            document.getElementById("browser").textContent = navigator.userAgent;
+            document.getElementById("device-name").textContent = navigator.platform;
+            document.getElementById("browser-version").textContent = navigator.appVersion;
+            document.getElementById("ip-address").textContent = "Fetching...";
+            document.getElementById("admin-stats").style.display = 'block';
+            calculatePing();
+            fetchIP();
+        }
 
-            showAdminStats: function() {
-                document.getElementById("http-protocol").textContent = window.location.protocol;
-                document.getElementById("last-refresh").textContent = new Date().toLocaleTimeString();
-                document.getElementById("hostname").textContent = window.location.hostname;
-                document.getElementById("ping").textContent = "Calculating...";
-                document.getElementById("browser").textContent = navigator.userAgent;
-                document.getElementById("device-name").textContent = navigator.platform;
-                document.getElementById("browser-version").textContent = navigator.appVersion;
-                document.getElementById("ip-address").textContent = "Fetching...";
-                document.getElementById("admin-stats").style.display = 'block';
-                app.calculatePing();
-                app.fetchIP();
-            },
+        function closeAdminStats() {
+            document.getElementById("admin-stats").style.display = 'none';
+        }
 
-            closeAdminStats: function() {
-                document.getElementById("admin-stats").style.display = 'none';
-            },
+        function showScoreboard() {
+            document.querySelector('.loading').style.display = 'none';
+            document.getElementById("scoreboard").style.display = 'block';
+            document.getElementById("error-screen").style.display = 'none';
+        }
 
-            showScoreboard: function() {
-                document.querySelector('.loading').style.display = 'none';
-                document.getElementById("scoreboard").style.display = 'block';
-                document.getElementById("error-screen").style.display = 'none';
-            },
+        function showErrorScreen() {
+            document.getElementById("scoreboard").style.display = 'none';
+            document.getElementById("error-screen").style.display = 'block';
+        }
 
-            showErrorScreen: function() {
-                document.getElementById("scoreboard").style.display = 'none';
-                document.getElementById("error-screen").style.display = 'block';
-            },
-
-            updateScoreboard: function() {
-                $.ajax({
-                    url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json',
-                    method: 'GET',
-                    success: function(data) {
-                        $('#title').text(data.game);
-                        app.updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
-                        app.scoreb = data.bulldogsScore;
-                        app.updateScoreWithAnimation('#guest-score', data.guestScore);
-                        app.scoreg = data.guestScore;
-                        $('#quarter').text(data.quarter);
-                        
-                        if (data.logsEnabled) {
-                            if (Array.isArray(data.goalLogs)) {
-                                data.goalLogs.forEach(function(log) {
-                                    if (!app.existingGoalLogs.has(log)) {
-                                        $('#goal-logs').append('<li class="slide-in">' + log + '</li>');
-                                        app.existingGoalLogs.add(log);
-                                    }
-                                });
-                            } else {
-                                console.error('goalLogs is not an array');
-                            }
-                            $('#goal-logs-disabled').hide();
+        function updateScoreboard() {
+            $.ajax({
+                url: 'https://test-71ecd-default-rtdb.firebaseio.com/.json',
+                method: 'GET',
+                success: function(data) {
+                    $('#title').text(data.game);
+                    updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
+                    scoreb = data.bulldogsScore;
+                    updateScoreWithAnimation('#guest-score', data.guestScore);
+                    scoreg = data.guestScore;
+                    $('#quarter').text(data.quarter);
+                    
+                    if (data.logsEnabled) {
+                        if (Array.isArray(data.goalLogs)) {
+                            data.goalLogs.forEach(function(log) {
+                                if (!existingGoalLogs.has(log)) {
+                                    $('#goal-logs').append('<li class="slide-in">' + log + '</li>');
+                                    existingGoalLogs.add(log);
+                                }
+                            });
                         } else {
-                            $('#goal-logs-disabled').show();
+                            console.error('goalLogs is not an array');
                         }
-
-                        $('#last-updated').text(new Date().toLocaleTimeString());
-                        document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
-                        app.showScoreboard();
-                    },
-                    error: function() {
-                        console.error('Error fetching data from Firebase');
-                        app.showErrorScreen();
+                        $('#goal-logs-disabled').hide();
+                    } else {
+                        $('#goal-logs-disabled').show();
                     }
-                });
-            },
 
-            updateScoreWithAnimation: function(scoreId, newScore) {
-                const scoreElement = $(scoreId);
-                if (scoreElement.text() != newScore) {
-                    scoreElement.fadeOut(() => {
-                        scoreElement.text(newScore).fadeIn();
-                    });
+                    $('#last-updated').text(new Date().toLocaleTimeString());
+                    
+                    document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
+                    
+                    showScoreboard();
+                  // showErrorScreen();
+                },
+                error: function() {
+                    console.error('Error fetching data from Firebase');
+                    showErrorScreen();
                 }
-            },
+            });
+        }
 
-            calculatePing: function() {
-                const startTime = new Date().getTime();
-                $.ajax({
-                    url: window.location.href,
-                    method: 'GET',
-                    success: function() {
-                        const endTime = new Date().getTime();
-                        const ping = endTime - startTime;
-                        document.getElementById("ping").textContent = ping + " ms";
-                    },
-                    error: function() {
-                        document.getElementById("ping").textContent = "Ping failed";
-                    }
-                });
-            },
+        function updateScoreWithAnimation(scoreId, newScore) {
+            const scoreElement = $(scoreId);
+            if (scoreElement.text() != newScore) {
+                scoreElement.fadeOut();
+            setTimeout(() => {
+                scoreElement.text(newScore);
+                scoreElement.fadeIn();
+            }, 1000);
+            };
+        }
 
-            fetchIP: function() {
-                $.getJSON("https://api.ipify.org?format=json", function(data) {
-                    document.getElementById("ip-address").textContent = data.ip;
-                });
-            },
-
-            promptForPassword: function() {
-                const password = prompt("Enter the password to view admin stats:");
-                if (password === "1234") {
-                    app.showAdminStats();
-                } else {
-                    alert("Incorrect password.");
+        function calculatePing() {
+            const startTime = new Date().getTime();
+            $.ajax({
+                url: window.location.href,
+                method: 'GET',
+                success: function() {
+                    const endTime = new Date().getTime();
+                    const ping = endTime - startTime;
+                    document.getElementById("ping").textContent = ping + " ms";
+                },
+                error: function() {
+                    document.getElementById("ping").textContent = "Ping failed";
                 }
-            },
+            });
+        }
 
-            handleKeydown: function(event) {
-                if (event.key === 'f') {
-                    app.promptForPassword();
-                    console.log('Admin Stats Opened');
-                }
-            },
+        function fetchIP() {
+            $.getJSON("https://api.ipify.org?format=json", function(data) {
+                document.getElementById("ip-address").textContent = data.ip;
+            });
+        }
 
-            createSnowflakes: function() {
-                const snowContainer = document.getElementById('snow-container');
-                for (let i = 0; i < 100; i++) {
-                    const snowflake = document.createElement('div');
-                    snowflake.className = 'snowflake';
-                    const size = Math.random() * 10 + 5;
-                    snowflake.style.width = `${size}px`;
-                    snowflake.style.height = `${size}px`;
-                    snowflake.style.left = `${Math.random() * 100}vw`;
-                    snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                    snowflake.style.opacity = Math.random();
-                    snowContainer.appendChild(snowflake);
-                }
+        function promptForPassword() {
+            const password = prompt("Enter the password to view admin stats:");
+            if (password === "1234") {
+                showAdminStats();
+            } else {
+                alert("Incorrect password.");
             }
-        };
+        }
 
-        app.init();
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'f') {
+                promptForPassword();
+                console.log('Admin Stats Opened');
+            }
+        });
+
+        setTimeout(showScoreboard, 2000);
+        setInterval(displayTime, 1000);
+        setInterval(updateScoreboard, 4000);
+        displayTime();
+
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            for (let i = 0; i < 100; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                const size = Math.random() * 10 + 5;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.opacity = Math.random();
+                snowContainer.appendChild(snowflake);
+            }
+        }
+
+        createSnowflakes();
     </script>
 </body>
 </html>
