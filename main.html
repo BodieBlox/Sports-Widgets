@@ -349,10 +349,10 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            scoreElement.css('transform', 'rotateY(180deg)');
+            scoreElement.fadeOut();
             setTimeout(() => {
                 scoreElement.text(newScore);
-                scoreElement.css('transform', 'rotateY(0deg)');
+                scoreElement.fadeIn();
             }, 2250);
         }
 
