@@ -243,9 +243,11 @@
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
-        <h1>Happy Winter!</h1>
+        <h1>Upcoming Game</h1>
+        <h4>Away Playoff game tonight! The scoreboard was updated to better support mobile viewing and faster updates! We hope to see you there to support the team!</h4>
+     <!--   <h1>Happy Winter!</h1>
         <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
-        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>
+        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>-->
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -335,7 +337,8 @@
                     
                     document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
                     
-                    showScoreboard();
+                   // showScoreboard();
+                   showErrorScreen();
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
