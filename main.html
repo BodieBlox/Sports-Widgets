@@ -337,8 +337,8 @@
                     
                     document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
                     
-                   // showScoreboard();
-                   showErrorScreen();
+                    showScoreboard();
+                  // showErrorScreen();
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
@@ -353,7 +353,7 @@
             setTimeout(() => {
                 scoreElement.text(newScore);
                 scoreElement.css('transform', 'rotateY(0deg)');
-            }, 250);
+            }, 2250);
         }
 
         function calculatePing() {
@@ -396,7 +396,7 @@
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
-        setInterval(updateScoreboard, 2000);
+        setInterval(updateScoreboard, 4000);
         displayTime();
 
         function createSnowflakes() {
