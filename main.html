@@ -353,7 +353,7 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            if (!scoreElement.text == newScore) {
+            if (!scoreElement.text() == newScore) {
                 scoreElement.fadeOut();
             setTimeout(() => {
                 scoreElement.text(newScore);
