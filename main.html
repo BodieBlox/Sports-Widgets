@@ -268,6 +268,8 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         let existingGoalLogs = new Set();
+        var scoreb = 0;
+        var scoreg = 0;
 
         function displayTime() {
             const now = new Date();
@@ -313,8 +315,10 @@
                 method: 'GET',
                 success: function(data) {
                     $('#title').text(data.game);
-                    updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
-                    updateScoreWithAnimation('#guest-score', data.guestScore);
+                    updateScoreWithAnimation('bulldogs-score', data.bulldogsScore);
+                    scoreb = data.bulldogsScore;
+                    updateScoreWithAnimation('guest-score', data.guestScore);
+                    scoreg = data.guestScore;
                     $('#quarter').text(data.quarter);
                     
                     if (data.logsEnabled) {
@@ -349,11 +353,13 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            scoreElement.fadeOut();
+            if (!scoreElement.text == newScore) {
+                scoreElement.fadeOut();
             setTimeout(() => {
                 scoreElement.text(newScore);
                 scoreElement.fadeIn();
-            }, 2250);
+            }, 1000);
+            }
         }
 
         function calculatePing() {
