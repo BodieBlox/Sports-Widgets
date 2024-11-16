@@ -33,7 +33,7 @@
             border-radius: 12px;
             background-color: #ffffff;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 90%;
+            max-width: 600px; /* Adjusted max-width for better PC view */
             margin: auto;
             display: none;
             position: relative;
@@ -101,10 +101,6 @@
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
         .loading {
             display: flex;
             justify-content: center;
@@ -120,49 +116,10 @@
             color: #dc3545;
             font-size: 2.5em;
         }
-        .fade-in {
-            animation: fadeIn 0.5s;
-        }
         .goal-logs-disabled {
             color: #dc3545;
             font-size: 4.5em;
             font-weight: bold;
-        }
-        .slide-in {
-            animation: slideIn 0.5s forwards;
-        }
-        @keyframes slideIn {
-            from {
-                transform: translateY(-20px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        .snow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
         }
         /* Mobile Specific Styles */
         @media (max-width: 600px) {
@@ -188,6 +145,21 @@
             .admin-button {
                 display: none; /* Hide admin button on larger screens */
             }
+        }
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background-color: #333;
+            color: #f0f4f8;
+        }
+        .dark-mode .scoreboard, .dark-mode .admin-stats {
+            background-color: #444;
+            border-color: #555;
+        }
+        .dark-mode .button {
+            background-color: #555;
+        }
+        .dark-mode .button:hover {
+            background-color: #666;
         }
     </style>
 </head>
@@ -234,6 +206,7 @@
             <br>
             <button class="button" onclick="location.reload();">Refresh</button>
             <button class="button admin-button" onclick="promptForPassword()">View Admin Stats</button>
+            <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button> <!-- Dark mode toggle button -->
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
@@ -245,9 +218,6 @@
     <div class="error-screen fade-in" id="error-screen">
         <h1>Upcoming Game</h1>
         <h4>Away Playoff game tonight! The scoreboard was updated to better support mobile viewing and faster updates! We hope to see you there to support the team!</h4>
-     <!--   <h1>Happy Winter!</h1>
-        <p>The fall season has ended! The scoreboard will be active during the <strong>spring</strong> season! See you then!</p>
-        <h6>*The database has been slowed since no events are near! Loading will take longer!</h6>-->
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -342,7 +312,6 @@
                     document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
                     
                     showScoreboard();
-                  // showErrorScreen();
                 },
                 error: function() {
                     console.error('Error fetching data from Firebase');
@@ -355,11 +324,11 @@
             const scoreElement = $(scoreId);
             if (scoreElement.text() != newScore) {
                 scoreElement.fadeOut();
-            setTimeout(() => {
-                scoreElement.text(newScore);
-                scoreElement.fadeIn();
-            }, 1000);
-            };
+                setTimeout(() => {
+                    scoreElement.text(newScore);
+                    scoreElement.fadeIn();
+                }, 1000);
+            }
         }
 
         function calculatePing() {
@@ -391,6 +360,11 @@
             } else {
                 alert("Incorrect password.");
             }
+        }
+
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            document.cookie = "darkMode=" + (document.body.classList.contains('dark-mode') ? "enabled" : "disabled");
         }
 
         document.addEventListener('keydown', function(event) {
