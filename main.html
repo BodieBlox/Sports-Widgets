@@ -413,8 +413,13 @@
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
-                promptForPassword();
-                console.log('Admin Stats Opened');
+                if (window.location !== window.parent.location) {
+                    console.error('Admin Stats failed to open');
+                  } else {
+                    promptForPassword();
+                    console.log('Admin Stats Opened');
+                }
+               
             }
         });
 
