@@ -1,3 +1,5 @@
+# Code Refactored
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -43,7 +45,7 @@
             color: #333;
             font-size: 2.8em;
         }
-          @keyframes spin {
+        @keyframes spin {
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
@@ -101,7 +103,7 @@
             cursor: pointer;
             font-size: 1em;
         }
-                .fade-in {
+        .fade-in {
             animation: fadeIn 0.5s;
         }
         @keyframes fadeIn {
@@ -114,7 +116,7 @@
             align-items: center;
             height: 100vh;
         }
-        .football {
+        .basketball {
             width: 120px;
             animation: spin 2s linear infinite;
         }
@@ -128,9 +130,6 @@
             font-size: 4.5em;
             font-weight: bold;
         }
-<<<<<<< HEAD
-=======
-
         .slide-in {
             animation: slideIn 0.5s forwards;
         }
@@ -144,31 +143,7 @@
                 opacity: 1;
             }
         }
-        .snow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            overflow: hidden;
-            z-index: 0;
-        }
-        .snowflake {
-            position: absolute;
-            top: -10px;
-            background: white;
-            border-radius: 50%;
-            opacity: 0.8;
-            animation: fall linear infinite;
-        }
-        @keyframes fall {
-            to {
-                transform: translateY(100vh);
-            }
-        }
         /* Mobile Specific Styles */
->>>>>>> f43690a183bfb65cc815bd76361112bee8f196dd
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -210,9 +185,8 @@
     </style>
 </head>
 <body>
-    <div class="snow" id="snow-container"></div>
     <div class="loading">
-        <img class="football" src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Football_Icon.svg/658px-Football_Icon.svg.png?20091206063425" alt="Spinning Football" />
+        <img class="basketball" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Basketball_icon.svg/1200px-Basketball_icon.svg.png" alt="Spinning Basketball" />
     </div>
 
     <div class="scoreboard fade-in" id="scoreboard">
@@ -220,13 +194,13 @@
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
         <div>
-            <h2>Bulldogs</h2>
-            <p class="score">Score: <strong id="bulldogs-score">Connecting to database</strong></p>
+            <h2>Home Team</h2>
+            <p class="score">Score: <strong id="home-score">Connecting to database</strong></p>
         </div>
         
         <div>
-            <h2>Guest Team</h2>
-            <p class="score">Score: <strong id="guest-score">Connecting to database</strong></p>
+            <h2>Away Team</h2>
+            <p class="score">Score: <strong id="away-score">Connecting to database</strong></p>
         </div>
         
         <hr />
@@ -262,8 +236,10 @@
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
-        <h1>Happy Winter!</h1>
+        <h1>Game Not Found!</h1>
         <h4>No game is active or check your connection!</h4>
+        <h5>Current Weather: <span id="weather">Loading...</span></h5>
+        <h5>Current Time: <span id="error-time">Loading...</span></h5>
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -283,25 +259,19 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        //----Add Better Dark Mode, Mobile Notch Support(Only broken on Iphone X-14; Working on 8+ And Below, and 14 Pro and above.), display weather and time on error screen.
         let existingGoalLogs = new Set();
-        var scoreb = 0;
-        var scoreg = 0;
-
-        //------------------------------
+        var scoreh = 0;
+        var scorea = 0;
 
         function displayTime() {
             const now = new Date();
             document.getElementById("current-time").textContent = now.toLocaleTimeString();
+            document.getElementById("error-time").textContent = now.toLocaleTimeString();
         }
-
-        //------------------------------
-
 
         function openFirebaseDatabase() {
             window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank');
         }
-        //------------------------------
 
         function showAdminStats() {
             document.getElementById("http-protocol").textContent = window.location.protocol;
@@ -316,25 +286,21 @@
             calculatePing();
             fetchIP();
         }
-        //------------------------------
 
         function closeAdminStats() {
             document.getElementById("admin-stats").style.display = 'none';
         }
-        //------------------------------
 
         function showScoreboard() {
             document.querySelector('.loading').style.display = 'none';
             document.getElementById("scoreboard").style.display = 'block';
             document.getElementById("error-screen").style.display = 'none';
         }
-        //------------------------------
 
         function showErrorScreen() {
             document.getElementById("scoreboard").style.display = 'none';
             document.getElementById("error-screen").style.display = 'block';
         }
-        //------------------------------
 
         function updateScoreboard() {
             $.ajax({
@@ -342,10 +308,10 @@
                 method: 'GET',
                 success: function(data) {
                     $('#title').text(data.game);
-                    updateScoreWithAnimation('#bulldogs-score', data.bulldogsScore);
-                    scoreb = data.bulldogsScore;
-                    updateScoreWithAnimation('#guest-score', data.guestScore);
-                    scoreg = data.guestScore;
+                    updateScoreWithAnimation('#home-score', data.homeScore);
+                    scoreh = data.homeScore;
+                    updateScoreWithAnimation('#away-score', data.awayScore);
+                    scorea = data.awayScore;
                     $('#quarter').text(data.quarter);
                     
                     if (data.logsEnabled) {
@@ -376,7 +342,6 @@
                 }
             });
         }
-        //------------------------------
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
@@ -388,7 +353,6 @@
                 }, 1000);
             }
         }
-        //------------------------------
 
         function calculatePing() {
             const startTime = new Date().getTime();
@@ -405,14 +369,12 @@
                 }
             });
         }
-        //------------------------------
 
         function fetchIP() {
             $.getJSON("https://api.ipify.org?format=json", function(data) {
                 document.getElementById("ip-address").textContent = data.ip;
             });
         }
-        //------------------------------
 
         function promptForPassword() {
             const password = prompt("Enter the password to view admin stats:");
@@ -422,50 +384,27 @@
                 alert("Incorrect password.");
             }
         }
-        //------------------------------
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             document.cookie = "darkMode=" + (document.body.classList.contains('dark-mode') ? "enabled" : "disabled");
         }
-        //------------------------------
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
                 if (window.location !== window.parent.location) {
                     console.error('Admin Stats failed to open');
-                  } else {
+                } else {
                     promptForPassword();
                     console.log('Admin Stats Opened');
                 }
-               
             }
         });
-        //------------------------------
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
-        //------------------------------
-
-        function createSnowflakes() {
-            const snowContainer = document.getElementById('snow-container');
-            for (let i = 0; i < 100; i++) {
-                const snowflake = document.createElement('div');
-                snowflake.className = 'snowflake';
-                const size = Math.random() * 10 + 5;
-                snowflake.style.width = `${size}px`;
-                snowflake.style.height = `${size}px`;
-                snowflake.style.left = `${Math.random() * 100}vw`;
-                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                snowflake.style.opacity = Math.random();
-                snowContainer.appendChild(snowflake);
-            }
-        }
-        //------------------------------
-        createSnowflakes();
-        //------------------------------
     </script>
 </body>
 </html>
