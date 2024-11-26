@@ -11,7 +11,7 @@
             background-color: #f0f4f8;
             margin: 0;
             padding: 0;
-            overflow: auto;
+            overflow: hidden; /* Prevent scrolling */
         }
         .button {
             background-color: #007bff;
@@ -33,7 +33,7 @@
             border-radius: 12px;
             background-color: #ffffff;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 600px; /* Adjusted max-width for better PC view */
+            max-width: 600px;
             margin: auto;
             display: none;
             position: relative;
@@ -121,7 +121,6 @@
             font-size: 4.5em;
             font-weight: bold;
         }
-        /* Mobile Specific Styles */
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -138,15 +137,14 @@
                 width: 90%;
             }
             .admin-button {
-                display: block; /* Show admin button on mobile */
+                display: block;
             }
         }
         @media (min-width: 601px) {
             .admin-button {
-                display: none; /* Hide admin button on larger screens */
+                display: none;
             }
         }
-        /* Dark Mode Styles */
         body.dark-mode {
             background-color: #333;
             color: #f0f4f8;
@@ -206,7 +204,7 @@
             <br>
             <button class="button" onclick="location.reload();">Refresh</button>
             <button class="button admin-button" onclick="promptForPassword()">View Admin Stats</button>
-            <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button> <!-- Dark mode toggle button -->
+            <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
