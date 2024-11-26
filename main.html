@@ -43,6 +43,10 @@
             color: #333;
             font-size: 2.8em;
         }
+          @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
         .playoffs {
             background: linear-gradient(90deg, #007bff, #28a745);
             -webkit-background-clip: text;
@@ -97,6 +101,9 @@
             cursor: pointer;
             font-size: 1em;
         }
+                .fade-in {
+            animation: fadeIn 0.5s;
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -121,6 +128,47 @@
             font-size: 4.5em;
             font-weight: bold;
         }
+<<<<<<< HEAD
+=======
+
+        .slide-in {
+            animation: slideIn 0.5s forwards;
+        }
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .snow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        /* Mobile Specific Styles */
+>>>>>>> f43690a183bfb65cc815bd76361112bee8f196dd
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -214,8 +262,8 @@
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
-        <h1>Upcoming Game</h1>
-        <h4>Away Playoff game tonight! The scoreboard was updated to better support mobile viewing and faster updates! We hope to see you there to support the team!</h4>
+        <h1>Happy Winter!</h1>
+        <h4>No game is active or check your connection!</h4>
     </div>
 
     <div class="admin-stats" id="admin-stats">
@@ -235,18 +283,25 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        //----Add Better Dark Mode, Mobile Notch Support(Only broken on Iphone X-14; Working on 8+ And Below, and 14 Pro and above.), display weather and time on error screen.
         let existingGoalLogs = new Set();
         var scoreb = 0;
         var scoreg = 0;
+
+        //------------------------------
 
         function displayTime() {
             const now = new Date();
             document.getElementById("current-time").textContent = now.toLocaleTimeString();
         }
 
+        //------------------------------
+
+
         function openFirebaseDatabase() {
             window.open('https://test-71ecd-default-rtdb.firebaseio.com/', '_blank');
         }
+        //------------------------------
 
         function showAdminStats() {
             document.getElementById("http-protocol").textContent = window.location.protocol;
@@ -261,21 +316,25 @@
             calculatePing();
             fetchIP();
         }
+        //------------------------------
 
         function closeAdminStats() {
             document.getElementById("admin-stats").style.display = 'none';
         }
+        //------------------------------
 
         function showScoreboard() {
             document.querySelector('.loading').style.display = 'none';
             document.getElementById("scoreboard").style.display = 'block';
             document.getElementById("error-screen").style.display = 'none';
         }
+        //------------------------------
 
         function showErrorScreen() {
             document.getElementById("scoreboard").style.display = 'none';
             document.getElementById("error-screen").style.display = 'block';
         }
+        //------------------------------
 
         function updateScoreboard() {
             $.ajax({
@@ -317,6 +376,7 @@
                 }
             });
         }
+        //------------------------------
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
@@ -328,6 +388,7 @@
                 }, 1000);
             }
         }
+        //------------------------------
 
         function calculatePing() {
             const startTime = new Date().getTime();
@@ -344,12 +405,14 @@
                 }
             });
         }
+        //------------------------------
 
         function fetchIP() {
             $.getJSON("https://api.ipify.org?format=json", function(data) {
                 document.getElementById("ip-address").textContent = data.ip;
             });
         }
+        //------------------------------
 
         function promptForPassword() {
             const password = prompt("Enter the password to view admin stats:");
@@ -359,23 +422,32 @@
                 alert("Incorrect password.");
             }
         }
+        //------------------------------
 
         function toggleDarkMode() {
             document.body.classList.toggle('dark-mode');
             document.cookie = "darkMode=" + (document.body.classList.contains('dark-mode') ? "enabled" : "disabled");
         }
+        //------------------------------
 
         document.addEventListener('keydown', function(event) {
             if (event.key === 'f') {
-                promptForPassword();
-                console.log('Admin Stats Opened');
+                if (window.location !== window.parent.location) {
+                    console.error('Admin Stats failed to open');
+                  } else {
+                    promptForPassword();
+                    console.log('Admin Stats Opened');
+                }
+               
             }
         });
+        //------------------------------
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
+        //------------------------------
 
         function createSnowflakes() {
             const snowContainer = document.getElementById('snow-container');
@@ -391,8 +463,9 @@
                 snowContainer.appendChild(snowflake);
             }
         }
-
+        //------------------------------
         createSnowflakes();
+        //------------------------------
     </script>
 </body>
 </html>
