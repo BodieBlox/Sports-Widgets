@@ -400,7 +400,7 @@
         function fetchWeather() {
             const apiKey = '9102519a20d8f93f280d7c0d6eb7ba5b'; // Replace with your actual API key
             const city = '4366001'; // Replace with your desired city
-            $.getJSON(`https://api.openweathermap.org/data/2.5/weather?id=4366001&appid=9102519a20d8f93f280d7c0d6eb7ba5b&units=metric`, function(data) {
+            $.getJSON(`https://api.openweathermap.org/data/2.5/weather?id=4366001&appid=9102519a20d8f93f280d7c0d6eb7ba5b&units=imperial`, function(data) {
                 const weatherDescription = data.weather[0].description;
                 const temperature = data.main.temp;
                 document.getElementById("weather").textContent = `${temperature}°C, ${weatherDescription}`;
