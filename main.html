@@ -11,7 +11,7 @@
             background-color: #f0f4f8;
             margin: 0;
             padding: 0;
-            overflow: auto; /* Allow scrolling */
+            overflow: auto;
         }
         .button {
             background-color: #007bff;
@@ -141,7 +141,6 @@
                 opacity: 1;
             }
         }
-
         .snow {
             position: absolute;
             top: 0;
@@ -165,7 +164,6 @@
                 transform: translateY(100vh);
             }
         }
-        /* Mobile Specific Styles */
         @media (max-width: 600px) {
             h1 {
                 font-size: 2em;
@@ -209,7 +207,7 @@
 <body>
     <div class="snow" id="snow-container"></div>
     <div class="loading">
-        <img class="basketball" src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Basketball_icon.svg/1200px-Basketball_icon.svg.png" alt="Spinning Basketball" />
+        <img class="basketball" src="https://png.pngtree.com/png-vector/20230131/ourmid/pngtree-basketball-png-image_6578466.png" alt="Spinning Basketball" />
     </div>
 
     <div class="scoreboard fade-in" id="scoreboard">
@@ -399,6 +397,18 @@
             });
         }
 
+        function fetchWeather() {
+            const apiKey = '9102519a20d8f93f280d7c0d6eb7ba5b'; // Replace with your actual API key
+            const city = '4366001'; // Replace with your desired city
+            $.getJSON(`https://api.openweathermap.org/data/2.5/weather?id=4366001&appid=9102519a20d8f93f280d7c0d6eb7ba5b&units=metric`, function(data) {
+                const weatherDescription = data.weather[0].description;
+                const temperature = data.main.temp;
+                document.getElementById("weather").textContent = `${temperature}°C, ${weatherDescription}`;
+            }).fail(function() {
+                document.getElementById("weather").textContent = "Weather data unavailable";
+            });
+        }
+
         function promptForPassword() {
             const password = prompt("Enter the password to view admin stats:");
             if (password === "1234") {
@@ -428,6 +438,7 @@
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
+        fetchWeather(); // Fetch weather data on load
 
         function createSnowflakes() {
             const snowContainer = document.getElementById('snow-container');
@@ -443,7 +454,6 @@
                 snowContainer.appendChild(snowflake);
             }
         }
-        //------------------------------
         createSnowflakes();
     </script>
 </body>
