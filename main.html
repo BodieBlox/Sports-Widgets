@@ -141,6 +141,30 @@
                 opacity: 1;
             }
         }
+
+        .snow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+        .snowflake {
+            position: absolute;
+            top: -10px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: fall linear infinite;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
         /* Mobile Specific Styles */
         @media (max-width: 600px) {
             h1 {
@@ -403,6 +427,23 @@
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
+
+        function createSnowflakes() {
+            const snowContainer = document.getElementById('snow-container');
+            for (let i = 0; i < 100; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                const size = Math.random() * 10 + 5;
+                snowflake.style.width = `${size}px`;
+                snowflake.style.height = `${size}px`;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                snowflake.style.opacity = Math.random();
+                snowContainer.appendChild(snowflake);
+            }
+        }
+        //------------------------------
+        createSnowflakes();
     </script>
 </body>
 </html>
