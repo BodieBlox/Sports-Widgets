@@ -529,7 +529,7 @@
         });
 
         let loadingText = document.getElementById('loading-text');
-        let loadingSteps = ["Fetching game data...", "Connecting to database...", "Loading assets...", "Preparing scoreboard..."];
+        let loadingSteps = ["Fetching game data...", "Connecting to database...", "Loading assets...", "Preparing scoreboard...", "Done loading"];
         let stepIndex = 0;
         function updateLoadingText() {
             if (stepIndex < loadingSteps.length) {
@@ -541,7 +541,7 @@
                 document.getElementById('scoreboard').style.display = 'block';
             }
         }
-        let loadingInterval = setInterval(updateLoadingText, 2000);
+        let loadingInterval = setInterval(updateLoadingText, 500);
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
