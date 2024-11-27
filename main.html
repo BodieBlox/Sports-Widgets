@@ -528,6 +528,21 @@
             }
         });
 
+        let loadingText = document.getElementById('loading-text');
+        let loadingSteps = ["Fetching game data...", "Connecting to database...", "Loading assets...", "Preparing scoreboard..."];
+        let stepIndex = 0;
+        function updateLoadingText() {
+            if (stepIndex < loadingSteps.length) {
+                loadingText.textContent = loadingSteps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(loadingInterval);
+                document.querySelector('.loading').style.display = 'none';
+                document.getElementById('scoreboard').style.display = 'block';
+            }
+        }
+        let loadingInterval = setInterval(updateLoadingText, 2000);
+
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
