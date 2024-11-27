@@ -417,6 +417,8 @@
             });
         }
 
+        function animateScoreReveal(scoreElement) { const ball = $('<div class="basketball"></div>').css({ position: 'absolute', left: scoreElement.offset().left + scoreElement.width() / 2 - 30, top: scoreElement.offset().top - 100, zIndex: 10 }).appendTo('body'); ball.animate({ top: scoreElement.offset().top - 20 }, 500, function() { ball.animate({ top: scoreElement.offset().top }, 300, function() { ball.remove(); }); }); }
+
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
             if (scoreElement.text() != newScore) {
@@ -424,6 +426,7 @@
                 setTimeout(() => {
                     scoreElement.text(newScore);
                     scoreElement.fadeIn();
+                    speakScore(newScore);
                     animateScoreReveal(scoreElement);
                     playScoreChangeSound(newScore);
                 }, 1000);
@@ -431,25 +434,16 @@
             }
         }
 
-        function animateScoreReveal(scoreElement) {
-            const ball = $('<div class="basketball"></div>').css({
-                position: 'absolute',
-                left: scoreElement.offset().left + scoreElement.width() / 2 - 30,
-                top: scoreElement.offset().top - 100,
-                zIndex: 10
-            }).appendTo('body');
-
-            ball.animate({ top: scoreElement.offset().top - 20 }, 500, function() {
-                ball.animate({ top: scoreElement.offset().top }, 300, function() {
-                    ball.remove();
-                });
-            });
-        }
-
         function playScoreChangeSound(newScore) {
-            const audio = new Audio('score_change.mp3'); // Ensure you have a sound file named score_change.mp3
+            const audio = new Audio('score_change.mp3'); 
             audio.play();
         }
+
+        function speakScore(score) {
+    const utterance = new SpeechSynthesisUtterance(`The score is now ${score}`);
+    window.speechSynthesis.speak(utterance);
+}
+
 
         function calculatePing() {
             const startTime = new Date().getTime();
@@ -474,19 +468,19 @@
         }
 
         function fetchWeather() {
-            const apiKey = '9102519a20d8f93f280d7c0d6eb7ba5b'; // Replace with your actual API key
-            const city = '4366001'; // Replace with your desired city
+            const apiKey = '9102519a20d8f93f280d7c0d6eb7ba5b'; 
+            const city = '4366001'; 
             $.getJSON(`https://api.openweathermap.org/data/2.5/weather?id=${city}&appid=${apiKey}&units=imperial`, function(data) {
                 const weatherDescription = data.weather[0].description;
                 const temperature = data.main.temp;
                 document.getElementById("weather").textContent = `${temperature}°F, ${weatherDescription}`;
             }).fail(function() {
-                document.getElementById("weather").textContent = "Weather data unavailable";
+                document.getElementById("weather").textContent = "Weather unavailable";
             });
         }
 
         function promptForPassword() {
-            const password = prompt("Enter the password to view admin stats:");
+            const password = prompt("password");
             if (password === "1234") {
                 showAdminStats();
             } else {
@@ -538,7 +532,7 @@
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
-        fetchWeather(); // Fetch weather data on load
+        fetchWeather(); 
 
         function createSnowflakes() {
             const snowContainer = document.getElementById('snow-container');
