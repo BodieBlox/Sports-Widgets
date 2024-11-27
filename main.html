@@ -410,6 +410,7 @@
                     scoreElement.text(newScore);
                     scoreElement.fadeIn();
                     animateScoreReveal(scoreElement);
+                    playScoreChangeSound(newScore);
                 }, 1000);
             }
         }
@@ -427,6 +428,11 @@
                     ball.remove();
                 });
             });
+        }
+
+        function playScoreChangeSound(newScore) {
+            const audio = new Audio('score_change.mp3'); // Ensure you have a sound file named score_change.mp3
+            audio.play();
         }
 
         function calculatePing() {
