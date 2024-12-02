@@ -8,7 +8,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #e9ecef;
+            background-color: #f0f4f8;
             margin: 0;
             padding: 0;
             overflow: auto;
@@ -45,7 +45,7 @@
         }
         h1 {
             color: #333;
-            font-size: 2.8em;
+            font-size: 2.5em;
             margin-bottom: 10px;
         }
         .playoffs {
@@ -495,7 +495,7 @@
                 document.body.style.backgroundColor = '#f0e68c';
                 document.body.style.color = '#333';
             } else {
-                document.body.style.backgroundColor = '#e9ecef';
+                document.body.style.backgroundColor = '#f0f4f8';
                 document.body.style.color = '#333';
             }
         }
@@ -510,6 +510,21 @@
                 }
             }
         });
+
+        let loadingText = document.getElementById('loading-text');
+        let loadingSteps = ["Fetching game data...", "Connecting to database...", "Loading assets...", "Preparing scoreboard...", "Done loading"];
+        let stepIndex = 0;
+        function updateLoadingText() {
+            if (stepIndex < loadingSteps.length) {
+                loadingText.textContent = loadingSteps[stepIndex];
+                stepIndex++;
+            } else {
+                clearInterval(loadingInterval);
+                document.querySelector('.loading').style.display = 'none';
+                document.getElementById('scoreboard').style.display = 'block';
+            }
+        }
+        let loadingInterval = setInterval(updateLoadingText, 350);
 
         setTimeout(showScoreboard, 2000);
         setInterval(displayTime, 1000);
