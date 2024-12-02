@@ -32,7 +32,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
         }
         .scoreboard, .error-screen {
-            padding: 40px;
+            padding: 60px; /* Increased padding for more space */
             border: 2px solid #007bff;
             border-radius: 12px;
             background-color: #ffffff;
@@ -236,22 +236,31 @@
                 transform: rotate(360deg);
             }
         }
-        /* New styles for team logos */
-        .team-logo {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-        }
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background-color: #28a745;
-            color: white;
-            padding: 10px 20px;
-            border-radius: 5px;
+        /* New styles for settings popup */
+        .settings-popup {
             display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border: 2px solid #007bff;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
+            animation: fadeIn 0.5s;
+            max-width: 400px;
+            text-align: left;
+        }
+        .settings-popup h3 {
+            margin: 0;
+            font-size: 1.8em;
+            color: #007bff;
+        }
+        .settings-popup label {
+            display: block;
+            margin: 10px 0;
         }
     </style>
 </head>
@@ -269,18 +278,12 @@
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
         <div>
-            <h2>
-                <img src="home_team_logo.png" alt="Home Team Logo" class="team-logo" id="home-logo">
-                Home Team
-            </h2>
+            <h2>Home Team</h2>
             <p class="score">Score: <strong id="home-score">Connecting to database</strong></p>
         </div>
         
         <div>
-            <h2>
-                <img src="away_team_logo.png" alt="Away Team Logo" class="team-logo" id="away-logo">
-                Away Team
-            </h2>
+            <h2>Away Team</h2>
             <p class="score">Score: <strong id="away-score">Connecting to database</strong></p>
         </div>
         
@@ -340,7 +343,7 @@
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
-    <div class="settings-popup" id="settings-popup" style="display: none;">
+    <div class="settings-popup" id="settings-popup">
         <h3>Settings</h3>
         <label>
             <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()"> Enable Dark Mode
