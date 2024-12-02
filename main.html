@@ -91,9 +91,16 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             animation: fadeIn 0.5s;
+            max-width: 500px;
+            text-align: left;
         }
         .admin-stats h3 {
             margin: 0;
+            font-size: 1.8em;
+            color: #007bff;
+        }
+        .admin-stats p {
+            margin: 5px 0;
         }
         .close-button {
             background-color: #dc3545;
@@ -229,6 +236,23 @@
                 transform: rotate(360deg);
             }
         }
+        /* New styles for team logos */
+        .team-logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
@@ -238,17 +262,25 @@
         <div class="loading-text" id="loading-text">Fetching game data, please wait...</div>
     </div>
 
+    <div class="notification" id="score-notification">Score Updated!</div>
+
     <div class="scoreboard fade-in" id="scoreboard">
         <h1>Scoreboard - <span id="title">Game Title</span></h1>
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
         <div>
-            <h2>Home Team</h2>
+            <h2>
+                <img src="home_team_logo.png" alt="Home Team Logo" class="team-logo" id="home-logo">
+                Home Team
+            </h2>
             <p class="score">Score: <strong id="home-score">Connecting to database</strong></p>
         </div>
         
         <div>
-            <h2>Away Team</h2>
+            <h2>
+                <img src="away_team_logo.png" alt="Away Team Logo" class="team-logo" id="away-logo">
+                Away Team
+            </h2>
             <p class="score">Score: <strong id="away-score">Connecting to database</strong></p>
         </div>
         
@@ -302,9 +334,10 @@
         <p>Device Name: <strong><span id="device-name"></span></strong></p>
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
+        <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
         <button class="button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
+        <button class="button" onclick="testNotification();">Test Notification</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
-        <button class="close-button" onclick="testScoreboard()">Test Scoreboard</button>
     </div>
 
     <div class="settings-popup" id="settings-popup" style="display: none;">
@@ -355,9 +388,11 @@
             document.getElementById("device-name").textContent = navigator.platform;
             document.getElementById("browser-version").textContent = navigator.appVersion;
             document.getElementById("ip-address").textContent = "Fetching...";
+            document.getElementById("weather-admin").textContent = "Fetching...";
             document.getElementById("admin-stats").style.display = 'block';
             calculatePing();
             fetchIP();
+            fetchWeather();
         }
 
         function closeAdminStats() {
@@ -391,7 +426,8 @@
                         if (Array.isArray(data.goalLogs)) {
                             data.goalLogs.forEach(function(log) {
                                 if (!existingGoalLogs.has(log)) {
-                                    $('#goal-logs').append('<li class="slide-in">' + log + '</li>');
+                                    const timestamp = new Date().toLocaleTimeString();
+                                    $('#goal-logs').append('<li class="slide-in">' + timestamp + ': ' + log + '</li>');
                                     existingGoalLogs.add(log);
                                 }
                             });
@@ -423,9 +459,18 @@
                 setTimeout(() => {
                     scoreElement.text(newScore);
                     scoreElement.fadeIn();
+                    showScoreNotification();
                 }, 1000);
                 scoreElement.css('color', newScore > (scoreId === '#home-score' ? scoreh : scorea) ? 'green' : 'red');
             }
+        }
+
+        function showScoreNotification() {
+            const notification = document.getElementById("score-notification");
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
         }
 
         function calculatePing() {
@@ -456,10 +501,14 @@
             $.getJSON(`https://api.openweathermap.org/data/2.5/weather?id=${city}&appid=${apiKey}&units=imperial`, function(data) {
                 const weatherDescription = data.weather[0].description;
                 const temperature = data.main.temp;
-                document.getElementById("weather").textContent = `${temperature}°F, ${weatherDescription}`;
+                document.getElementById("weather-admin").textContent = `${temperature}°F, ${weatherDescription}`;
             }).fail(function() {
-                document.getElementById("weather").textContent = "Weather unavailable";
+                document.getElementById("weather-admin").textContent = "Weather unavailable";
             });
+        }
+
+        function testNotification() {
+            alert("This is a test notification!");
         }
 
         function promptForPassword() {
