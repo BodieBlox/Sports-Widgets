@@ -43,6 +43,7 @@
         .scoreboard, .error-screen {
             padding: 40px; /* Adjusted padding for a cleaner look */
             border-radius: 12px;
+            border: 2px solid #007bff; /* Added border */
             background-color: rgba(255, 255, 255, 0.9);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             max-width: 600px;
@@ -187,7 +188,6 @@
         }
         .snowflake {
             position: absolute;
-            top: -10px;
             background: white;
             border-radius: 50%;
             opacity: 0.8;
@@ -376,6 +376,7 @@
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
+        <h3>Site Version: <span id="site-version">1.0.0</span></h3> <!-- Added site version -->
 
         <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
@@ -398,6 +399,7 @@
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
+        <p>Site Version: <strong><span id="site-version">1.0.0</span></strong></p> <!-- Added site version -->
         <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
         <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
@@ -661,6 +663,7 @@
                 snowflake.style.width = `${size}px`;
                 snowflake.style.height = `${size}px`;
                 snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.top = `${Math.random() * -50}px`; // Start from random position above the screen
                 snowflake.style.animationDuration = `${Math.random() * 3 + 2}s`;
                 snowflake.style.opacity = Math.random();
                 snowflake.style.borderRadius = Math.random() > 0.5 ? '50%' : '0'; // Random shapes
