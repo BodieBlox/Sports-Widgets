@@ -4,15 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Game Scoreboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
-            background-color: #f0f4f8;
             margin: 0;
             padding: 0;
             overflow: auto;
             transition: background-color 0.3s, color 0.3s;
+            position: relative;
+            background: linear-gradient(135deg, #f0f4f8, #e0e7ff);
+            animation: backgroundAnimation 10s ease infinite;
+        }
+        @keyframes backgroundAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
         .button {
             background: linear-gradient(90deg, #007bff, #28a745);
@@ -339,10 +347,10 @@
             <span style="font-size: 22px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
             <hr />
             <br>
-            <button class="button" onclick="location.reload();">Refresh</button>
-            <button class="button admin-button" onclick="promptForPassword()">View Admin Stats</button>
-            <button class="button" onclick="toggleDarkMode()">Toggle Dark Mode</button>
-            <button class="button" onclick="openSettings()">Settings</button>
+            <button class="button" onclick="location.reload();"><i class="fas fa-sync-alt"></i> Refresh</button>
+            <button class="button admin-button" onclick="promptForPassword()"><i class="fas fa-user-shield"></i> View Admin Stats</button>
+            <button class="button" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
+            <button class="button" onclick="openSettings()"><i class="fas fa-cog"></i> Settings</button>
         </div>
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
@@ -369,8 +377,8 @@
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
-        <button class="button" onclick="openFirebaseDatabase();">Open Firebase Database</button>
-        <button class="button" onclick="testNotification();">Test Notification</button>
+        <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
+        <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
