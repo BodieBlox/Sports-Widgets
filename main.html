@@ -146,6 +146,10 @@
         }
         .spinner {
             width: 120px;
+            height: 120px;
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
+            border-radius: 50%;
             animation: spin 2s linear infinite;
         }
         .loading-text {
@@ -259,6 +263,91 @@
         .high-contrast .button:hover {
             background-color: #ccc;
         }
+        /* Slider Styles */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .slider-label {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+        }
+        /* Custom Popup Styles */
+        .custom-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: fadeIn 0.5s;
+            max-width: 400px;
+            text-align: center;
+        }
+        .custom-popup h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #007bff;
+        }
+        .custom-popup input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .custom-popup .login-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .custom-popup .close-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
@@ -268,7 +357,7 @@
         <div class="loading-text" id="loading-text">Fetching game data, please wait...</div>
     </div>
 
-    <div class="notification" id="score-notification">Score Updated!</div>
+    <div class="notification" id="score-notification" style="display: none;">Score Updated!</div>
 
     <div class="scoreboard fade-in" id="scoreboard">
         <h1>Scoreboard - <span id="title">Game Title</span></h1>
@@ -306,12 +395,11 @@
         
         <div class="footer">
             <img style="width: 120px;" src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" />
-            <br>
-            <span style="font-size: 22px; color: #333; margin-left: 10px;">WCHS Athletic Department</span>
+            <span style="font-size: 22px; color: #333; margin-left: 10px;">WCHS Athletics 2024</span>
             <hr />
             <br>
             <button class="button" onclick="location.reload();"><i class="fas fa-sync-alt"></i> Refresh</button>
-            <button class="button admin-button" onclick="promptForPassword()"><i class="fas fa-user-shield"></i> View Admin Stats</button>
+            <button class="button admin-button" onclick="openLoginPopup()"><i class="fas fa-user-shield"></i> View Admin Stats</button>
             <button class="button" onclick="toggleDarkMode()"><i class="fas fa-moon"></i> Toggle Dark Mode</button>
             <button class="button" onclick="openSettings()"><i class="fas fa-cog"></i> Settings</button>
         </div>
@@ -350,12 +438,14 @@
 
     <div class="settings-popup" id="settings-popup">
         <h3>Settings</h3>
-        <label>
-            <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()"> Enable Dark Mode
-        </label>
-        <label>
-            <input type="checkbox" id="high-contrast-toggle" onchange="toggleHighContrast()"> Enable High Contrast
-        </label>
+        <div class="slider-container">
+            <label class="slider-label">Enable Dark Mode</label>
+            <input type="checkbox" id="dark-mode-toggle" class="slider" onchange="toggleDarkMode()">
+        </div>
+        <div class="slider-container">
+            <label class="slider-label">Enable High Contrast</label>
+            <input type="checkbox" id="high-contrast-toggle" class="slider" onchange="toggleHighContrast()">
+        </div>
         <label>
             Font Size:
             <select id="font-size-select" onchange="changeFontSize()">
@@ -374,6 +464,13 @@
             </select>
         </label>
         <button class="close-button" onclick="closeSettings()">Close</button>
+    </div>
+
+    <div class="custom-popup" id="login-popup">
+        <h3>Admin Login</h3>
+        <input type="password" id="admin-password" placeholder="Enter Password" />
+        <button class="login-button" onclick="checkAdminPassword()">Login</button>
+        <button class="close-button" onclick="closeLoginPopup()">Close</button>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -484,8 +581,13 @@
         function showScoreNotification() {
             const notification = document.getElementById("score-notification");
             notification.style.display = 'block';
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '1';
             setTimeout(() => {
-                notification.style.display = 'none';
+                notification.style.opacity = '0';
+                setTimeout(() => {
+                    notification.style.display = 'none';
+                }, 500);
             }, 3000);
         }
 
@@ -529,10 +631,19 @@
             alert("This is a test notification!");
         }
 
-        function promptForPassword() {
-            const password = prompt("password");
+        function openLoginPopup() {
+            document.getElementById("login-popup").style.display = 'block';
+        }
+
+        function closeLoginPopup() {
+            document.getElementById("login-popup").style.display = 'none';
+        }
+
+        function checkAdminPassword() {
+            const password = document.getElementById("admin-password").value;
             if (password === "1234") {
                 showAdminStats();
+                closeLoginPopup();
             } else {
                 alert("Incorrect password.");
             }
@@ -585,7 +696,7 @@
                 if (window.location !== window.parent.location) {
                     console.error('Admin Stats failed to open');
                 } else {
-                    promptForPassword();
+                    openLoginPopup();
                     console.log('Admin Stats Opened');
                 }
             }
