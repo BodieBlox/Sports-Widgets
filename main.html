@@ -294,6 +294,7 @@
             border-radius: 50%;
             background: #007bff;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         .slider::-moz-range-thumb {
             width: 25px;
@@ -301,6 +302,7 @@
             border-radius: 50%;
             background: #007bff;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
         /* Custom Popup Styles */
         .custom-popup {
@@ -395,7 +397,6 @@
         
         <div class="footer">
             <img style="width: 120px;" src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="WCHS Athletic Department" />
-            <span style="font-size: 22px; color: #333; margin-left: 10px;">WCHS Athletics 2024</span>
             <hr />
             <br>
             <button class="button" onclick="location.reload();"><i class="fas fa-sync-alt"></i> Refresh</button>
@@ -430,13 +431,14 @@
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
         <p>Site Version: <strong><span id="site-version">1.0.0</span></strong></p> <!-- Added site version -->
+        <p>&copy; WCHS Athletics 2024</p> <!-- Moved copyright here -->
         <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
         <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
         <button class="button" onclick="viewErrorScreen()">View Error Screen</button> <!-- Added button to view error screen -->
         <button class="close-button" onclick="closeAdminStats()">Close</button>
     </div>
 
-    <div class="settings-popup" id="settings-popup">
+    <div class="settings-popup custom-popup" id="settings-popup">
         <h3>Settings</h3>
         <div class="slider-container">
             <label class="slider-label">Enable Dark Mode</label>
@@ -717,7 +719,10 @@
         }
         let loadingInterval = setInterval(updateLoadingText, 350);
 
-        setTimeout(showScoreboard, 2000);
+        setTimeout(() => {
+            document.querySelector('.loading').style.display = 'none'; // Hide loading on timeout
+            document.getElementById('scoreboard').style.display = 'block'; // Show scoreboard
+        }, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
         displayTime();
