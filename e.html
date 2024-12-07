@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,46 +8,49 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
     <script>
         // Your web app's Firebase configuration
-         const firebaseConfig = {
-    apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
-    authDomain: "test-71ecd.firebaseapp.com",
-    databaseURL: "https://test-71ecd-default-rtdb.firebaseio.com",
-    projectId: "test-71ecd",
-    storageBucket: "test-71ecd.firebasestorage.app",
-    messagingSenderId: "426214403781",
-    appId: "1:426214403781:web:4af409ec8186bd821d4aac",
-    measurementId: "G-C7VBNTXM8R"
-  };
+        const firebaseConfig = {
+            apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
+            authDomain: "test-71ecd.firebaseapp.com",
+            databaseURL: "https://test-71ecd-default-rtdb.firebaseio.com",
+            projectId: "test-71ecd",
+            storageBucket: "test-71ecd.firebasestorage.app",
+            messagingSenderId: "426214403781",
+            appId: "1:426214403781:web:4af409ec8186bd821d4aac",
+            measurementId: "G-C7VBNTXM8R"
+        };
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function addValue() {
-            const ref = database.ref('homeScore');
-            ref.transaction(currentValue => (currentValue || 0) + 1);
+        function updateScore(refPath, operation) {
+            const ref = database.ref(refPath);
+            ref.transaction(currentValue => {
+                return operation === 'add' ? (currentValue || 0) + 1 : (currentValue || 0) - 1;
+            });
         }
 
-          function addValue2() {
-            const ref = database.ref('awayScore');
-            ref.transaction(currentValue => (currentValue || 0) + 1);
+        function addValue() {
+            updateScore('homeScore', 'add');
+        }
+
+        function addValue2() {
+            updateScore('awayScore', 'add');
         }
 
         function removeValue() {
-            const ref = database.ref('homeScore');
-            ref.transaction(currentValue => (currentValue || 0) - 1);
+            updateScore('homeScore', 'remove');
         }
 
         function removeValue2() {
-            const ref = database.ref('awayScore');
-            ref.transaction(currentValue => (currentValue || 0) - 1);
+            updateScore('awayScore', 'remove');
         }
     </script>
 </head>
 <body>
-    <button onclick="addValue()">Add 1Home</button>
-    <button onclick="addValue2()">Add 1Away</button>
-    <button onclick="removeValue()">Remove 1Home</button>
-    <button onclick="removeValue2()">Remove 1Away</button>
+    <button onclick="addValue()">Add 1 Home</button>
+    <button onclick="addValue2()">Add 1 Away</button>
+    <button onclick="removeValue()">Remove 1 Home</button>
+    <button onclick="removeValue2()">Remove 1 Away</button>
 </body>
 </html>
