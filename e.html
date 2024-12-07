@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Firebase Button Example</title>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js"></script>
+        <script src="    https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
+
+    
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -23,27 +26,25 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        function updateScore(refPath, operation) {
+        function updateScore(refPath, increment) {
             const ref = database.ref(refPath);
-            ref.transaction(currentValue => {
-                return operation === 'add' ? (currentValue || 0) + 1 : (currentValue || 0) - 1;
-            });
+            ref.transaction(currentValue => (currentValue || 0) + increment);
         }
 
         function addValue() {
-            updateScore('homeScore', 'add');
+            updateScore('homeScore', 1);
         }
 
         function addValue2() {
-            updateScore('awayScore', 'add');
+            updateScore('awayScore', 1);
         }
 
         function removeValue() {
-            updateScore('homeScore', 'remove');
+            updateScore('homeScore', -1);
         }
 
         function removeValue2() {
-            updateScore('awayScore', 'remove');
+            updateScore('awayScore', -1);
         }
     </script>
 </head>
