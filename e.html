@@ -6,10 +6,15 @@
     <title>Firebase Button Example</title>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
-            <script src="    https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"></script>
+</head>
+<body>
+    <button onclick="addValue()">Add 1 Home</button>
+    <button onclick="addValue2()">Add 1 Away</button>
+    <button onclick="removeValue()">Remove 1 Home</button>
+    <button onclick="removeValue2()">Remove 1 Away</button>
 
-    
     <script>
         // Your web app's Firebase configuration
         const firebaseConfig = {
@@ -24,35 +29,35 @@
         };
 
         // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
+        firebase.initializeApp(firebaseConfig)
+            .then(() => {
+                // Your code that uses firebase goes here
+                const database = firebase.database();
 
-        function updateScore(refPath, increment) {
-            const ref = database.ref(refPath);
-            ref.transaction(currentValue => (currentValue || 0) + increment);
-        }
+                function updateScore(refPath, increment) {
+                    const ref = database.ref(refPath);
+                    ref.transaction(currentValue => (currentValue || 0) + increment);
+                }
 
-        function addValue() {
-            updateScore('homeScore', 1);
-        }
+                function addValue() {
+                    updateScore('homeScore', 1);
+                }
 
-        function addValue2() {
-            updateScore('awayScore', 1);
-        }
+                function addValue2() {
+                    updateScore('awayScore', 1);
+                }
 
-        function removeValue() {
-            updateScore('homeScore', -1);
-        }
+                function removeValue() {
+                    updateScore('homeScore', -1);
+                }
 
-        function removeValue2() {
-            updateScore('awayScore', -1);
-        }
+                function removeValue2() {
+                    updateScore('awayScore', -1);
+                }
+            })
+            .catch((error) => {
+                console.error("Firebase initialization error:", error);
+            });
     </script>
-</head>
-<body>
-    <button onclick="addValue()">Add 1 Home</button>
-    <button onclick="addValue2()">Add 1 Away</button>
-    <button onclick="removeValue()">Remove 1 Home</button>
-    <button onclick="removeValue2()">Remove 1 Away</button>
 </body>
 </html>
