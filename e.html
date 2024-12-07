@@ -9,35 +9,46 @@
     <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-database.js"></script>
     <script>
         // Your web app's Firebase configuration
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
+         const firebaseConfig = {
+    apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
+    authDomain: "test-71ecd.firebaseapp.com",
+    databaseURL: "https://test-71ecd-default-rtdb.firebaseio.com",
+    projectId: "test-71ecd",
+    storageBucket: "test-71ecd.firebasestorage.app",
+    messagingSenderId: "426214403781",
+    appId: "1:426214403781:web:4af409ec8186bd821d4aac",
+    measurementId: "G-C7VBNTXM8R"
+  };
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
         function addValue() {
-            const ref = database.ref('value');
+            const ref = database.ref('homeScore');
+            ref.transaction(currentValue => (currentValue || 0) + 1);
+        }
+
+          function addValue2() {
+            const ref = database.ref('awayScore');
             ref.transaction(currentValue => (currentValue || 0) + 1);
         }
 
         function removeValue() {
-            const ref = database.ref('value');
+            const ref = database.ref('homeScore');
+            ref.transaction(currentValue => (currentValue || 0) - 1);
+        }
+
+        function removeValue2() {
+            const ref = database.ref('awayScore');
             ref.transaction(currentValue => (currentValue || 0) - 1);
         }
     </script>
 </head>
 <body>
-    <button onclick="addValue()">Add 1</button>
-    <button onclick="addValue()">Add 1</button>
-    <button onclick="removeValue()">Remove 1</button>
-    <button onclick="removeValue()">Remove 1</button>
+    <button onclick="addValue()">Add 1Home</button>
+    <button onclick="addValue2()">Add 1Away</button>
+    <button onclick="removeValue()">Remove 1Home</button>
+    <button onclick="removeValue2()">Remove 1Away</button>
 </body>
 </html>
