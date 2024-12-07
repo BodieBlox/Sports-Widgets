@@ -34,11 +34,13 @@
                 // Your code that uses firebase goes here
                 const database = firebase.database();
 
+                // Define the updateScore function outside the callback
                 function updateScore(refPath, increment) {
                     const ref = database.ref(refPath);
                     ref.transaction(currentValue => (currentValue || 0) + increment);
                 }
 
+                // Now the button functions can access updateScore
                 function addValue() {
                     updateScore('homeScore', 1);
                 }
@@ -58,6 +60,39 @@
             .catch((error) => {
                 console.error("Firebase initialization error:", error);
             });
+
+        // Make sure the button functions are defined globally
+        function addValue() {
+            // This function will be called when the button is clicked
+            // It will update the 'homeScore' in your Realtime Database
+            updateScore('homeScore', 1);
+        }
+
+        function addValue2() {
+            // This function will be called when the button is clicked
+            // It will update the 'awayScore' in your Realtime Database
+            updateScore('awayScore', 1);
+        }
+
+        function removeValue() {
+            // This function will be called when the button is clicked
+            // It will decrease the 'homeScore' in your Realtime Database
+            updateScore('homeScore', -1);
+        }
+
+        function removeValue2() {
+            // This function will be called when the button is clicked
+            // It will decrease the 'awayScore' in your Realtime Database
+            updateScore('awayScore', -1);
+        }
+
+        // Define the updateScore function globally
+        function updateScore(refPath, increment) {
+            // This function will be called by the button functions
+            // It will update the score in your Realtime Database
+            const ref = database.ref(refPath);
+            ref.transaction(currentValue => (currentValue || 0) + increment);
+        }
     </script>
 </body>
 </html>
