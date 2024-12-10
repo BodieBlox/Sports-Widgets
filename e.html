@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scoreboard</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <style>
@@ -95,34 +96,61 @@
         const app = firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Function to update score
+        // Function to update score using AJAX
         function updateScore(team, points) {
-            const scoreRef = database.ref(); // Reference to the root of the database
-            scoreRef.once('value').then((snapshot) => {
-                let homeScore = snapshot.val().homeScore || 0;
-                let awayScore = snapshot.val().awayScore || 0;
+            // Get current scores
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'GET',
+                success: function(data) {
+                    let homeScore = data.homeScore || 0;
+                    let awayScore = data.awayScore || 0;
 
-                if (team === 'home') {
-                    homeScore += points;
-                    scoreRef.update({ homeScore: homeScore });
-                } else {
-                    awayScore += points;
-                    scoreRef.update({ awayScore: awayScore });
+                    // Update scores based on team
+                    if (team === 'home') {
+                        homeScore += points;
+                        sendScoreUpdate({ homeScore: homeScore });
+                    } else {
+                        awayScore += points;
+                        sendScoreUpdate({ awayScore: awayScore });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    logError("Error retrieving scores: " + error);
                 }
-            }).catch((error) => {
-                logError(error.message);
             });
         }
 
-        // Function to listen for score updates
-        function listenForScoreUpdates() {
-            const scoreRef = database.ref(); // Reference to the root of the database
-            scoreRef.on('value', (snapshot) => {
-                const scores = snapshot.val();
-                document.getElementById('home-score').textContent = scores.homeScore || 0;
-                document.getElementById('away-score').textContent = scores.awayScore || 0;
-            }, (error) => {
-                logError(error.message);
+        // Function to send score update to Firebase
+        function sendScoreUpdate(scoreData) {
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify(scoreData),
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Score updated successfully");
+                    // Update the displayed scores
+                    updateDisplayedScores();
+                },
+                error: function(xhr, status, error) {
+                    logError("Error updating score: " + error);
+                }
+            });
+        }
+
+        // Function to update displayed scores
+        function updateDisplayedScores() {
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'GET',
+                success: function(data) {
+                    document.getElementById('home-score').textContent = data.homeScore || 0;
+                    document.getElementById('away-score').textContent = data.awayScore || 0;
+                },
+                error: function(xhr, status, error) {
+                    logError("Error retrieving scores: " + error);
+                }
             });
         }
 
@@ -132,52 +160,8 @@
             errorLog.textContent += message + '\n';
         }
 
-        // Key bindings for adding/removing points
-        document.addEventListener('keydown', (event) => {
-            switch (event.key) {
-                case '1':
-                    updateScore('home', 1);
-                    break;
-                case '2':
-                    updateScore('home', 2);
-                    break;
-                case '3':
-                    updateScore('home', 3);
-                    break;
-                case '4':
-                    updateScore('home', -1);
-                    break;
-                case '5':
-                    updateScore('home', -2);
-                    break;
-                case '6':
-                    updateScore('home', -3);
-                    break;
-                case '7':
-                    updateScore('away', 1);
-                    break;
-                case '8':
-                    updateScore('away', 2);
-                    break;
-                case '9':
-                    updateScore('away', 3);
-                    break;
-                case '0':
-                    updateScore('away', -1);
-                    break;
-                case '-':
-                    updateScore('away', -2);
-                    break;
-                case '=':
-                    updateScore('away', -3);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        // Start listening for score updates
-        listenForScoreUpdates();
+        // Start by displaying the initial scores
+        updateDisplayedScores();
     </script>
 </body>
 </html>
