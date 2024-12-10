@@ -205,21 +205,6 @@
                     break;
             }
         });
-
-        // Function to handle login
-        function handleLogin() {
-            const password = prompt("Enter password:");
-            if (password === '1234') {
-                document.getElementById('scoreboard').style.display = 'block';
-                updateDisplayedScores();
-            } else {
-                alert("Incorrect password. Closing tab.");
-                window.close();
-            }
-        }
-
-        // Show login prompt on page load
-        handleLogin();
     </script>
 </body>
 </html>
