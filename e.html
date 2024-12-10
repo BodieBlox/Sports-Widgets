@@ -3,20 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Firebase Button Example</title>
-    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-firestore.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js"></script>
+    <title>Scoreboard</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+        .scoreboard {
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        h1 {
+            color: #2196F3;
+        }
+        .score {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 5px;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+    </style>
 </head>
 <body>
-    <button onclick="addValue()">Add 1 Home</button>
-    <button onclick="addValue2()">Add 1 Away</button>
-    <button onclick="removeValue()">Remove 1 Home</button>
-    <button onclick="removeValue2()">Remove 1 Away</button>
+
+    <div class="scoreboard">
+        <h1>Scoreboard</h1>
+        <div>
+            <h2>Home Team</h2>
+            <p class="score" id="home-score">0</p>
+            <button class="button" onclick="updateScore('home', 1)">+1</button>
+            <button class="button" onclick="updateScore('home', 2)">+2</button>
+            <button class="button" onclick="updateScore('home', 3)">+3</button>
+            <button class="button" onclick="updateScore('home', -1)">-1</button>
+            <button class="button" onclick="updateScore('home', -2)">-2</button>
+            <button class="button" onclick="updateScore('home', -3)">-3</button>
+        </div>
+        <div>
+            <h2>Away Team</h2>
+            <p class="score" id="away-score">0</p>
+            <button class="button" onclick="updateScore('away', 1)">+1</button>
+            <button class="button" onclick="updateScore('away', 2)">+2</button>
+            <button class="button" onclick="updateScore('away', 3)">+3</button>
+            <button class="button" onclick="updateScore('away', -1)">-1</button>
+            <button class="button" onclick="updateScore('away', -2)">-2</button>
+            <button class="button" onclick="updateScore('away', -3)">-3</button>
+        </div>
+    </div>
 
     <script>
-        // Your web app's Firebase configuration
+        // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
             authDomain: "test-71ecd.firebaseapp.com",
@@ -29,70 +85,38 @@
         };
 
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig)
-            .then(() => {
-                // Your code that uses firebase goes here
-                const database = firebase.database();
+        const app = firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
-                // Define the updateScore function outside the callback
-                function updateScore(refPath, increment) {
-                    const ref = database.ref(refPath);
-                    ref.transaction(currentValue => (currentValue || 0) + increment);
-                }
+        // Function to update score
+        function updateScore(team, points) {
+            const scoreRef = database.ref(); // Reference to the root of the database
+            scoreRef.once('value').then((snapshot) => {
+                let homeScore = snapshot.val().homeScore || 0;
+                let awayScore = snapshot.val().awayScore || 0;
 
-                // Now the button functions can access updateScore
-                function addValue() {
-                    updateScore('homeScore', 1);
+                if (team === 'home') {
+                    homeScore += points;
+                    scoreRef.update({ homeScore: homeScore });
+                } else {
+                    awayScore += points;
+                    scoreRef.update({ awayScore: awayScore });
                 }
-
-                function addValue2() {
-                    updateScore('awayScore', 1);
-                }
-
-                function removeValue() {
-                    updateScore('homeScore', -1);
-                }
-
-                function removeValue2() {
-                    updateScore('awayScore', -1);
-                }
-            })
-            .catch((error) => {
-                console.error("Firebase initialization error:", error);
             });
-
-        // Make sure the button functions are defined globally
-        function addValue() {
-            // This function will be called when the button is clicked
-            // It will update the 'homeScore' in your Realtime Database
-            updateScore('homeScore', 1);
         }
 
-        function addValue2() {
-            // This function will be called when the button is clicked
-            // It will update the 'awayScore' in your Realtime Database
-            updateScore('awayScore', 1);
+        // Function to listen for score updates
+        function listenForScoreUpdates() {
+            const scoreRef = database.ref(); // Reference to the root of the database
+            scoreRef.on('value', (snapshot) => {
+                const scores = snapshot.val();
+                document.getElementById('home-score').textContent = scores.homeScore || 0;
+                document.getElementById('away-score').textContent = scores.awayScore || 0;
+            });
         }
 
-        function removeValue() {
-            // This function will be called when the button is clicked
-            // It will decrease the 'homeScore' in your Realtime Database
-            updateScore('homeScore', -1);
-        }
-
-        function removeValue2() {
-            // This function will be called when the button is clicked
-            // It will decrease the 'awayScore' in your Realtime Database
-            updateScore('awayScore', -1);
-        }
-
-        // Define the updateScore function globally
-        function updateScore(refPath, increment) {
-            // This function will be called by the button functions
-            // It will update the score in your Realtime Database
-            const ref = database.ref(refPath);
-            ref.transaction(currentValue => (currentValue || 0) + increment);
-        }
+        // Start listening for score updates
+        listenForScoreUpdates();
     </script>
 </body>
 </html>
