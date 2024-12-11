@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scoreboard</title>
+    <title>Scoreboard Admin Dashboard</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            text-align: center;
             margin: 0;
             padding: 20px;
             background-color: #f0f0f0;
         }
-        .scoreboard {
+        .container {
+            max-width: 800px;
+            margin: auto;
             background-color: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 400px;
-            margin: auto;
         }
         h1 {
             color: #2196F3;
+            text-align: center;
         }
         .score {
             font-size: 2em;
@@ -35,7 +36,7 @@
             color: white;
             border: none;
             border-radius: 8px;
-            padding: 10px 20px;
+            padding: 10px 15px;
             cursor: pointer;
             font-size: 1em;
             margin: 5px;
@@ -44,16 +45,9 @@
         .button:hover {
             background-color: #45a049;
         }
-        .error-log {
-            margin-top: 20px;
-            color: red;
-            font-weight: bold;
-            max-height: 100px;
-            overflow-y: auto;
-            background-color: #fff3f3;
-            border: 1px solid red;
-            padding: 10px;
-            border-radius: 5px;
+        .quarter-selector, .game-title {
+            margin: 20px 0;
+            text-align: center;
         }
         .enter-score-popup {
             display: none;
@@ -79,35 +73,53 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
-        .quarter-selector {
-            margin: 20px 0;
-        }
         .connection-status {
             margin-top: 20px;
             font-weight: bold;
+            text-align: center;
         }
         .stats {
             margin-top: 20px;
             font-size: 1.2em;
+            text-align: center;
+        }
+        .title-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
 
-    <div class="scoreboard" id="scoreboard">
-        <h1>Scoreboard</h1>
+    <div class="container">
+        <h1>Scoreboard Admin Dashboard</h1>
+        <div class="game-title">
+            <label for="game-title">Game Title:</label>
+            <input type="text" id="game-title" class="title-input" placeholder="Enter game title" oninput="updateGameTitle()">
+        </div>
         <div>
             <h2>Home Team</h2>
             <p class="score" id="home-score">0</p>
             <button class="button" onclick="updateScore('home', 1)">+1</button>
+            <button class="button" onclick="updateScore('home', 2)">+2</button>
+            <button class="button" onclick="updateScore('home', 3)">+3</button>
             <button class="button" onclick="updateScore('home', -1)">-1</button>
+            <button class="button" onclick="updateScore('home', -2)">-2</button>
+            <button class="button" onclick="updateScore('home', -3)">-3</button>
             <button class="button" onclick="openEnterScore('home')">Enter Score</button>
         </div>
         <div>
             <h2>Away Team</h2>
             <p class="score" id="away-score">0</p>
             <button class="button" onclick="updateScore('away', 1)">+1</button>
+            <button class="button" onclick="updateScore('away', 2)">+2</button>
+            <button class="button" onclick="updateScore('away', 3)">+3</button>
             <button class="button" onclick="updateScore('away', -1)">-1</button>
+            <button class="button" onclick="updateScore('away', -2)">-2</button>
+            <button class="button" onclick="updateScore('away', -3)">-3</button>
             <button class="button" onclick="openEnterScore('away')">Enter Score</button>
         </div>
         <div class="quarter-selector">
@@ -122,10 +134,8 @@
         <div class="stats">
             <p id="active-visitors">Active Visitors: 0</p>
         </div>
+        <div class="connection-status" id="connection-status">Connecting to database...</div>
     </div>
-
-    <div class="error-log" id="error-log"></div>
-    <div class="connection-status" id="connection-status">Connecting to database...</div>
 
     <div class="overlay" id="overlay"></div>
     <div class="enter-score-popup" id="enter-score-popup">
@@ -150,6 +160,7 @@
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
+        const analytics = firebase.analytics();
         const database = firebase.database();
 
         // Function to update score using AJAX
@@ -172,7 +183,7 @@
                     }
                 },
                 error: function(xhr, status, error) {
-                    logError("Error retrieving scores: " + error);
+                    console.error("Error retrieving scores: " + error);
                 }
             });
         }
@@ -190,7 +201,7 @@
                     updateDisplayedScores();
                 },
                 error: function(xhr, status, error) {
-                    logError("Error updating score: " + error);
+                    console.error("Error updating score: " + error);
                 }
             });
         }
@@ -205,16 +216,9 @@
                     document.getElementById('away-score').textContent = data.awayScore || 0;
                 },
                 error: function(xhr, status, error) {
-                    logError("Error retrieving scores: " + error);
+                    console.error("Error retrieving scores: " + error);
                 }
             });
-        }
-
-        // Function to log errors to the page
-        function logError(message) {
-            const errorLog = document.getElementById('error-log');
-            errorLog.textContent += message + '\n';
-            errorLog.scrollTop = errorLog.scrollHeight; // Auto-scroll to the bottom
         }
 
         // Function to open the enter score popup
@@ -255,7 +259,24 @@
                     console.log("Quarter updated successfully");
                 },
                 error: function(xhr, status, error) {
-                    logError("Error updating quarter: " + error);
+                    console.error("Error updating quarter: " + error);
+                }
+            });
+        }
+
+        // Function to update the game title
+        function updateGameTitle() {
+            const title = document.getElementById('game-title').value;
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify({ gameTitle: title }),
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Game title updated successfully");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error updating game title: " + error);
                 }
             });
         }
@@ -272,17 +293,16 @@
             });
         }
 
-        // Function to update active visitors
+        // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
-            // Mocking active visitors count
-            const activeVisitors = Math.floor(Math.random() * 100) + 1; // Random number between 1 and 100
-            document.getElementById('active-visitors').textContent = "Active Visitors: " + activeVisitors;
+            // This function will be called to track active visitors
+            analytics.logEvent('active_visitor', { timestamp: Date.now() });
         }
 
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
         checkConnection();
-        setInterval(updateActiveVisitors, 5000); // Update active visitors every 5 seconds
+        setInterval(updateActiveVisitors, 5000); // Track active visitors every 5 seconds
     </script>
 </body>
 </html>
