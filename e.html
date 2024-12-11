@@ -48,6 +48,12 @@
             margin-top: 20px;
             color: red;
             font-weight: bold;
+            max-height: 100px;
+            overflow-y: auto;
+            background-color: #fff3f3;
+            border: 1px solid red;
+            padding: 10px;
+            border-radius: 5px;
         }
         .enter-score-popup {
             display: none;
@@ -55,12 +61,13 @@
             left: 50%;
             top: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
-            backdrop-filter: blur(5px);
+            backdrop-filter: blur(10px);
+            width: 300px;
         }
         .overlay {
             display: none;
@@ -79,6 +86,10 @@
             margin-top: 20px;
             font-weight: bold;
         }
+        .stats {
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
     </style>
 </head>
 <body>
@@ -88,11 +99,15 @@
         <div>
             <h2>Home Team</h2>
             <p class="score" id="home-score">0</p>
+            <button class="button" onclick="updateScore('home', 1)">+1</button>
+            <button class="button" onclick="updateScore('home', -1)">-1</button>
             <button class="button" onclick="openEnterScore('home')">Enter Score</button>
         </div>
         <div>
             <h2>Away Team</h2>
             <p class="score" id="away-score">0</p>
+            <button class="button" onclick="updateScore('away', 1)">+1</button>
+            <button class="button" onclick="updateScore('away', -1)">-1</button>
             <button class="button" onclick="openEnterScore('away')">Enter Score</button>
         </div>
         <div class="quarter-selector">
@@ -103,6 +118,9 @@
                 <option value="3">3</option>
                 <option value="4">4</option>
             </select>
+        </div>
+        <div class="stats">
+            <p id="active-visitors">Active Visitors: 0</p>
         </div>
     </div>
 
@@ -196,6 +214,7 @@
         function logError(message) {
             const errorLog = document.getElementById('error-log');
             errorLog.textContent += message + '\n';
+            errorLog.scrollTop = errorLog.scrollHeight; // Auto-scroll to the bottom
         }
 
         // Function to open the enter score popup
@@ -253,9 +272,17 @@
             });
         }
 
+        // Function to update active visitors
+        function updateActiveVisitors() {
+            // Mocking active visitors count
+            const activeVisitors = Math.floor(Math.random() * 100) + 1; // Random number between 1 and 100
+            document.getElementById('active-visitors').textContent = "Active Visitors: " + activeVisitors;
+        }
+
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
         checkConnection();
+        setInterval(updateActiveVisitors, 5000); // Update active visitors every 5 seconds
     </script>
 </body>
 </html>
