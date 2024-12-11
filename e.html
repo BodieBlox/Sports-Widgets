@@ -4,27 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scoreboard Admin Dashboard</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
+            background-color: #f8f9fa;
         }
         .container {
-            max-width: 800px;
-            margin: auto;
+            margin-top: 20px;
             background-color: white;
             border-radius: 12px;
             padding: 20px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            color: #2196F3;
+            color: #007bff;
             text-align: center;
         }
         .score {
@@ -32,22 +29,7 @@
             margin: 20px 0;
         }
         .button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 1em;
             margin: 5px;
-            transition: background-color 0.3s;
-        }
-        .button:hover {
-            background-color: #45a049;
-        }
-        .quarter-selector, .game-title {
-            margin: 20px 0;
-            text-align: center;
         }
         .enter-score-popup {
             display: none;
@@ -96,35 +78,37 @@
 
     <div class="container">
         <h1>Scoreboard Admin Dashboard</h1>
-        <div class="game-title">
+        <div class="form-group">
             <label for="game-title">Game Title:</label>
-            <input type="text" id="game-title" class="title-input" placeholder="Enter game title" oninput="updateGameTitle()">
+            <input type="text" id="game-title" class="form-control title-input" placeholder="Enter game title" oninput="updateGameTitle()">
         </div>
-        <div>
-            <h2>Home Team</h2>
-            <p class="score" id="home-score">0</p>
-            <button class="button" onclick="updateScore('home', 1)">+1</button>
-            <button class="button" onclick="updateScore('home', 2)">+2</button>
-            <button class="button" onclick="updateScore('home', 3)">+3</button>
-            <button class="button" onclick="updateScore('home', -1)">-1</button>
-            <button class="button" onclick="updateScore('home', -2)">-2</button>
-            <button class="button" onclick="updateScore('home', -3)">-3</button>
-            <button class="button" onclick="openEnterScore('home')">Enter Score</button>
+        <div class="row">
+            <div class="col text-center">
+                <h2>Home Team</h2>
+                <p class="score" id="home-score">0</p>
+                <button class="btn btn-success" onclick="updateScore('home', 1)">+1</button>
+                <button class="btn btn-success" onclick="updateScore('home', 2)">+2</button>
+                <button class="btn btn-success" onclick="updateScore('home', 3)">+3</button>
+                <button class="btn btn-danger" onclick="updateScore('home', -1)">-1</button>
+                <button class="btn btn-danger" onclick="updateScore('home', -2)">-2</button>
+                <button class="btn btn-danger" onclick="updateScore('home', -3)">-3</button>
+                <button class="btn btn-primary" onclick="openEnterScore('home')">Enter Score</button>
+            </div>
+            <div class="col text-center">
+                <h2>Away Team</h2>
+                <p class="score" id="away-score">0</p>
+                <button class="btn btn-success" onclick="updateScore('away', 1)">+1</button>
+                <button class="btn btn-success" onclick="updateScore('away', 2)">+2</button>
+                <button class="btn btn-success" onclick="updateScore('away', 3)">+3</button>
+                <button class="btn btn-danger" onclick="updateScore('away', -1)">-1</button>
+                <button class="btn btn-danger" onclick="updateScore('away', -2)">-2</button>
+                <button class="btn btn-danger" onclick="updateScore('away', -3)">-3</button>
+                <button class="btn btn-primary" onclick="openEnterScore('away')">Enter Score</button>
+            </div>
         </div>
-        <div>
-            <h2>Away Team</h2>
-            <p class="score" id="away-score">0</p>
-            <button class="button" onclick="updateScore('away', 1)">+1</button>
-            <button class="button" onclick="updateScore('away', 2)">+2</button>
-            <button class="button" onclick="updateScore('away', 3)">+3</button>
-            <button class="button" onclick="updateScore('away', -1)">-1</button>
-            <button class="button" onclick="updateScore('away', -2)">-2</button>
-            <button class="button" onclick="updateScore('away', -3)">-3</button>
-            <button class="button" onclick="openEnterScore('away')">Enter Score</button>
-        </div>
-        <div class="quarter-selector">
+        <div class="form-group text-center">
             <label for="quarter">Quarter:</label>
-            <select id="quarter" onchange="updateQuarter()">
+            <select id="quarter" class="form-control" onchange="updateQuarter()">
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -140,9 +124,9 @@
     <div class="overlay" id="overlay"></div>
     <div class="enter-score-popup" id="enter-score-popup">
         <h2>Enter Score</h2>
-        <input type="number" id="score-input" placeholder="Enter score" />
-        <button class="button" id="submit-score-button">Submit</button>
-        <button class="button" onclick="closeEnterScore()">Cancel</button>
+        <input type="number" id="score-input" class="form-control" placeholder="Enter score" />
+        <button class="btn btn-success" id="submit-score-button">Submit</button>
+        <button class="btn btn-secondary" onclick="closeEnterScore()">Cancel</button>
     </div>
 
     <script>
@@ -258,7 +242,9 @@
                 success: function() {
                     console.log("Quarter updated successfully");
                 },
-                error: function(xhr, status, error) {
+                error: function(xhr
+
+, status, error) {
                     console.error("Error updating quarter: " + error);
                 }
             });
@@ -271,7 +257,9 @@
                 url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
                 type: 'PATCH',
                 data: JSON.stringify({ gameTitle: title }),
-                contentType: 'application/json',
+                contentType: '
+
+application/json',
                 success: function() {
                     console.log("Game title updated successfully");
                 },
@@ -302,7 +290,9 @@
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
         checkConnection();
-        setInterval(updateActiveVisitors, 5000); // Track active visitors every 5 seconds
+        setInterval(updateActiveVisitors, 5000
+
+); // Track active visitors every 5 seconds
     </script>
 </body>
 </html>
