@@ -49,35 +49,73 @@
             color: red;
             font-weight: bold;
         }
+        .enter-score-popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .quarter-selector {
+            margin: 20px 0;
+        }
+        .connection-status {
+            margin-top: 20px;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 
-    <div class="scoreboard" id="scoreboard" style="display: block;">
+    <div class="scoreboard" id="scoreboard">
         <h1>Scoreboard</h1>
         <div>
             <h2>Home Team</h2>
             <p class="score" id="home-score">0</p>
-            <button class="button" onclick="updateScore('home', 1)">+1</button>
-            <button class="button" onclick="updateScore('home', 2)">+2</button>
-            <button class="button" onclick="updateScore('home', 3)">+3</button>
-            <button class="button" onclick="updateScore('home', -1)">-1</button>
-            <button class="button" onclick="updateScore('home', -2)">-2</button>
-            <button class="button" onclick="updateScore('home', -3)">-3</button>
+            <button class="button" onclick="openEnterScore('home')">Enter Score</button>
         </div>
         <div>
             <h2>Away Team</h2>
             <p class="score" id="away-score">0</p>
-            <button class="button" onclick="updateScore('away', 1)">+1</button>
-            <button class="button" onclick="updateScore('away', 2)">+2</button>
-            <button class="button" onclick="updateScore('away', 3)">+3</button>
-            <button class="button" onclick="updateScore('away', -1)">-1</button>
-            <button class="button" onclick="updateScore('away', -2)">-2</button>
-            <button class="button" onclick="updateScore('away', -3)">-3</button>
+            <button class="button" onclick="openEnterScore('away')">Enter Score</button>
+        </div>
+        <div class="quarter-selector">
+            <label for="quarter">Quarter:</label>
+            <select id="quarter" onchange="updateQuarter()">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+            </select>
         </div>
     </div>
 
     <div class="error-log" id="error-log"></div>
+    <div class="connection-status" id="connection-status">Connecting to database...</div>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="enter-score-popup" id="enter-score-popup">
+        <h2>Enter Score</h2>
+        <input type="number" id="score-input" placeholder="Enter score" />
+        <button class="button" id="submit-score-button">Submit</button>
+        <button class="button" onclick="closeEnterScore()">Cancel</button>
+    </div>
 
     <script>
         // Firebase configuration
@@ -160,51 +198,64 @@
             errorLog.textContent += message + '\n';
         }
 
-        // Key bindings for adding/removing points
-        document.addEventListener('keydown', (event) => {
-            switch (event.key) {
-                // Home Team
-                case '1':
-                    updateScore('home', 1);
-                    break;
-                case '2':
-                    updateScore('home', 2);
-                    break;
-                case '3':
-                    updateScore('home', 3);
-                    break;
-                case '4':
-                    updateScore('home', -1);
-                    break;
-                case '5':
-                    updateScore('home', -2);
-                    break;
-                case '6':
-                    updateScore('home', -3);
-                    break;
-                // Away Team
-                case '7':
-                    updateScore('away', 1);
-                    break;
-                case '8':
-                    updateScore('away', 2);
-                    break;
-                case '9':
-                    updateScore('away', 3);
-                    break;
-                case '0':
-                    updateScore('away', -1);
-                    break;
-                case '-':
-                    updateScore('away', -2);
-                    break;
-                case '=':
-                    updateScore('away', -3);
-                    break;
-                default:
-                    break;
+        // Function to open the enter score popup
+        function openEnterScore(team) {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('enter-score-popup').style.display = 'block';
+            document.getElementById('score-input').dataset.team = team; // Store team in data attribute
+        }
+
+        // Function to close the enter score popup
+        function closeEnterScore() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('enter-score-popup').style.display = 'none';
+            document.getElementById('score-input').value = ''; // Clear input
+        }
+
+        // Function to submit the entered score
+        document.getElementById('submit-score-button').addEventListener('click', function() {
+            const score = parseInt(document.getElementById('score-input').value);
+            const team = document.getElementById('score-input').dataset.team;
+            if (!isNaN(score)) {
+                updateScore(team, score);
+                closeEnterScore();
+            } else {
+                alert("Please enter a valid score.");
             }
         });
+
+        // Function to update the quarter
+        function updateQuarter() {
+            const quarter = document.getElementById('quarter').value;
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify({ quarter: quarter }),
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Quarter updated successfully");
+                },
+                error: function(xhr, status, error) {
+                    logError("Error updating quarter: " + error);
+                }
+            });
+        }
+
+        // Function to check database connection status
+        function checkConnection() {
+            const connectionStatus = document.getElementById('connection-status');
+            database.ref().on('value', function(snapshot) {
+                connectionStatus.textContent = "Connected to database";
+                connectionStatus.style.color = "green";
+            }, function(error) {
+                connectionStatus.textContent = "Connection failed: " + error.message;
+                connectionStatus.style.color = "red";
+            });
+        }
+
+        // Start by displaying the initial scores and checking connection
+        updateDisplayedScores();
+        checkConnection();
     </script>
 </body>
 </html>
