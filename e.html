@@ -74,6 +74,7 @@
             border: 1px solid #ccc;
             border-radius: 5px;
             margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
             height: 100vh;
@@ -123,9 +124,63 @@
         .dark-mode .sidebar {
             background-color: rgba(52, 58, 64, 0.9);
         }
+        .quarter-selector {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
+        }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .toggle-label {
+            margin-right: 10px;
+        }
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 20px;
+        }
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            border-radius: 50%;
+            transition: .4s;
+        }
+        input:checked + .slider {
+            background-color: #007bff;
+        }
+        input:checked + .slider:before {
+            transform: translateX(14px);
         }
     </style>
 </head>
@@ -137,7 +192,6 @@
         <a href="#title" onclick="showTab('title')">Game Title</a>
         <a href="#stats" onclick="showTab('stats')">Statistics</a>
         <a href="#settings" onclick="showTab('settings')">Settings</a>
-        <button class="btn btn-dark" id="toggle-dark-mode">Toggle Dark Mode</button>
     </div>
 
     <div class="content">
@@ -170,7 +224,7 @@
             </div>
             <div class="form-group text-center">
                 <label for="quarter">Quarter:</label>
-                <select id="quarter" class="form-control" onchange="updateQuarter()">
+                <select id="quarter" class="quarter-selector" onchange="updateQuarter()">
                     <option value="1">1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -195,7 +249,13 @@
 
         <div id="settings" class="tab-content" style="display:none;">
             <h2>Settings</h2>
-            <p>Settings options will be available here.</p>
+            <div class="toggle-container">
+                <span class="toggle-label">Dark Mode:</span>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="dark-mode-toggle">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </div>
     </div>
 
@@ -385,10 +445,10 @@
         }
 
         // Toggle dark mode
-        document.getElementById('toggle-dark-mode').addEventListener('click', function() {
+        document.getElementById('dark-mode-toggle').addEventListener('change', function() {
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
-            this.textContent = isDarkMode ? 'Toggle Light Mode' : 'Toggle Dark Mode';
+            this.checked = isDarkMode; // Sync toggle with dark mode state
         });
 
         // Start by displaying the initial scores and checking connection
