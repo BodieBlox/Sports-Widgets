@@ -14,7 +14,67 @@
         body {
             background-color: #f8f9fa;
             transition: background-color 0.5s;
-            overflow-x: hidden; /* Prevent horizontal overflow */
+        }
+        .container {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s;
+        }
+        h1 {
+            color: #007bff;
+            text-align: center;
+        }
+        .score {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+        .button {
+            margin: 5px;
+        }
+        .enter-score-popup {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            width: 300px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .connection-status {
+            margin-top: 20px;
+            font-weight: bold;
+            text-align: center;
+        }
+        .stats {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+        .title-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
             height: 100vh;
@@ -26,11 +86,6 @@
             backdrop-filter: blur(10px);
             padding-top: 20px;
             transition: background-color 0.5s;
-            z-index: 1000;
-        }
-        .sidebar h2 {
-            color: white;
-            text-align: center;
         }
         .sidebar a {
             color: white;
@@ -42,35 +97,29 @@
         .sidebar a:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+        }
         .navbar {
             position: fixed;
-            top: 0;
-            left: 250px;
+            bottom: 0;
+            left: 0;
             right: 0;
             background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             padding: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            z-index: 1000;
-        }
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-            margin-top: 60px; /* Space for the navbar */
-        }
-        .tab-content {
-            display: none; /* Hide all tab content by default */
-            animation: fadeIn 0.5s;
-        }
-        .tab-content.active {
-            display: block; /* Show only the active tab content */
         }
         .dark-mode {
             background-color: #343a40;
             color: white;
+        }
+        .dark-mode .container {
+            background-color: rgba(255, 255, 255, 0.1);
         }
         .dark-mode .sidebar {
             background-color: rgba(52, 58, 64, 0.9);
@@ -138,21 +187,16 @@
 <body>
 
     <div class="sidebar">
-        <h2>Admin Dashboard</h2>
+        <h2 class="text-white text-center">Admin Dashboard</h2>
         <a href="#score" onclick="showTab('score')">Score Management</a>
         <a href="#title" onclick="showTab('title')">Game Title</a>
         <a href="#stats" onclick="showTab('stats')">Statistics</a>
         <a href="#settings" onclick="showTab('settings')">Settings</a>
     </div>
 
-    <div class="navbar">
-        <div id="current-time"></div>
-        <div id="connection-status">Checking database connection...</div>
-    </div>
-
     <div class="content">
         <h1>WCHS Athletics Admin Dashboard</h1>
-        <div id="score" class="tab-content active">
+        <div id="score" class="tab-content">
             <h2>Score Management</h2>
             <div class="row">
                 <div class="col text-center">
@@ -187,9 +231,10 @@
                     <option value="4">4</option>
                 </select>
             </div>
+            <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
-        <div id="title" class="tab-content">
+        <div id="title" class="tab-content" style="display:none;">
             <h2>Game Title</h2>
             <div class="form-group">
                 <label for="game-title">Game Title:</label>
@@ -197,12 +242,12 @@
             </div>
         </div>
 
-        <div id="stats" class="tab-content">
+        <div id="stats" class="tab-content" style="display:none;">
             <h2>Statistics</h2>
             <p id="active-visitors">Active Visitors: 0</p>
         </div>
 
-        <div id="settings" class="tab-content">
+        <div id="settings" class="tab-content" style="display:none;">
             <h2>Settings</h2>
             <div class="toggle-container">
                 <span class="toggle-label">Dark Mode:</span>
@@ -220,6 +265,11 @@
         <input type="number" id="score-input" class="form-control" placeholder="Enter score" />
         <button class="btn btn-success" id="submit-score-button">Submit</button>
         <button class="btn btn-secondary" onclick="closeEnterScore()">Cancel</button>
+    </div>
+
+    <div class="navbar">
+        <div id="current-time"></div>
+        <div id="connection-status-bottom">Connecting to database...</div>
     </div>
 
     <script>
@@ -361,18 +411,17 @@
         // Function to check database connection status
         function checkConnection() {
             const connectionStatus = document.getElementById('connection-status');
-            connectionStatus.textContent = "Checking database connection...";
-            $.ajax({
-                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
-                type: 'GET',
-                success: function() {
-                    connectionStatus.textContent = "Connected to database";
-                    connectionStatus.style.color = "green";
-                },
-                error: function() {
-                    connectionStatus.textContent = "Connection failed";
-                    connectionStatus.style.color = "red";
-                }
+            const connectionStatusBottom = document.getElementById('connection-status-bottom');
+            connectionStatus.textContent = "Connecting to database...";
+            connectionStatus.style.color = "yellow";
+            database.ref().on('value', function(snapshot) {
+                connectionStatus.textContent = "Connected to database";
+                connectionStatus.style.color = "green";
+                connectionStatusBottom.textContent = "Connected to database";
+            }, function(error) {
+                connectionStatus.textContent = "Connection failed: " + error.message;
+                connectionStatus.style.color = "red";
+                connectionStatusBottom.textContent = "Connection failed: " + error.message;
             });
         }
 
@@ -384,9 +433,8 @@
 
         // Function to show the selected tab
         function showTab(tabId) {
-            $('.tab-content').removeClass('active'); // Hide all tabs
-            $('#' + tabId).addClass('active'); // Show the selected tab
-            $('.tab-content').hide().fadeIn(500); // Add fade-in animation
+            $('.tab-content').hide(); // Hide all tabs
+            $('#' + tabId).show(); // Show the selected tab
         }
 
         // Function to update the current time
