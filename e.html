@@ -58,61 +58,26 @@
             background-color: rgba(0, 0, 0, 0.5);
             z-index: 999;
         }
-        .connection-status {
-            margin-top: 20px;
-            font-weight: bold;
-            text-align: center;
-        }
-        .stats {
-            margin-top: 20px;
-            font-size: 1.2em;
-            text-align: center;
-        }
-        .title-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .sidebar {
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            background-color: rgba(52, 58, 64, 0.8);
-            backdrop-filter: blur(10px);
-            padding-top: 20px;
-            transition: background-color 0.5s;
-        }
-        .sidebar a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s;
-        }
-        .sidebar a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-        }
         .navbar {
             position: fixed;
-            bottom: 0;
+            top: 0;
             left: 0;
             right: 0;
             background-color: rgba(255, 255, 255, 0.8);
             backdrop-filter: blur(10px);
             padding: 10px;
-            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
+            z-index: 1000;
+        }
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+        .tab-content.active {
+            display: block;
         }
         .dark-mode {
             background-color: #343a40;
@@ -121,7 +86,7 @@
         .dark-mode .container {
             background-color: rgba(255, 255, 255, 0.1);
         }
-        .dark-mode .sidebar {
+        .dark-mode .navbar {
             background-color: rgba(52, 58, 64, 0.9);
         }
         .quarter-selector {
@@ -186,6 +151,11 @@
 </head>
 <body>
 
+    <div class="navbar">
+        <div id="current-time"></div>
+        <div id="connection-status">Checking database connection...</div>
+    </div>
+
     <div class="sidebar">
         <h2 class="text-white text-center">Admin Dashboard</h2>
         <a href="#score" onclick="showTab('score')">Score Management</a>
@@ -196,7 +166,7 @@
 
     <div class="content">
         <h1>WCHS Athletics Admin Dashboard</h1>
-        <div id="score" class="tab-content">
+        <div id="score" class="tab-content active">
             <h2>Score Management</h2>
             <div class="row">
                 <div class="col text-center">
@@ -231,10 +201,9 @@
                     <option value="4">4</option>
                 </select>
             </div>
-            <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
-        <div id="title" class="tab-content" style="display:none;">
+        <div id="title" class="tab-content">
             <h2>Game Title</h2>
             <div class="form-group">
                 <label for="game-title">Game Title:</label>
@@ -242,12 +211,12 @@
             </div>
         </div>
 
-        <div id="stats" class="tab-content" style="display:none;">
+        <div id="stats" class="tab-content">
             <h2>Statistics</h2>
             <p id="active-visitors">Active Visitors: 0</p>
         </div>
 
-        <div id="settings" class="tab-content" style="display:none;">
+        <div id="settings" class="tab-content">
             <h2>Settings</h2>
             <div class="toggle-container">
                 <span class="toggle-label">Dark Mode:</span>
@@ -265,11 +234,6 @@
         <input type="number" id="score-input" class="form-control" placeholder="Enter score" />
         <button class="btn btn-success" id="submit-score-button">Submit</button>
         <button class="btn btn-secondary" onclick="closeEnterScore()">Cancel</button>
-    </div>
-
-    <div class="navbar">
-        <div id="current-time"></div>
-        <div id="connection-status-bottom">Connecting to database...</div>
     </div>
 
     <script>
@@ -411,17 +375,18 @@
         // Function to check database connection status
         function checkConnection() {
             const connectionStatus = document.getElementById('connection-status');
-            const connectionStatusBottom = document.getElementById('connection-status-bottom');
-            connectionStatus.textContent = "Connecting to database...";
-            connectionStatus.style.color = "yellow";
-            database.ref().on('value', function(snapshot) {
-                connectionStatus.textContent = "Connected to database";
-                connectionStatus.style.color = "green";
-                connectionStatusBottom.textContent = "Connected to database";
-            }, function(error) {
-                connectionStatus.textContent = "Connection failed: " + error.message;
-                connectionStatus.style.color = "red";
-                connectionStatusBottom.textContent = "Connection failed: " + error.message;
+            connectionStatus.textContent = "Checking database connection...";
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'GET',
+                success: function() {
+                    connectionStatus.textContent = "Connected to database";
+                    connectionStatus.style.color = "green";
+                },
+                error: function() {
+                    connectionStatus.textContent = "Connection failed";
+                    connectionStatus.style.color = "red";
+                }
             });
         }
 
@@ -433,8 +398,9 @@
 
         // Function to show the selected tab
         function showTab(tabId) {
-            $('.tab-content').hide(); // Hide all tabs
-            $('#' + tabId).show(); // Show the selected tab
+            $('.tab-content').removeClass('active'); // Hide all tabs
+            $('#' + tabId).addClass('active'); // Show the selected tab
+            $('.tab-content').hide().fadeIn(500); // Add fade-in animation
         }
 
         // Function to update the current time
