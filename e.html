@@ -14,6 +14,7 @@
         body {
             background-color: #f8f9fa;
             transition: background-color 0.5s;
+            overflow-x: hidden; /* Prevent horizontal overflow */
         }
         .sidebar {
             height: 100vh;
@@ -41,10 +42,6 @@
         .sidebar a:hover {
             background-color: rgba(255, 255, 255, 0.2);
         }
-        .content {
-            margin-left: 260px;
-            padding: 20px;
-        }
         .navbar {
             position: fixed;
             top: 0;
@@ -59,12 +56,17 @@
             align-items: center;
             z-index: 1000;
         }
+        .content {
+            margin-left: 260px;
+            padding: 20px;
+            margin-top: 60px; /* Space for the navbar */
+        }
         .tab-content {
-            display: none;
+            display: none; /* Hide all tab content by default */
             animation: fadeIn 0.5s;
         }
         .tab-content.active {
-            display: block;
+            display: block; /* Show only the active tab content */
         }
         .dark-mode {
             background-color: #343a40;
