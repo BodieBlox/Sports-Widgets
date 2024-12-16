@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Game Scoreboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -300,7 +301,7 @@
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
-        <h3>Site Version: <span id="site-version">1.0.0</span></h3> <!-- Added site version -->
+        <h3>Site Version: <span id="site-version">1.1.0</span></h3> <!-- Updated site version -->
 
         <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
@@ -323,7 +324,7 @@
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
-        <p>Site Version: <strong><span id="site-version">1.0.0</span></strong></p> <!-- Added site version -->
+        <p>Site Version: <strong><span id="site-version">1.1.0</span></strong></p> <!-- Updated site version -->
         <p>&copy; WCHS Athletics 2024</p> <!-- Moved copyright here -->
         <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
         <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
@@ -369,6 +370,7 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         let existingGoalLogs = new Set();
         var scoreh = 0;
@@ -480,21 +482,30 @@
                 } else {
                     scoreElement.css('color', 'red');
                 }
-                showScoreNotification();
+                showToastNotification("Score Updated!", "The score has been updated.");
             }
         }
 
-        function showScoreNotification() {
-            const notification = document.getElementById("score-notification");
-            notification.style.display = 'block';
-            notification.style.transition = 'opacity 0.5s';
-            notification.style.opacity = '1';
-            setTimeout(() => {
-                notification.style.opacity = '0';
+        function updateQuarterWithAnimation(newQuarter) {
+            const quarterElement = $('#quarter');
+            quarterElement.fadeOut(300, function() {
+                quarterElement.text(newQuarter).fadeIn(300);
+                // Quarter change animation
+                quarterElement.css('transform', 'scale(1.5)');
                 setTimeout(() => {
-                    notification.style.display = 'none';
-                }, 500);
-            }, 3000);
+                    quarterElement.css('transform', 'scale(1)');
+                }, 300);
+            });
+            showToastNotification("Quarter Changed!", "The quarter has been updated to " + newQuarter + ".");
+        }
+
+        function showToastNotification(title, message) {
+            toastr.success(message, title, {
+                positionClass: "toast-top-right",
+                timeOut: 3000,
+                closeButton: true,
+                progressBar: true
+            });
         }
 
         function calculatePing() {
@@ -650,6 +661,26 @@
             }
         }
         createSnowflakes();
+    </script>
+    <script>
+        // Initialize Toastr notifications
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": true,
+            "progressBar": true,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        };
     </script>
 </body>
 </html>
