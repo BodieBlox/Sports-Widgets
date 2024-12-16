@@ -5,13 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Live Game Scoreboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
-      body {
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        .scoreboard, .admin-stats, .custom-popup {
-            transition: background-color 0.3s ease;
+        body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             text-align: center;
             margin: 0;
@@ -64,11 +59,6 @@
             margin: 10px 0;
             background-color: rgba(255, 255, 255, 0.8);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        .team-card:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
         h1 {
             color: #333;
@@ -91,7 +81,7 @@
         .score {
             font-size: 3em;
             color: #333;
-            transition: transform 0.5s, color 0.5s;
+            transition: transform 0.5s;
             margin: 10px 0;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         }
@@ -155,12 +145,12 @@
             flex-direction: column;
         }
         .spinner {
-            width: 80px;
-            height: 80px;
-            border: 8px solid #f3f3f3; /* Light grey */
-            border-top: 8px solid #3498db; /* Blue */
+            width: 120px;
+            height: 120px;
+            border: 16px solid #f3f3f3; /* Light grey */
+            border-top: 16px solid #3498db; /* Blue */
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 2s linear infinite;
         }
         .loading-text {
             font-size: 1.5em;
@@ -248,6 +238,118 @@
         .dark-mode .button:hover {
             background-color: #666;
         }
+        /* Custom Themes */
+        .theme-blue {
+            background-color: #007bff;
+            color: white;
+        }
+        .theme-green {
+            background-color: #28a745;
+            color: white;
+        }
+        .theme-rainbow {
+            background: linear-gradient(90deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #4b0082);
+            color: white;
+        }
+        /* Accessibility Features */
+        .high-contrast {
+            background-color: #000;
+            color: #fff;
+        }
+        .high-contrast .button {
+            background-color: #fff;
+            color: #000;
+        }
+        .high-contrast .button:hover {
+            background-color: #ccc;
+        }
+        /* Slider Styles */
+        .slider-container {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+        }
+        .slider-label {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        .slider {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 15px;
+            border-radius: 5px;
+            background: #ddd;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        .slider:hover {
+            opacity: 1;
+        }
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .slider::-moz-range-thumb {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        /* Custom Popup Styles */
+        .custom-popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            z-index: 1001;
+            animation: fadeIn 0.5s;
+            max-width: 400px;
+            text-align: center;
+        }
+        .custom-popup h3 {
+            margin: 0;
+            font-size: 1.5em;
+            color: #007bff;
+        }
+        .custom-popup input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .custom-popup .login-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .custom-popup .close-button {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 18px;
+            cursor: pointer;
+            font-size: 1em;
+        }
     </style>
 </head>
 <body>
@@ -263,12 +365,12 @@
         <h1>Scoreboard - <span id="title">Game Title</span></h1>
         <h1 class="playoffs" id="playoffs-label" style="display: none;">Playoffs</h1>
         
-        <div class="team-card" id="home-team-card">
+        <div class="team-card">
             <h2>Home Team</h2>
             <p class="score">Score: <strong id="home-score">Connecting to database</strong></p>
         </div>
         
-        <div class="team-card" id="away-team-card">
+        <div class="team-card">
             <h2>Away Team</h2>
             <p class="score">Score: <strong id="away-score">Connecting to database</strong></p>
         </div>
@@ -305,7 +407,7 @@
 
         <h3>Last updated: <span id="last-updated">Loading...</span></h3>
         <h3>Current Time: <span id="current-time">Loading...</span></h3>
-        <h3>Site Version: <span id="site-version">1.1.0</span></h3> <!-- Updated site version -->
+        <h3>Site Version: <span id="site-version">1.0.0</span></h3> <!-- Added site version -->
 
         <h6>*Scoreboard updates <strong>automatically</strong> for the score, quarter, and goal logs. Refresh if the page doesn't load in 10-20 seconds.</h6>
     </div>
@@ -328,7 +430,7 @@
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
-        <p>Site Version: <strong><span id="site-version">1.1.0</span></strong></p> <!-- Updated site version -->
+        <p>Site Version: <strong><span id="site-version">1.0.0</span></strong></p> <!-- Added site version -->
         <p>&copy; WCHS Athletics 2024</p> <!-- Moved copyright here -->
         <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
         <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
@@ -374,7 +476,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <script>
         let existingGoalLogs = new Set();
         var scoreh = 0;
@@ -470,46 +571,26 @@
 
         function updateScoreWithAnimation(scoreId, newScore) {
             const scoreElement = $(scoreId);
-            const currentScore = parseInt(scoreElement.text());
-            if (currentScore !== newScore) {
+            if (scoreElement.text() != newScore) {
                 scoreElement.fadeOut(300, function() {
                     scoreElement.text(newScore).fadeIn(300);
-                    // Score change animation
-                    scoreElement.css('transform', 'scale(1.5)');
-                    setTimeout(() => {
-                        scoreElement.css('transform', 'scale(1)');
-                    }, 300);
                 });
-                // Highlight the higher score
-                if (newScore > currentScore) {
-                    scoreElement.css('color', 'green');
-                } else {
-                    scoreElement.css('color', 'red');
-                }
-                showToastNotification("Score Updated!", "The score has been updated.");
+                scoreElement.css('color', newScore > (scoreId === '#home-score' ? scoreh : scorea) ? 'green' : 'red');
+                showScoreNotification();
             }
         }
 
-        function updateQuarterWithAnimation(newQuarter) {
-            const quarterElement = $('#quarter');
-            quarterElement.fadeOut(300, function() {
-                quarterElement.text(newQuarter).fadeIn(300);
-                // Quarter change animation
-                quarterElement.css('transform', 'scale(1.5)');
+        function showScoreNotification() {
+            const notification = document.getElementById("score-notification");
+            notification.style.display = 'block';
+            notification.style.transition = 'opacity 0.5s';
+            notification.style.opacity = '1';
+            setTimeout(() => {
+                notification.style.opacity = '0';
                 setTimeout(() => {
-                    quarterElement.css('transform', 'scale(1)');
-                }, 300);
-            });
-            showToastNotification("Quarter Changed!", "The quarter has been updated to " + newQuarter + ".");
-        }
-
-        function showToastNotification(title, message) {
-            toastr.success(message, title, {
-                positionClass: "toast-top-right",
-                timeOut: 3000,
-                closeButton: true,
-                progressBar: true
-            });
+                    notification.style.display = 'none';
+                }, 500);
+            }, 3000);
         }
 
         function calculatePing() {
@@ -665,26 +746,6 @@
             }
         }
         createSnowflakes();
-    </script>
-    <script>
-        // Initialize Toastr notifications
-        toastr.options = {
-            "closeButton": true,
-            "debug": false,
-            "newestOnTop": true,
-            "progressBar": true,
-            "positionClass": "toast-top-right",
-            "preventDuplicates": false,
-            "onclick": null,
-            "showDuration": "300",
-            "hideDuration": "1000",
-            "timeOut": "5000",
-            "extendedTimeOut": "1000",
-            "showEasing": "swing",
-            "hideEasing": "linear",
-            "showMethod": "fadeIn",
-            "hideMethod": "fadeOut"
-        };
     </script>
 </body>
 </html>
