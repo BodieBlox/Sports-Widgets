@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <style>
@@ -308,7 +307,6 @@
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
-        const analytics = firebase.analytics();
         const database = firebase.database();
 
         // Function to open the login popup
@@ -326,12 +324,11 @@
             document.getElementById('login-error').style.display = 'none';
         }
 
-        // Function to handle login
+        // Function to handle login using AJAX
         document.getElementById('login-button').addEventListener('click', function() {
             const email = document.getElementById('login-email').value;
             const password = document.getElementById('login-password').value;
 
-            // Use AJAX to sign in
             $.ajax({
                 url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
                 type: 'POST',
@@ -339,6 +336,7 @@
                 data: JSON.stringify({ email: email, password: password, returnSecureToken: true }),
                 success: function(response) {
                     // Login successful
+                    localStorage.setItem('token', response.idToken); // Store token for future requests
                     closeLoginPopup();
                     showTab('score'); // Show the score management tab after login
                 },
@@ -351,15 +349,11 @@
         });
 
         // Check if user is logged in on page load
-        firebase.auth().onAuthStateChanged((user) => {
-            if (user) {
-                // User is signed in, show the dashboard
-                showTab('score'); // Show the score management tab
-            } else {
-                // No user is signed in, show the login popup
-                openLoginPopup();
-            }
-        });
+        if (!localStorage.getItem('token')) {
+            openLoginPopup(); // Show the login popup if no token is found
+        } else {
+            showTab('score'); // Show the score management tab if token exists
+        }
 
         // Function to update score using AJAX
         function updateScore(team, points) {
