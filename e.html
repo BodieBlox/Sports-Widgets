@@ -571,8 +571,8 @@
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
             connectionLabel.textContent = "Checking connection...";
-            navigator.onLine ? connectionLabel.textContent = "Connected" : connectionLabel.textContent = "No Connection";
-            connectionLabel.style.color = navigator.onLine ? "green" : "red";
+            window.navigator.onLine ? connectionLabel.textContent = "Connected" : connectionLabel.textContent = "No Connection";
+            connectionLabel.style.color = window.navigator.onLine ? "green" : "red";
         }
 
         // Function to update active visitors using Firebase Analytics
@@ -607,6 +607,7 @@
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
         checkConnection();
+        setInterval(checkConnection(), 5000);
         setInterval(updateActiveVisitors, 5000); // Track active visitors every 5 seconds
         setInterval(updateCurrentTime, 1000); // Update current time every second
         showTab('score'); // Show the score management tab by default
