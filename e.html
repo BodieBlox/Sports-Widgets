@@ -182,14 +182,6 @@
         input:checked + .slider:before {
             transform: translateX(14px);
         }
-        .log-card {
-            border: 1px solid #007bff;
-            border-radius: 8px;
-            padding: 15px;
-            margin: 10px 0;
-            background-color: rgba(255, 255, 255, 0.8);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
     </style>
 </head>
 <body>
@@ -199,7 +191,9 @@
         <a href="#score" onclick="showTab('score')">Score Management</a>
         <a href="#title" onclick="showTab('title')">Game Title</a>
         <a href="#stats" onclick="showTab('stats')">Statistics</a>
-        <a href="#logs" onclick="showTab('logs')">Logs</a>
+        <a href="#
+
+logs" onclick="showTab('logs')">Logs</a>
         <a href="#settings" onclick="showTab('settings')">Settings</a>
     </div>
 
@@ -241,6 +235,7 @@
                 </select>
             </div>
             <button class="btn btn-info" onclick="logScore()">Log Score</button>
+            <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
             <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
@@ -397,6 +392,24 @@
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching game logs: " + error);
+                }
+            });
+        }
+
+        // Function to clear scores
+        function clearScores() {
+            const scoreData = { homeScore: 0, awayScore: 0 };
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify(scoreData),
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Scores cleared successfully");
+                    updateDisplayedScores(); // Update displayed scores to reflect changes
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error clearing scores: " + error);
                 }
             });
         }
