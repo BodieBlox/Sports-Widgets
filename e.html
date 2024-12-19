@@ -570,9 +570,10 @@
         // Function to check database connection status
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
+            const staus = navigator.onLine;
             connectionLabel.textContent = "Checking connection...";
-            window.navigator.onLine ? connectionLabel.textContent = "Connected" : connectionLabel.textContent = "No Connection";
-            connectionLabel.style.color = window.navigator.onLine ? "green" : "red";
+            status ? connectionLabel.textContent = "Connected" : connectionLabel.textContent = "No Connection";
+            connectionLabel.style.color = status ? "green" : "red";
         }
 
         // Function to update active visitors using Firebase Analytics
