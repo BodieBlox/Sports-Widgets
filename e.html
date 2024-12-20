@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
@@ -87,6 +88,10 @@
             background-color: rgba(52, 58, 64, 0.8);
             backdrop-filter: blur(10px);
             padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center content vertically */
+            align-items: center; /* Center content horizontally */
             transition: background-color 0.5s;
         }
         .sidebar a {
@@ -95,6 +100,7 @@
             text-decoration: none;
             display: block;
             transition: background-color 0.3s;
+            margin: 5px 0; /* Add margin for spacing */
         }
         .sidebar a:hover {
             background-color: rgba(255, 255, 255, 0.2);
@@ -257,17 +263,18 @@
         <img src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="Winston Churchill High School Athletics" class="logo">
         <h2 class="text-white text-center">Admin Dashboard</h2>
         <div id="connection-label" class="text-white text-center">Checking connection...</div>
+        <div id="current-time" class="text-white text-center" style="margin-top: 10px;">Current Time: --:--</div>
     </div>
 
     <div class="content">
         <h1>Winston Churchill High School Athletics Admin Dashboard</h1>
         <div class="tab-bar">
-            <a href="#score" class="active" onclick="showTab('score')">Score Management</a>
-            <a href="#title" onclick="showTab('title')">Game Title</a>
-            <a href="#stats" onclick="showTab('stats')">Statistics</a>
-            <a href="#logs" onclick="showTab('logs')">Logs</a>
-            <a href="#info" onclick="showTab('info')">Info</a>
-            <a href="#settings" onclick="showTab('settings')">Settings</a>
+            <a href="#score" class="active" onclick="showTab('score')"><i class="material-icons">score</i> Score Management</a>
+            <a href="#title" onclick="showTab('title')"><i class="material-icons">title</i> Game Title</a>
+            <a href="#stats" onclick="showTab('stats')"><i class="material-icons">bar_chart</i> Statistics</a>
+            <a href="#logs" onclick="showTab('logs')"><i class="material-icons">list</i> Logs</a>
+            <a href="#info" onclick="showTab('info')"><i class="material-icons">info</i> Info</a>
+            <a href="#settings" onclick="showTab('settings')"><i class="material-icons">settings</i> Settings</a>
         </div>
 
         <div id="score" class="tab-content fade show">
@@ -286,7 +293,6 @@
                 </div>
                 <div class="col text-center">
                     <h3>Away Team</h3>
-                    <input type="text" id="away-team-name" class="form-control" placeholder="Enter Away Team Name" oninput="updateAwayTeamName()">
                     <p class="score" id="away-score">0</p>
                     <button class="btn btn-success" onclick="updateScore('away', 1)">+1</button>
                     <button class="btn btn-success" onclick="updateScore('away', 2)">+2</button>
@@ -316,6 +322,10 @@
             <div class="form-group">
                 <label for="game-title">Game Title:</label>
                 <input type="text" id="game-title" class="form-control title-input" placeholder="Enter game title" oninput="updateGameTitle()">
+            </div>
+            <div class="form-group">
+                <label for="away-team-name">Away Team Name:</label>
+                <input type="text" id="away-team-name" class="form-control title-input" placeholder="Enter Away Team Name" oninput="updateAwayTeamName()">
             </div>
         </div>
 
@@ -388,7 +398,9 @@
 
         // Function to open the login popup
         function openLoginPopup() {
-            document.getElementById('login-overlay').style.display = 'block';
+            document
+
+.getElementById('login-overlay').style.display = 'block';
             document.getElementById('login-popup').style.display = 'block';
         }
 
@@ -407,7 +419,9 @@
             const password = document.getElementById('login-password').value;
 
             $.ajax({
-                url: `https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${firebaseConfig.apiKey}`,
+                url: `https://identitytoolkit.googleapis.com/v1/accounts
+
+:signInWithPassword?key=${firebaseConfig.apiKey}`,
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({ email: email, password: password, returnSecureToken: true }),
@@ -418,7 +432,9 @@
                     showTab('score'); // Show the score management tab after login
                 },
                 error: function(xhr) {
-                    const errorMessage = xhr.responseJSON.error.message;
+                    const errorMessage = xhr.responseJSON
+
+.error.message;
                     document.getElementById('login-error').textContent = errorMessage;
                     document.getElementById('login-error').style.display = 'block';
                 }
@@ -493,7 +509,6 @@
                     document.getElementById('home-score').textContent = data.homeScore || 0;
                     document.getElementById('away-score').textContent = data.awayScore || 0;
                     document.getElementById('game-title').value = data.game || ''; // Set game title
-                    document.getElementById('away-team-name').value = data.awayName || ''; // Set away team name
                 },
                 error: function(xhr, status, error) {
                     console.error("Error retrieving scores: " + error);
@@ -766,6 +781,13 @@
         // Function to hide loading spinner
         function hideLoadingSpinner() {
             $('#loading-spinner').hide();
+        }
+
+        // Function to update current time
+        function updateCurrentTime() {
+            const now = new Date();
+            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            document.getElementById('current-time').textContent = "Current Time: " + now.toLocaleTimeString([], options);
         }
 
         // Toggle dark mode
