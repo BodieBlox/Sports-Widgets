@@ -6,11 +6,13 @@
     <title>Winston Churchill High School Athletics Admin Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -203,6 +205,21 @@
             margin-top: 20px;
             text-align: center;
         }
+        .loading-spinner {
+            display: none;
+            position: fixed;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+        }
+        .fade {
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .fade.show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -231,7 +248,7 @@
 
     <div class="content">
         <h1>Winston Churchill High School Athletics Admin Dashboard</h1>
-        <div id="score" class="tab-content">
+        <div id="score" class="tab-content fade">
             <h2>Score Management</h2>
             <div class="row">
                 <div class="col text-center">
@@ -272,7 +289,7 @@
             <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
-        <div id="title" class="tab-content" style="display:none;">
+        <div id="title" class="tab-content fade" style="display:none;">
             <h2>Game Title</h2>
             <div class="form-group">
                 <label for="game-title">Game Title:</label>
@@ -280,19 +297,22 @@
             </div>
         </div>
 
-        <div id="stats" class="tab-content" style="display:none;">
+        <div id="stats" class="tab-content fade" style="display:none;">
             <h2>Statistics</h2>
             <p id="active-visitors">Active Visitors: 0</p>
         </div>
 
-        <div id="logs" class="tab-content" style="display:none;">
+        <div id="logs" class="tab-content fade" style="display:none;">
             <h2>Game Logs</h2>
             <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search logs..." oninput="filterLogs()">
+            <input type="date" id="date-filter" class="form-control" onchange="filterLogsByDate()">
             <div id="game-logs-container"></div>
             <button class="btn btn-primary" onclick="exportLogsToPDF()">Export to PDF</button>
+            <button class="btn btn-secondary" onclick="exportLogsToCSV()">Export to CSV</button>
+            <button class="btn btn-secondary" onclick="exportLogsToExcel()">Export to Excel</button>
         </div>
 
-        <div id="info" class="tab-content" style="display:none;">
+        <div id="info" class="tab-content fade" style="display:none;">
             <h2>Info</h2>
             <div class="info-section">
                 <p>Copyright © WCHS Athletics 2025</p>
@@ -300,7 +320,7 @@
             </div>
         </div>
 
-        <div id="settings" class="tab-content" style="display:none;">
+        <div id="settings" class="tab-content fade" style="display:none;">
             <h2>Settings</h2>
             <div class="toggle-container">
                 <span class="toggle-label">Dark Mode:</span>
@@ -319,6 +339,12 @@
         <input type="text" id="game-name-input" class="form-control" placeholder="Enter game name" />
         <button class="btn btn-success" id="submit-score-button">Submit</button>
         <button class="btn btn-secondary" onclick="closeEnterScore()">Cancel</button>
+    </div>
+
+    <div class="loading-spinner" id="loading-spinner">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
     </div>
 
     <script>
@@ -390,6 +416,9 @@
             $.ajax({
                 url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
                 type: 'GET',
+                beforeSend: function() {
+                    showLoadingSpinner();
+                },
                 success: function(data) {
                     let homeScore = data.homeScore || 0;
                     let awayScore = data.awayScore || 0;
@@ -405,6 +434,9 @@
                 },
                 error: function(xhr, status, error) {
                     console.error("Error retrieving scores: " + error);
+                },
+                complete: function() {
+                    hideLoadingSpinner();
                 }
             });
         }
@@ -432,6 +464,9 @@
             $.ajax({
                 url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
                 type: 'GET',
+                beforeSend: function() {
+                    showLoadingSpinner();
+                },
                 success: function(data) {
                     document.getElementById('home-score').textContent = data.homeScore || 0;
                     document.getElementById('away-score').textContent = data.awayScore || 0;
@@ -440,6 +475,9 @@
                 },
                 error: function(xhr, status, error) {
                     console.error("Error retrieving scores: " + error);
+                },
+                complete: function() {
+                    hideLoadingSpinner();
                 }
             });
         }
@@ -450,7 +488,7 @@
             const awayScore = document.getElementById('away-score').textContent;
             const gameName = document.getElementById('game-title').value; // Get game name
             const timestamp = new Date().toLocaleString(); // Get current time
-            const logEntry = `Game: ${gameName}, Home: ${homeScore}, Away: ${awayScore}, Time: ${timestamp}`;
+            const logEntry = { game: gameName, home: homeScore, away: awayScore, time: timestamp };
             
             // Push the log entry to Firebase
             $.ajax({
@@ -473,12 +511,15 @@
             $.ajax({
                 url: `https://test-71ecd-default-rtdb.firebaseio.com/GameLogs.json`,
                 type: 'GET',
+                beforeSend: function() {
+                    showLoadingSpinner();
+                },
                 success: function(data) {
                     const logsContainer = $('#game-logs-container');
                     logsContainer.empty(); // Clear previous logs
                     for (const key in data) {
                         if (data.hasOwnProperty(key)) {
-                            const logCard = $('<div class="log-card"></div>').text(data[key]);
+                            const logCard = $('<div class="log-card"></div>').text(`Game: ${data[key].game}, Home: ${data[key].home}, Away: ${data[key].away}, Time: ${data[key].time}`);
                             const deleteButton = $('<button class="btn btn-danger btn-sm float-right">Delete</button>');
                             deleteButton.on('click', function() {
                                 deleteLog(key);
@@ -490,6 +531,9 @@
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching game logs: " + error);
+                },
+                complete: function() {
+                    hideLoadingSpinner();
                 }
             });
         }
@@ -518,6 +562,16 @@
             });
         }
 
+        // Function to filter logs by date
+        function filterLogsByDate() {
+            const selectedDate = $('#date-filter').val();
+            $('#game-logs-container .log-card').each(function() {
+                const logText = $(this).text();
+                const logDate = logText.match(/Time: (.+)/)[1].split(',')[0]; // Extract date from log
+                $(this).toggle(logDate.includes(selectedDate));
+            });
+        }
+
         // Function to export logs to PDF
         function exportLogsToPDF() {
             const { jsPDF } = window.jspdf;
@@ -527,6 +581,38 @@
                 doc.text($(this).text(), 20, 30 + (index * 10));
             });
             doc.save("game_logs.pdf");
+        }
+
+        // Function to export logs to CSV
+        function exportLogsToCSV() {
+            const csvData = [];
+            $('#game-logs-container .log-card').each(function() {
+                const logText = $(this).text();
+                const logParts = logText.split(', ');
+                csvData.push(logParts.join(','));
+            });
+            const csvContent = "data:text/csv;charset=utf-8," + csvData.join("\n");
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "game_logs.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Function to export logs to Excel
+        function exportLogsToExcel() {
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet([["Game", "Home", "Away", "Time"]]);
+            $('#game-logs-container .log-card').each(function() {
+                const logText = $(this).text();
+                const logParts = logText.split(', ');
+                const row = logParts.map(part => part.split(': ')[1]); // Extract values
+                XLSX.utils.sheet_add_aoa(ws, [row], { origin: -1 });
+            });
+            XLSX.utils.book_append_sheet(wb, ws, "Game Logs");
+            XLSX.writeFile(wb, "game_logs.xlsx");
         }
 
         // Function to clear scores
@@ -636,10 +722,10 @@
             analytics.logEvent('active_visitor', { timestamp: Date.now() });
         }
 
-        // Function to show the selected tab
+        // Function to show the selected tab with animation
         function showTab(tabId) {
-            $('.tab-content').hide(); // Hide all tabs
-            $('#' + tabId).show(); // Show the selected tab
+            $('.tab-content').removeClass('show'); // Hide all tabs
+            $('#' + tabId).addClass('show'); // Show the selected tab
             if (tabId === 'logs') {
                 fetchGameLogs(); // Fetch logs when the logs tab is shown
             } else if (tabId === 'score') {
@@ -647,11 +733,14 @@
             }
         }
 
-        // Function to update the current time
-        function updateCurrentTime() {
-            const now = new Date();
-            const options = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
-            document.getElementById('current-time').textContent = now.toLocaleTimeString([], options);
+        // Function to show loading spinner
+        function showLoadingSpinner() {
+            $('#loading-spinner').show();
+        }
+
+        // Function to hide loading spinner
+        function hideLoadingSpinner() {
+            $('#loading-spinner').hide();
         }
 
         // Toggle dark mode
