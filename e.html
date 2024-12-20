@@ -10,6 +10,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -198,6 +199,10 @@
             margin: 20px auto;
             display: block;
         }
+        .info-section {
+            margin-top: 20px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
@@ -220,6 +225,7 @@
         <a href="#title" onclick="showTab('title')">Game Title</a>
         <a href="#stats" onclick="showTab('stats')">Statistics</a>
         <a href="#logs" onclick="showTab('logs')">Logs</a>
+        <a href="#info" onclick="showTab('info')">Info</a>
         <a href="#settings" onclick="showTab('settings')">Settings</a>
     </div>
 
@@ -241,6 +247,7 @@
                 </div>
                 <div class="col text-center">
                     <h3>Away Team</h3>
+                    <input type="text" id="away-team-name" class="form-control" placeholder="Enter Away Team Name" oninput="updateAwayTeamName()">
                     <p class="score" id="away-score">0</p>
                     <button class="btn btn-success" onclick="updateScore('away', 1)">+1</button>
                     <button class="btn btn-success" onclick="updateScore('away', 2)">+2</button>
@@ -282,6 +289,15 @@
             <h2>Game Logs</h2>
             <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search logs..." oninput="filterLogs()">
             <div id="game-logs-container"></div>
+            <button class="btn btn-primary" onclick="exportLogsToPDF()">Export to PDF</button>
+        </div>
+
+        <div id="info" class="tab-content" style="display:none;">
+            <h2>Info</h2>
+            <div class="info-section">
+                <p>Copyright © WCHS Athletics 2025</p>
+                <p>Powered by <img src="https://assets.vnnsports.net/2021/01/14133922/vnn-logo-blackwhiteoutline.png" alt="VNN API" style="height: 30px;"></p>
+            </div>
         </div>
 
         <div id="settings" class="tab-content" style="display:none;">
@@ -411,7 +427,7 @@
             });
         }
 
-        // Function to update displayed scores
+        // Function to update displayed scores and game name
         function updateDisplayedScores() {
             $.ajax({
                 url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
@@ -419,6 +435,8 @@
                 success: function(data) {
                     document.getElementById('home-score').textContent = data.homeScore || 0;
                     document.getElementById('away-score').textContent = data.awayScore || 0;
+                    document.getElementById('game-title').value = data.game || ''; // Set game title
+                    document.getElementById('away-team-name').value = data.awayName || ''; // Set away team name
                 },
                 error: function(xhr, status, error) {
                     console.error("Error retrieving scores: " + error);
@@ -500,6 +518,17 @@
             });
         }
 
+        // Function to export logs to PDF
+        function exportLogsToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text("Game Logs", 20, 20);
+            $('#game-logs-container .log-card').each(function(index) {
+                doc.text($(this).text(), 20, 30 + (index * 10));
+            });
+            doc.save("game_logs.pdf");
+        }
+
         // Function to clear scores
         function clearScores() {
             const scoreData = { homeScore: 0, awayScore: 0 };
@@ -567,13 +596,38 @@
             });
         }
 
-        // Function to check database connection status
+        // Function to update the away team name
+        function updateAwayTeamName() {
+            const awayName = document.getElementById('away-team-name').value;
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify({ awayName: awayName }), // Update awayName in Firebase
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Away team name updated successfully");
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error updating away team name: " + error);
+                }
+            });
+        }
+
+        // Function to check Wi-Fi connection status
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
-            const staus = navigator.onLine;
-            connectionLabel.textContent = "Checking connection...";
-            status ? connectionLabel.textContent = "Connected" : connectionLabel.textContent = "No Connection";
-            connectionLabel.style.color = status ? "green" : "red";
+            const updateConnectionStatus = () => {
+                if (navigator.onLine) {
+                    connectionLabel.textContent = "Connected";
+                    connectionLabel.style.color = "green";
+                } else {
+                    connectionLabel.textContent = "No Connection";
+                    connectionLabel.style.color = "red";
+                }
+            };
+            window.addEventListener('online', updateConnectionStatus);
+            window.addEventListener('offline', updateConnectionStatus);
+            updateConnectionStatus(); // Initial check
         }
 
         // Function to update active visitors using Firebase Analytics
@@ -588,6 +642,8 @@
             $('#' + tabId).show(); // Show the selected tab
             if (tabId === 'logs') {
                 fetchGameLogs(); // Fetch logs when the logs tab is shown
+            } else if (tabId === 'score') {
+                updateDisplayedScores(); // Update scores when the score tab is shown
             }
         }
 
@@ -608,7 +664,6 @@
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
         checkConnection();
-        setInterval(checkConnection(), 5000);
         setInterval(updateActiveVisitors, 5000); // Track active visitors every 5 seconds
         setInterval(updateCurrentTime, 1000); // Update current time every second
         showTab('score'); // Show the score management tab by default
