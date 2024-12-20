@@ -734,11 +734,11 @@
             const connectionLabel = document.getElementById('connection-label');
             const updateConnectionStatus = () => {
                 if (navigator.onLine) {
-                    connectionLabel.textContent = "Connected to the Internet";
-                    connectionLabel.style.color = "green";
+                    $("#connection-label").text("Connected to the Internet");
+                    $("#connection-label").css("color", "green");
                 } else {
-                    connectionLabel.textContent = "No Internet Connection";
-                    connectionLabel.style.color = "red";
+                    $("#connection-label").text("No Internet Connection");
+                    $("#connection-label").css("color", "red");
                 }
             };
             window.addEventListener('online', updateConnectionStatus);
