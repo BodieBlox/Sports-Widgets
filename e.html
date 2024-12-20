@@ -731,23 +731,40 @@
 
         // Function to check Wi-Fi connection status
 
-                            $("#connection-label").text("Loading");
 
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
             const updateConnectionStatus = () => {
                 if (navigator.onLine) {
-                    $("#connection-label").text("Connected to the Internet");
-                    $("#connection-label").css("color", "green");
+                    
                 } else {
-                    $("#connection-label").text("No Internet Connection");
-                    $("#connection-label").css("color", "red");
+                  
                 }
             };
             window.addEventListener('online', updateConnectionStatus);
             window.addEventListener('offline', updateConnectionStatus);
             updateConnectionStatus(); // Initial check
         }
+
+        if (navigator.onLine) {
+    document.getElementById("connection-label").innerHTML = "Connected to the Internet";
+    document.getElementById("connection-label").style.color = "green";
+        } else {
+  document.getElementById("connection-label").innerHTML = "No Internet Connection";
+    document.getElementById("connection-label").style.color = "red";
+        }
+
+// To see changes in the network state, use addEventListener
+window.addEventListener("offline", (e) => {
+    document.getElementById("connection-label").innerHTML = "No Internet Connection";
+    document.getElementById("connection-label").style.color = "red";
+});
+
+window.addEventListener("online", (e) => {
+    document.getElementById("connection-label").innerHTML = "Connected to the Internet";
+    document.getElementById("connection-label").style.color = "green";
+
+});
 
         // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
