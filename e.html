@@ -103,6 +103,25 @@
             margin-left: 260px;
             padding: 20px;
         }
+        .tab-bar {
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 20px;
+        }
+        .tab-bar a {
+            display: inline-block;
+            padding: 10px 15px;
+            border: 1px solid #007bff;
+            border-radius: 5px;
+            margin-right: 5px;
+            color: #007bff;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+        .tab-bar a.active {
+            background-color: #007bff;
+            color: white;
+        }
         .navbar {
             position: fixed;
             bottom: 0;
@@ -238,17 +257,20 @@
         <img src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="Winston Churchill High School Athletics" class="logo">
         <h2 class="text-white text-center">Admin Dashboard</h2>
         <div id="connection-label" class="text-white text-center">Checking connection...</div>
-        <a href="#score" onclick="showTab('score')">Score Management</a>
-        <a href="#title" onclick="showTab('title')">Game Title</a>
-        <a href="#stats" onclick="showTab('stats')">Statistics</a>
-        <a href="#logs" onclick="showTab('logs')">Logs</a>
-        <a href="#info" onclick="showTab('info')">Info</a>
-        <a href="#settings" onclick="showTab('settings')">Settings</a>
     </div>
 
     <div class="content">
         <h1>Winston Churchill High School Athletics Admin Dashboard</h1>
-        <div id="score" class="tab-content fade">
+        <div class="tab-bar">
+            <a href="#score" class="active" onclick="showTab('score')">Score Management</a>
+            <a href="#title" onclick="showTab('title')">Game Title</a>
+            <a href="#stats" onclick="showTab('stats')">Statistics</a>
+            <a href="#logs" onclick="showTab('logs')">Logs</a>
+            <a href="#info" onclick="showTab('info')">Info</a>
+            <a href="#settings" onclick="showTab('settings')">Settings</a>
+        </div>
+
+        <div id="score" class="tab-content fade show">
             <h2>Score Management</h2>
             <div class="row">
                 <div class="col text-center">
@@ -725,7 +747,10 @@
         // Function to show the selected tab with animation
         function showTab(tabId) {
             $('.tab-content').removeClass('show'); // Hide all tabs
-            $('#' + tabId).addClass('show'); // Show the selected tab
+            $('.tab-content').hide(); // Hide all tabs
+            $('#' + tabId).fadeIn(500).addClass('show'); // Show the selected tab with fade-in effect
+            $('.tab-bar a').removeClass('active'); // Remove active class from all tabs
+            $('.tab-bar a[href="#' + tabId + '"]').addClass('active'); // Add active class to the clicked tab
             if (tabId === 'logs') {
                 fetchGameLogs(); // Fetch logs when the logs tab is shown
             } else if (tabId === 'score') {
