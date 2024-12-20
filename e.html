@@ -730,6 +730,9 @@
         }
 
         // Function to check Wi-Fi connection status
+
+                            $("#connection-label").text("Loading");
+
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
             const updateConnectionStatus = () => {
