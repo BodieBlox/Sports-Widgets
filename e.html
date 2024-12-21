@@ -801,14 +801,20 @@
     
     const updateConnectionStatus = () => {
         if (navigator.onLine) {
-            $connectionLabel.text("Connected to the Internet").css("color", "green");
+            $connectionLabel
+                .text("Connected to the Internet")
+                .css({ "color": "green", "transition": "color 0.5s ease-in-out" });
         } else {
-            $connectionLabel.text("No Internet Connection").css("color", "red");
+            $connectionLabel
+                .text("No Internet Connection")
+                .css({ "color": "red", "transition": "color 0.5s ease-in-out" });
         }
     };
 
     $(window).on('online offline', updateConnectionStatus); // Listen to both events
-    updateConnectionStatus(); // Initial check
+
+    // Run the check 10 seconds after page load
+    setTimeout(updateConnectionStatus, 10000);
 }
         // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
