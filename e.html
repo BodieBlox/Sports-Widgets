@@ -312,6 +312,7 @@
             </div>
             <button class="btn btn-info" onclick="logScore()">Log Score</button>
             <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
+            <button class="btn btn-warning" onclick="endGame()">End Game</button>
             <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
@@ -550,10 +551,15 @@
                     for (const key in data) {
                         if (data.hasOwnProperty(key)) {
                             const logCard = $('<div class="log-card"></div>').text(`Game: ${data[key].game}, Home: ${data[key].home}, Away: ${data[key].away}, Time: ${data[key].time}`);
+                            const editButton = $('<button class="btn btn-warning btn-sm float-right">Edit</button>');
+                            editButton.on('click', function() {
+                                editLog(key);
+                            });
                             const deleteButton = $('<button class="btn btn-danger btn-sm float-right">Delete</button>');
                             deleteButton.on('click', function() {
                                 deleteLog(key);
                             });
+                            logCard.append(editButton);
                             logCard.append(deleteButton);
                             logsContainer.append(logCard);
                         }
@@ -566,6 +572,31 @@
                     hideLoadingSpinner();
                 }
             });
+        }
+
+        // Function to edit a log item
+        function editLog(logId) {
+            const newHomeScore = prompt("Enter new Home Score:");
+            const newAwayScore = prompt("Enter new Away Score:");
+            if (newHomeScore !== null && newAwayScore !== null) {
+                const updatedLog = {
+                    home: newHomeScore,
+                    away: newAwayScore
+                };
+                $.ajax({
+                    url: `https://test-71ecd-default-rtdb.firebaseio.com/GameLogs/${logId}.json`,
+                    type: 'PATCH',
+                    data: JSON.stringify(updatedLog),
+                    contentType: 'application/json',
+                    success: function() {
+                        console.log("Log updated successfully");
+                        fetchGameLogs(); // Refresh the logs after updating
+                    },
+                    error: function(xhr, status, error) {
+                        console.error("Error updating log: " + error);
+                    }
+                });
+            }
         }
 
         // Function to delete a log item
@@ -663,6 +694,25 @@
             });
         }
 
+        // Function to end the game
+        function endGame() {
+            clearScores();
+            const resetData = { quarter: 1, game: "N/A" };
+            $.ajax({
+                url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`,
+                type: 'PATCH',
+                data: JSON.stringify(resetData),
+                contentType: 'application/json',
+                success: function() {
+                    console.log("Game ended successfully");
+                    updateDisplayedScores(); // Update displayed scores to reflect changes
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error ending game: " + error);
+                }
+            });
+        }
+
         // Function to open the enter score popup
         function openEnterScore(team) {
             document.getElementById('overlay').style.display = 'block';
@@ -730,41 +780,21 @@
         }
 
         // Function to check Wi-Fi connection status
-
-
         function checkConnection() {
             const connectionLabel = document.getElementById('connection-label');
             const updateConnectionStatus = () => {
                 if (navigator.onLine) {
-                    
+                    connectionLabel.textContent = "Connected to the Internet";
+                    connectionLabel.style.color = "green";
                 } else {
-                  
+                    connectionLabel.textContent = "No Internet Connection";
+                    connectionLabel.style.color = "red";
                 }
             };
             window.addEventListener('online', updateConnectionStatus);
             window.addEventListener('offline', updateConnectionStatus);
             updateConnectionStatus(); // Initial check
         }
-
-        if (navigator.onLine) {
-    document.getElementById("connection-label").innerHTML = "Connected to the Internet";
-    document.getElementById("connection-label").style.color = "green";
-        } else {
-  document.getElementById("connection-label").innerHTML = "No Internet Connection";
-    document.getElementById("connection-label").style.color = "red";
-        }
-
-// To see changes in the network state, use addEventListener
-window.addEventListener("offline", (e) => {
-    document.getElementById("connection-label").innerHTML = "No Internet Connection";
-    document.getElementById("connection-label").style.color = "red";
-});
-
-window.addEventListener("online", (e) => {
-    document.getElementById("connection-label").innerHTML = "Connected to the Internet";
-    document.getElementById("connection-label").style.color = "green";
-
-});
 
         // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
