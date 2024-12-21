@@ -796,23 +796,20 @@
             });
         }
 
-        // Function to check Wi-Fi connection status
         function checkConnection() {
-            const connectionLabel = document.getElementById('connection-label');
-            const updateConnectionStatus = () => {
-                if (navigator.onLine) {
-                    connectionLabel.textContent = "Connected to the Internet";
-                    connectionLabel.style.color = "green";
-                } else {
-                    connectionLabel.textContent = "No Internet Connection";
-                    connectionLabel.style.color = "red";
-                }
-            };
-            window.addEventListener('online', updateConnectionStatus);
-            window.addEventListener('offline', updateConnectionStatus);
-            updateConnectionStatus(); // Initial check
+    const $connectionLabel = $('#connection-label');
+    
+    const updateConnectionStatus = () => {
+        if (navigator.onLine) {
+            $connectionLabel.text("Connected to the Internet").css("color", "green");
+        } else {
+            $connectionLabel.text("No Internet Connection").css("color", "red");
         }
+    };
 
+    $(window).on('online offline', updateConnectionStatus); // Listen to both events
+    updateConnectionStatus(); // Initial check
+}
         // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
             // This function will be called to track active visitors
@@ -894,6 +891,10 @@ async function askAI() {
             const isDarkMode = document.body.classList.contains('dark-mode');
             this.checked = isDarkMode; // Sync toggle with dark mode state
         });
+
+        $(document).ready(() => {
+    checkConnection();
+});
 
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
