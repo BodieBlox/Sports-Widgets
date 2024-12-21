@@ -851,38 +851,43 @@
         }
 
         // Function to ask AI
-        async function askAI() {
-            const question = document.getElementById('ai-question').value;
-            const responseDiv = document.getElementById('ai-response');
-            responseDiv.innerHTML = ""; // Clear previous response
+       // Function to ask AI
+async function askAI() {
+    const question = document.getElementById('ai-question').value;
+    const responseDiv = document.getElementById('ai-response');
+    responseDiv.innerHTML = ""; // Clear previous response
 
-            const apiKey = "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"; // Replace with your OpenAI API key
+    const apiKey = "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"; // Replace with your OpenAI API key
 
-            try {
-                const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer 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`
-                    },
-                    body: JSON.stringify({
-                        model: "gpt-3.5-turbo",
-                        messages: [{ role: "user", content: question }]
-                    })
-                });
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
+            },
+            body: JSON.stringify({
+                model: "gpt-3.5-turbo",
+                messages: [{ role: "user", content: question }]
+            })
+        });
 
-                const data = await response.json();
-                if (data.choices && data.choices.length > 0) {
-                    responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
-                } else {
-                    responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
-                }
-            } catch (error) {
-                console.error("Error fetching AI response:", error);
-                responseDiv.innerHTML = "<p>There was an error connecting to the AI service.</p>";
-            }
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error.message); // Throw an error if the response is not ok
         }
 
+        const data = await response.json();
+        if (data.choices && data.choices.length > 0) {
+            responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
+        } else {
+            responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching AI response:", error);
+        responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
+    }
+}
         // Toggle dark mode
         document.getElementById('dark-mode-toggle').addEventListener('change', function() {
             document.body.classList.toggle('dark-mode');
