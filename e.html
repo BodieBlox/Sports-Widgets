@@ -972,13 +972,6 @@
             // Run the check 10 seconds after page load
             setTimeout(updateConnectionStatus, 10000);
         }
-
-        // Function to update active visitors using Firebase Analytics
-        function updateActiveVisitors() {
-            // This function will be called to track active visitors
-            analytics.logEvent('active_visitor', { timestamp: Date.now() });
-        }
-
         // Function to show the selected tab with animation
         function showTab(tabId) {
             $('.tab-content').removeClass('show'); // Hide all tabs
