@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
     <style>
         body {
@@ -1058,6 +1059,54 @@
                     document.body.style.backgroundColor = '#f8f9fa'; // Default
             }
         }
+
+        function showAuthPopup() {
+      Swal.fire({
+        title: 'Authentication Required',
+        text: 'Please enter the admin password to proceed.',
+        input: 'password',
+        inputPlaceholder: 'Enter your password',
+        inputAttributes: {
+          autocapitalize: 'off'
+        },
+        showCancelButton: false, // Prevent closing by cancel button
+        allowOutsideClick: false, // Disable clicking outside to close
+        allowEscapeKey: false, // Disable escape key
+        confirmButtonText: 'Authenticate',
+        backdrop: 'rgba(0, 0, 0, 1)', // Solid black background, no transparency
+        preConfirm: (password) => {
+          return new Promise((resolve) => {
+            if (password === 'admin') {
+              resolve(); // Proceed if password is correct
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'Failed to Authenticate',
+                text: 'Reload to try again.',
+                showConfirmButton: false, // Prevent further attempts
+                allowOutsideClick: false,
+                allowEscapeKey: false
+              });
+            }
+          });
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            icon: 'success',
+            title: 'Authenticated',
+            text: 'You have successfully authenticated!',
+            showConfirmButton: true
+          }).then(() => {
+            // Redirect or proceed to the next action
+            console.log('Access granted');
+          });
+        }
+      });
+    }
+
+    // Trigger the popup on page load
+    document.addEventListener('DOMContentLoaded', showAuthPopup);
 
         // Keyboard shortcuts
         $(document).on('keydown', function(e) {
