@@ -37,7 +37,7 @@
         .button {
             margin: 5px;
         }
-        .enter-score-popup, .login-popup {
+        .enter-score-popup, .login-popup, .create-log-popup {
             display: none;
             position: fixed;
             left: 50%;
@@ -121,11 +121,14 @@
             margin-right: 5px;
             color: #007bff;
             text-decoration: none;
-            transition: background-color 0.3s;
+            transition: background-color 0.3s, color 0.3s;
         }
         .tab-bar a.active {
             background-color: #007bff;
             color: white;
+        }
+        .tab-bar a:hover {
+            background-color: rgba(0, 123, 255, 0.1);
         }
         .navbar {
             position: fixed;
@@ -402,20 +405,7 @@
             <button class="btn btn-secondary" onclick="exportLogsToExcel()">Export to Excel</button>
             <button class="btn btn-danger" onclick="bulkDeleteLogs()">Delete Selected Logs</button>
             <div id="pagination" class="mt-3"></div> <!-- Pagination controls -->
-            <h3>Create a Log</h3>
-            <div class="form-group">
-                <label for="log-game">Game:</label>
-                <input type="text" id="log-game" class="form-control" placeholder="Enter game name">
-            </div>
-            <div class="form-group">
-                <label for="log-home-score">Home Score:</label>
-                <input type="number" id="log-home-score" class="form-control" placeholder="Enter home score">
-            </div>
-            <div class="form-group">
-                <label for="log-away-score">Away Score:</label>
-                <input type="number" id="log-away-score" class="form-control" placeholder="Enter away score">
-            </div>
-            <button class="btn btn-success" onclick="createLog()">Create Log</button>
+            <button class="btn btn-success" onclick="openCreateLogPopup()">Create Log</button>
         </div>
 
         <div id="ai" class="tab-content fade" style="display:none;">
@@ -464,12 +454,22 @@
     </div>
 
     <div class="overlay" id="overlay"></div>
-    <div class="enter-score-popup" id="enter-score-popup">
-        <h2>Enter Score</h2>
-        <input type="number" id="score-input" class="form-control" placeholder="Enter score" />
-        <input type="text" id="game-name-input" class="form-control" placeholder="Enter game name" />
-        <button class="btn btn-success" id="submit-score-button">Submit</button>
-        <button class="btn btn-secondary" onclick="closeEnterScore()">Cancel</button>
+    <div class="login-popup" id="create-log-popup">
+        <h2>Create Log</h2>
+        <div class="form-group">
+            <label for="log-game">Game:</label>
+            <input type="text" id="log-game" class="form-control" placeholder="Enter game name">
+        </div>
+        <div class="form-group">
+            <label for="log-home-score">Home Score:</label>
+            <input type="number" id="log-home-score" class="form-control" placeholder="Enter home score">
+        </div>
+        <div class="form-group">
+            <label for="log-away-score">Away Score:</label>
+            <input type="number" id="log-away-score" class="form-control" placeholder="Enter away score">
+        </div>
+        <button class="btn btn-success" onclick="createLog()">Create Log</button>
+        <button class="btn btn-secondary" onclick="closeCreateLogPopup()">Cancel</button>
     </div>
 
     <div class="loading-spinner" id="loading-spinner">
@@ -516,6 +516,21 @@
             document.getElementById('login-email').value = '';
             document.getElementById('login-password').value = '';
             document.getElementById('login-error').style.display = 'none';
+        }
+
+        // Function to open the create log popup
+        function openCreateLogPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('create-log-popup').style.display = 'block';
+        }
+
+        // Function to close the create log popup
+        function closeCreateLogPopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('create-log-popup').style.display = 'none';
+            document.getElementById('log-game').value = ''; // Clear input
+            document.getElementById('log-home-score').value = ''; // Clear home score input
+            document.getElementById('log-away-score').value = ''; // Clear away score input
         }
 
         // Function to handle login using AJAX
@@ -1079,6 +1094,7 @@
         $(document).ready(() => {
             checkConnection();
             initScoringTrends(); // Initialize the scoring trends graph
+            updateCurrentTime(); // Load current time on page load
             setInterval(updateCurrentTime, 1000); // Update current time every second
         });
 
@@ -1194,6 +1210,7 @@
                     success: function() {
                         console.log("Log created successfully");
                         fetchGameLogs(); // Refresh the logs after creating
+                        closeCreateLogPopup(); // Close the popup after creating
                     },
                     error: function(xhr, status, error) {
                         console.error("Error creating log: " + error);
