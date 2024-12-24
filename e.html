@@ -12,6 +12,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
     <style>
         body {
             background-color: #f8f9fa;
@@ -243,6 +244,35 @@
         .fade.show {
             opacity: 1;
         }
+        /* Mobile styles */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .content {
+                margin-left: 0;
+                padding: 10px;
+            }
+            .score {
+                font-size: 1.5em;
+            }
+        }
+        /* Fullscreen styles for projector mode */
+        .projector-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: white;
+            z-index: 9999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            font-size: 5em;
+        }
     </style>
 </head>
 <body>
@@ -314,6 +344,7 @@
             <button class="btn btn-info" onclick="logScore()">Log Score</button>
             <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
             <button class="btn btn-warning" onclick="endGame()">End Game</button>
+            <button class="btn btn-secondary" onclick="toggleProjectorMode()">Projector Mode</button>
             <div class="connection-status" id="connection-status">Connecting to database...</div>
         </div>
 
@@ -331,6 +362,7 @@
 
         <div id="stats" class="tab-content fade" style="display:none;">
             <h2>Statistics</h2>
+            <canvas id="scoring-trends" width="400" height="200"></canvas> <!-- Graph for scoring trends -->
             <p id="active-visitors">Active Visitors: 0</p>
         </div>
 
@@ -338,10 +370,13 @@
             <h2>Game Logs</h2>
             <input type="text" id="search-bar" class="form-control search-bar" placeholder="Search logs..." oninput="filterLogs()">
             <input type="date" id="date-filter" class="form-control" onchange="filterLogsByDate()">
+            <input type="date" id="end-date-filter" class="form-control" placeholder="End Date" onchange="filterLogsByDateRange()">
             <div id="game-logs-container"></div>
             <button class="btn btn-primary" onclick="exportLogsToPDF()">Export to PDF</button>
             <button class="btn btn-secondary" onclick="exportLogsToCSV()">Export to CSV</button>
             <button class="btn btn-secondary" onclick="exportLogsToExcel()">Export to Excel</button>
+            <button class="btn btn-danger" onclick="bulkDeleteLogs()">Delete Selected Logs</button>
+            <div id="pagination" class="mt-3"></div> <!-- Pagination controls -->
         </div>
 
         <div id="ai" class="tab-content fade" style="display:none;">
@@ -392,6 +427,14 @@
     <div class="loading-spinner" id="loading-spinner">
         <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
+        </div>
+    </div>
+
+    <div id="projector-mode" class="projector-mode">
+        <div>
+            <span id="projector-score">Score: 0 - 0</span>
+            <br>
+            <span id="projector-quarter">Quarter: 1</span>
         </div>
     </div>
 
@@ -568,6 +611,11 @@
                     for (const key in data) {
                         if (data.hasOwnProperty(key)) {
                             const logCard = $('<div class="log-card"></div>').text(`Game: ${data[key].game}, Home: ${data[key].home}, Away: ${data[key].away}, Time: ${data[key].time}`);
+                            const starButton = $('<button class="btn btn-warning btn-sm float-right">⭐</button>');
+                            starButton.on('click', function() {
+                                // Logic to star log entry
+                                $(this).closest('.log-card').prependTo(logsContainer); // Move to top
+                            });
                             const editButton = $('<button class="btn btn-warning btn-sm float-right">Edit</button>');
                             editButton.on('click', function() {
                                 editLog(key);
@@ -576,11 +624,15 @@
                             deleteButton.on('click', function() {
                                 deleteLog(key);
                             });
+                            const checkbox = $('<input type="checkbox" data-log-id="' + key + '">');
+                            logCard.prepend(checkbox);
+                            logCard.append(starButton);
                             logCard.append(editButton);
                             logCard.append(deleteButton);
                             logsContainer.append(logCard);
                         }
                     }
+                    addPagination(logsContainer.children().length); // Add pagination
                 },
                 error: function(xhr, status, error) {
                     console.error("Error fetching game logs: " + error);
@@ -647,6 +699,17 @@
                 const logText = $(this).text();
                 const logDate = logText.match(/Time: (.+)/)[1].split(',')[0]; // Extract date from log
                 $(this).toggle(logDate.includes(selectedDate));
+            });
+        }
+
+        // Function to filter logs by date range
+        function filterLogsByDateRange() {
+            const startDate = $('#date-filter').val();
+            const endDate = $('#end-date-filter').val();
+            $('#game-logs-container .log-card').each(function() {
+                const logText = $(this).text();
+                const logDate = logText.match(/Time: (.+)/)[1].split(',')[0]; // Extract date from log
+                $(this).toggle(logDate >= startDate && logDate <= endDate);
             });
         }
 
@@ -797,25 +860,26 @@
         }
 
         function checkConnection() {
-    const $connectionLabel = $('#connection-label');
-    
-    const updateConnectionStatus = () => {
-        if (navigator.onLine) {
-            $connectionLabel
-                .text("Connected to the Internet")
-                .css({ "color": "green", "transition": "color 0.5s ease-in-out" });
-        } else {
-            $connectionLabel
-                .text("No Internet Connection")
-                .css({ "color": "red", "transition": "color 0.5s ease-in-out" });
+            const $connectionLabel = $('#connection-label');
+            
+            const updateConnectionStatus = () => {
+                if (navigator.onLine) {
+                    $connectionLabel
+                        .text("Connected to the Internet")
+                        .css({ "color": "green", "transition": "color 0.5s ease-in-out" });
+                } else {
+                    $connectionLabel
+                        .text("No Internet Connection")
+                        .css({ "color": "red", "transition": "color 0.5s ease-in-out" });
+                }
+            };
+
+            $(window).on('online offline', updateConnectionStatus); // Listen to both events
+
+            // Run the check 10 seconds after page load
+            setTimeout(updateConnectionStatus, 10000);
         }
-    };
 
-    $(window).on('online offline', updateConnectionStatus); // Listen to both events
-
-    // Run the check 10 seconds after page load
-    setTimeout(updateConnectionStatus, 10000);
-}
         // Function to update active visitors using Firebase Analytics
         function updateActiveVisitors() {
             // This function will be called to track active visitors
@@ -854,43 +918,43 @@
         }
 
         // Function to ask AI
-       // Function to ask AI
-async function askAI() {
-    const question = document.getElementById('ai-question').value;
-    const responseDiv = document.getElementById('ai-response');
-    responseDiv.innerHTML = ""; // Clear previous response
+        async function askAI() {
+            const question = document.getElementById('ai-question').value;
+            const responseDiv = document.getElementById('ai-response');
+            responseDiv.innerHTML = ""; // Clear previous response
 
-    const apiKey = "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"; // Replace with your OpenAI API key
+            const apiKey = "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"; // Replace with your OpenAI API key
 
-    try {
-        const response = await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
-            },
-            body: JSON.stringify({
-                model: "gpt-3.5-turbo",
-                messages: [{ role: "user", content: question }]
-            })
-        });
+            try {
+                const response = await fetch("https://api.openai.com/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
+                    },
+                    body: JSON.stringify({
+                        model: "gpt-3.5-turbo",
+                        messages: [{ role: "user", content: question }]
+                    })
+                });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error.message); // Throw an error if the response is not ok
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error.message); // Throw an error if the response is not ok
+                }
+
+                const data = await response.json();
+                if (data.choices && data.choices.length > 0) {
+                    responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
+                } else {
+                    responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
+                }
+            } catch (error) {
+                console.error("Error fetching AI response:", error);
+                responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
+            }
         }
 
-        const data = await response.json();
-        if (data.choices && data.choices.length > 0) {
-            responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
-        } else {
-            responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
-        }
-    } catch (error) {
-        console.error("Error fetching AI response:", error);
-        responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
-    }
-}
         // Toggle dark mode
         document.getElementById('dark-mode-toggle').addEventListener('change', function() {
             document.body.classList.toggle('dark-mode');
@@ -899,8 +963,9 @@ async function askAI() {
         });
 
         $(document).ready(() => {
-    checkConnection();
-});
+            checkConnection();
+            initScoringTrends(); // Initialize the scoring trends graph
+        });
 
         // Start by displaying the initial scores and checking connection
         updateDisplayedScores();
@@ -908,6 +973,91 @@ async function askAI() {
         setInterval(updateActiveVisitors, 5000); // Track active visitors every 5 seconds
         setInterval(updateCurrentTime, 1000); // Update current time every second
         showTab('score'); // Show the score management tab by default
+
+        // Function to initialize the scoring trends graph
+        function initScoringTrends() {
+            const ctx = document.getElementById('scoring-trends').getContext('2d');
+            const scoringTrendsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [], // Add labels for your data
+                    datasets: [{
+                        label: 'Scoring Trends',
+                        data: [], // Add your scoring data here
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Function to update scoring trends
+        function updateScoringTrends(data) {
+            const scoringTrendsChart = Chart.getChart('scoring-trends');
+            if (scoringTrendsChart) {
+                scoringTrendsChart.data.labels.push(new Date().toLocaleTimeString());
+                scoringTrendsChart.data.datasets[0].data.push(data.homeScore); // Example: pushing home score
+                scoringTrendsChart.update();
+            }
+        }
+
+        // Function to toggle projector mode
+        function toggleProjectorMode() {
+            const projector = document.getElementById('projector-mode');
+            if (projector.style.display === 'none') {
+                projector.style.display = 'flex';
+                document.getElementById('projector-score').textContent = `Score: ${document.getElementById('home-score').textContent} - ${document.getElementById('away-score').textContent}`;
+                document.getElementById('projector-quarter').textContent = `Quarter: ${document.getElementById('quarter').value}`;
+            } else {
+                projector.style.display = 'none';
+            }
+        }
+
+        // Function to bulk delete selected logs
+        function bulkDeleteLogs() {
+            const selectedLogs = [];
+            $('#game-logs-container .log-card input[type="checkbox"]:checked').each(function() {
+                selectedLogs.push($(this).data('log-id'));
+            });
+            // Perform delete operation for selected logs
+            selectedLogs.forEach(logId => {
+                deleteLog(logId);
+            });
+        }
+
+        // Function to add pagination
+        function addPagination(totalLogs) {
+            const paginationContainer = $('#pagination');
+            paginationContainer.empty(); // Clear previous pagination
+            const logsPerPage = 5; // Set number of logs per page
+            const totalPages = Math.ceil(totalLogs / logsPerPage);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = $('<button class="btn btn-secondary btn-sm"></button>').text(i);
+                pageButton.on('click', function() {
+                    showPage(i, logsPerPage);
+                });
+                paginationContainer.append(pageButton);
+            }
+        }
+
+        // Function to show specific page of logs
+        function showPage(pageNumber, logsPerPage) {
+            const logs = $('#game-logs-container .log-card');
+            logs.hide(); // Hide all logs
+            const start = (pageNumber - 1) * logsPerPage;
+            const end = start + logsPerPage;
+            logs.slice(start, end).show(); // Show logs for the current page
+        }
     </script>
 </body>
 </html>
