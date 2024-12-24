@@ -312,7 +312,7 @@
         <input type="email" id="login-email" class="form-control" placeholder="Email" required />
         <input type="password" id="login-password" class="form-control" placeholder="Password" required />
         <button class="btn btn-success" id="login-button">Login</button>
-        <button class="btn btn-secondary" onclick="closeLoginPopup()">Cancel</button>
+        <button class="btn btn-secondary" id="c" onclick="closeLoginPopup()">Cancel</button>
         <div id="login-error" style="color: red; display: none;"></div>
     </div>
 
@@ -504,6 +504,7 @@
         function openLoginPopup() {
             document.getElementById('login-overlay').style.display = 'block';
             document.getElementById('login-popup').style.display = 'block';
+            document.getElementById('c').style.display = 'none';
         }
 
         // Function to close the login popup
@@ -549,6 +550,9 @@
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON.error.message;
                     document.getElementById('login-error').textContent = errorMessage;
+                    if (errorMessage == "USER_DISABLED") {
+                        document.getElementById('login-error').textContent = 'Account Banned';
+                    }
                     document.getElementById('login-error').style.display = 'block';
                 }
             });
@@ -871,6 +875,7 @@
             document.getElementById('overlay').style.display = 'block';
             document.getElementById('enter-score-popup').style.display = 'block';
             document.getElementById('score-input').dataset.team = team; // Store team in data attribute
+            document.getElementById('')
         }
 
         // Function to close the enter score popup
@@ -1102,7 +1107,7 @@
     }
 
     // Trigger the popup on page load
-    document.addEventListener('DOMContentLoaded', showAuthPopup);
+   // document.addEventListener('DOMContentLoaded', showAuthPopup);
 
         // Keyboard shortcuts
         $(document).on('keydown', function(e) {
@@ -1267,7 +1272,7 @@
             }
         }
 
-        showAuthPopup();
+       // showAuthPopup();
     </script>
 </body>
 </html>
