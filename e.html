@@ -273,6 +273,31 @@
             align-items: center;
             font-size: 5em;
         }
+        /* Tooltip styles */
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: black;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%; /* Position above the tooltip */
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -411,6 +436,15 @@
                     <input type="checkbox" id="dark-mode-toggle">
                     <span class="slider"></span>
                 </label>
+            </div>
+            <div class="form-group">
+                <label for="theme-select">Select Theme:</label>
+                <select id="theme-select" class="form-control" onchange="changeTheme()">
+                    <option value="default">Default</option>
+                    <option value="blue">Blue</option>
+                    <option value="green">Green</option>
+                    <option value="red">Red</option>
+                </select>
             </div>
         </div>
     </div>
@@ -611,16 +645,16 @@
                     for (const key in data) {
                         if (data.hasOwnProperty(key)) {
                             const logCard = $('<div class="log-card"></div>').text(`Game: ${data[key].game}, Home: ${data[key].home}, Away: ${data[key].away}, Time: ${data[key].time}`);
-                            const starButton = $('<button class="btn btn-warning btn-sm float-right">⭐</button>');
+                            const starButton = $('<button class="btn btn-warning btn-sm float-right tooltip">⭐<span class="tooltiptext">Star this log</span></button>');
                             starButton.on('click', function() {
                                 // Logic to star log entry
                                 $(this).closest('.log-card').prependTo(logsContainer); // Move to top
                             });
-                            const editButton = $('<button class="btn btn-warning btn-sm float-right">Edit</button>');
+                            const editButton = $('<button class="btn btn-warning btn-sm float-right tooltip">Edit<span class="tooltiptext">Edit this log</span></button>');
                             editButton.on('click', function() {
                                 editLog(key);
                             });
-                            const deleteButton = $('<button class="btn btn-danger btn-sm float-right">Delete</button>');
+                            const deleteButton = $('<button class="btn btn-danger btn-sm float-right tooltip">Delete<span class="tooltiptext">Delete this log</span></button>');
                             deleteButton.on('click', function() {
                                 deleteLog(key);
                             });
@@ -960,6 +994,56 @@
             document.body.classList.toggle('dark-mode');
             const isDarkMode = document.body.classList.contains('dark-mode');
             this.checked = isDarkMode; // Sync toggle with dark mode state
+        });
+
+        // Change theme based on user selection
+        function changeTheme() {
+            const selectedTheme = document.getElementById('theme-select').value;
+            switch (selectedTheme) {
+                case 'blue':
+                    document.body.style.backgroundColor = '#007bff';
+                    break;
+                case 'green':
+                    document.body.style.backgroundColor = '#28a745';
+                    break;
+                case 'red':
+                    document.body.style.backgroundColor = '#dc3545';
+                    break;
+                default:
+                    document.body.style.backgroundColor = '#f8f9fa'; // Default
+            }
+        }
+
+        // Keyboard shortcuts
+        $(document).on('keydown', function(e) {
+            switch (e.key) {
+                case '1':
+                    showTab('score');
+                    break;
+                case '2':
+                    showTab('title');
+                    break;
+                case '3':
+                    showTab('stats');
+                    break;
+                case '4':
+                    showTab('logs');
+                    break;
+                case '5':
+                    showTab('ai');
+                    break;
+                case '6':
+                    showTab('info');
+                    break;
+                case '7':
+                    showTab('settings');
+                    break;
+                case 'Escape':
+                    closeLoginPopup();
+                    break;
+                default:
+                    break;
+            }
         });
 
         $(document).ready(() => {
