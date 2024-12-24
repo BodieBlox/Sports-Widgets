@@ -71,6 +71,11 @@
             font-size: 1.2em;
             text-align: center;
         }
+        .logins {
+            margin-top: 20px;
+            font-size: 1.2em;
+            text-align: bottom;
+        }
         .title-input {
             width: 100%;
             padding: 10px;
@@ -321,6 +326,7 @@
         <h2 class="text-white text-center">Admin Dashboard</h2>
         <div id="connection-label" class="text-white text-center">Checking connection...</div>
         <div id="current-time" class="text-white text-center" style="margin-top: 10px;">Current Time: --:--</div>
+        <div id="logins" class="text-white text-bottom" style="margin-top: 10px;">Loading User</div>
     </div>
 
     <div class="content">
@@ -531,6 +537,8 @@
             document.getElementById('log-away-score').value = ''; // Clear away score input
         }
 
+        var x = localStorage.getItem("name");
+
         // Function to handle login using AJAX
         document.getElementById('login-button').addEventListener('click', function() {
             const email = document.getElementById('login-email').value;
@@ -546,6 +554,8 @@
                     localStorage.setItem('token', response.idToken); // Store token for future requests
                     closeLoginPopup();
                     showTab('score'); // Show the score management tab after login
+                    localStorage.setItem('name', email);
+                    x = email
                 },
                 error: function(xhr) {
                     const errorMessage = xhr.responseJSON.error.message;
@@ -564,6 +574,8 @@
         } else {
             showTab('score'); // Show the score management tab if token exists
         }
+
+        document.getElementById('logins').textContent = x;
 
         // Function to update score using AJAX
         function updateScore(team, points) {
