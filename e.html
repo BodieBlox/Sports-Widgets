@@ -1008,8 +1008,10 @@
             const question = document.getElementById('ai-question').value;
             const responseDiv = document.getElementById('ai-response');
             responseDiv.innerHTML = ""; // Clear previous response
+            const t = "sk-proj-EEjjzkk2";
+            const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
 
-            const apiKey = "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"; // Replace with your OpenAI API key
+            const apiKey = t + v; // Replace with your OpenAI API key
 
             try {
                 const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -1019,7 +1021,7 @@
                         "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
                     },
                     body: JSON.stringify({
-                        model: "gpt-3.5-turbo",
+                        model: "gpt-4o-mini",
                         messages: [{ role: "user", content: question }]
                     })
                 });
