@@ -1006,14 +1006,14 @@
     const apiKey = t + v; // Combine the two parts of the API key
 
     try {
-        const response = await fetch("https://api.openai.com/v1/assistants/asst_JpXNYkLjRlE2MJNPzShCLIuc/completions", {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
             },
             body: JSON.stringify({
-               // model: "gpt-4o-mini", // Use the appropriate model
+                model: "gpt-4o-mini", // Use the appropriate model
                 messages: [{ role: "user", content: question }]
             })
         });
