@@ -1023,7 +1023,7 @@
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini", // Use the appropriate model
-                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. If it is not mentioned in this note then tell the user you don't know the answer. Do not answer random questions. This site requires login, if a user wants to know how to create a login says its not possible." }, { role: "user", content: question }]
+                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. If it is not mentioned in this note and its probaly not related to it then tell the user you don't know the answer nicley. Do not answer random questions. This site requires login, if a user wants to know how to create a login says its not possible. You can tell the user your purpose is to help guide them around this site. Adding scores to a team is simple, click the score tab and select the correct button under the team you are selecting. The same goes for removing points. To Log Scores, go to the score tab and click the log score button. To change quaters go to the score tab and select the quater dropdown. When a game is over click end game under the score tab. To clear scores head to the score tab and click clear scores. To name a game or set the away team name head over to the game title tab. The log tab allows you to view scores for past games." }, { role: "user", content: question }]
             })
         });
 
