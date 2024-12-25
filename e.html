@@ -1005,43 +1005,43 @@
 
         // Function to ask AI
         async function askAI() {
-            const question = document.getElementById('ai-question').value;
-            const responseDiv = document.getElementById('ai-response');
-            responseDiv.innerHTML = ""; // Clear previous response
-            const t = "sk-proj-EEjjzkk2";
-            const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
+    const question = document.getElementById('ai-question').value;
+    const responseDiv = document.getElementById('ai-response');
+    responseDiv.innerHTML = ""; // Clear previous response
+    const t = "sk-proj-EEjjzkk2";
+    const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
 
-            const apiKey = t + v; // Replace with your OpenAI API key
+    const apiKey = t + v; // Combine the two parts of the API key
 
-            try {
-                const response = await fetch("https://api.openai.com/v1/chat/completions", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
-                    },
-                    body: JSON.stringify({
-                        model: "gpt-4o-mini",
-                        messages: [{ role: "user", content: question }]
-                    })
-                });
+    try {
+        const response = await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${apiKey}` // Ensure the API key is included here
+            },
+            body: JSON.stringify({
+                model: "gpt-4", // Use the appropriate model
+                messages: [{ role: "user", content: question }]
+            })
+        });
 
-                if (!response.ok) {
-                    const errorData = await response.json();
-                    throw new Error(errorData.error.message); // Throw an error if the response is not ok
-                }
-
-                const data = await response.json();
-                if (data.choices && data.choices.length > 0) {
-                    responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
-                } else {
-                    responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
-                }
-            } catch (error) {
-                console.error("Error fetching AI response:", error);
-                responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
-            }
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error.message); // Throw an error if the response is not ok
         }
+
+        const data = await response.json();
+        if (data.choices && data.choices.length > 0) {
+            responseDiv.innerHTML = `<p>${data.choices[0].message.content}</p>`;
+        } else {
+            responseDiv.innerHTML = "<p>Sorry, I couldn't find an answer to that.</p>";
+        }
+    } catch (error) {
+        console.error("Error fetching AI response:", error);
+        responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
+    }
+}
 
         // Toggle dark mode
         document.getElementById('dark-mode-toggle').addEventListener('change', function() {
