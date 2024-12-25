@@ -19,6 +19,9 @@
             background-color: #f8f9fa;
             transition: background-color 0.5s;
         }
+        .admin-tab {
+            display: none;
+        }
         .container {
             margin-top: 20px;
             background-color: rgba(255, 255, 255, 0.9);
@@ -339,6 +342,13 @@
             <a href="#ai" onclick="showTab('ai')">AI Assistant</a>
             <a href="#info" onclick="showTab('info')">Info</a>
             <a href="#settings" onclick="showTab('settings')">Settings</a>
+            <a href="#admin" onclick="showTab('admin')">Admin</a> <!-- New Admin Tab -->
+        </div>
+
+        <div id="admin" class="tab-content admin-tab fade">
+            <h2>User Management</h2>
+            <button class="btn btn-primary" onclick="openCreateUserPopup()">Create User</button>
+            <div id="user-list"></div>
         </div>
 
         <div id="score" class="tab-content fade show">
@@ -450,6 +460,15 @@
                 </select>
             </div>
         </div>
+
+        <div class="overlay" id="create-user-overlay"></div>
+        <div class="create-user-popup" id="create-user-popup">
+            <h2>Create User</h2>
+            <input type="email" id="new-user-email" class="form-control" placeholder="Email" required />
+            <input type="password" id="new-user-password" class="form-control" placeholder="Password" required />
+            <button class="btn btn-success" onclick="createUser()">Create User</button>
+            <button class="btn btn-secondary" onclick="closeCreateUserPopup()">Cancel</button>
+        </div>
     </div>
 
     <div class="overlay" id="overlay"></div>
@@ -497,6 +516,19 @@
             appId: "1:426214403781:web:4af409ec8186bd821d4aac",
             measurementId: "G-C7VBNTXM8R"
         };
+
+        function openCreateUserPopup() {
+                document.getElementById('create-user-overlay').style.display = 'block';
+                document.getElementById('create-user-popup').style.display = 'block';
+            }
+
+            // Function to close the create user popup
+            function closeCreateUserPopup() {
+                document.getElementById('create-user-overlay').style.display = 'none';
+                document.getElementById('create-user-popup').style.display = 'none';
+                document.getElementById('new-user-email').value = ''; // Clear input
+                document.getElementById('new-user-password').value = ''; // Clear password input
+            }
 
         // Function to open the login popup
         function openLoginPopup() {
@@ -677,6 +709,93 @@
                 }
             });
         }
+
+        const apiKey = firebaseConfig.apiKey;
+    const databaseURL = firebaseConfig.databaseURL;
+
+    // Helper function to make AJAX requests
+    function ajaxRequest(method, url, data, callback) {
+        $.ajax({
+            url: url,
+            method: method,
+            data: JSON.stringify(data),
+            contentType: "application/json",
+            success: callback,
+            error: function (xhr) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    }
+
+    // Function to create a new user via Firebase Authentication API
+    function createUser() {
+        const email = document.getElementById('new-user-email').value;
+        const password = document.getElementById('new-user-password').value;
+
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${apiKey}`;
+        const data = { email, password, returnSecureToken: true };
+
+        ajaxRequest("POST", url, data, (response) => {
+            const userId = response.localId;
+            alert('User created successfully!');
+            saveUserToDatabase(userId, email);
+        });
+    }
+
+    // Function to save user details to Firebase Realtime Database
+    function saveUserToDatabase(userId, email) {
+        const url = `${databaseURL}/users/${userId}.json`;
+        const data = { email, createdAt: new Date().toISOString() };
+
+        ajaxRequest("PUT", url, data, () => {
+            closeCreateUserPopup();
+            loadUsers();
+        });
+    }
+
+    // Function to load users from Firebase Realtime Database
+    function loadUsers() {
+        const url = `${databaseURL}/users.json`;
+
+        ajaxRequest("GET", url, null, (response) => {
+            $('#user-list').empty(); // Clear previous user list
+            if (response) {
+                Object.entries(response).forEach(([userId, user]) => {
+                    const userDiv = $('<div></div>').text(user.email);
+                    const resetButton = $('<button class="btn btn-warning btn-sm">Reset Password</button>')
+                        .on('click', () => resetPassword(user.email));
+                    const deleteButton = $('<button class="btn btn-danger btn-sm">Delete</button>')
+                        .on('click', () => deleteUser(userId));
+                    userDiv.append(resetButton).append(deleteButton);
+                    $('#user-list').append(userDiv);
+                });
+            } else {
+                $('#user-list').append('<div>No users found</div>');
+            }
+        });
+    }
+
+    // Function to reset a user's password via Firebase Authentication API
+    function resetPassword(email) {
+        const url = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${apiKey}`;
+        const data = { requestType: "PASSWORD_RESET", email };
+
+        ajaxRequest("POST", url, data, () => {
+            alert('Password reset email sent to ' + email);
+        });
+    }
+
+    // Function to delete a user record from Firebase Realtime Database
+    function deleteUser(userId) {
+        if (confirm('Are you sure you want to delete this user?')) {
+            const url = `${databaseURL}/users/${userId}.json`;
+
+            ajaxRequest("DELETE", url, null, () => {
+                alert('User deleted successfully!');
+                loadUsers();
+            });
+        }
+    }
 
         // Function to fetch GameLogs from Firebase
         function fetchGameLogs() {
@@ -983,6 +1102,8 @@
                 fetchGameLogs(); // Fetch logs when the logs tab is shown
             } else if (tabId === 'score') {
                 updateDisplayedScores(); // Update scores when the score tab is shown
+            } else if (tabId === 'admin') {
+                loadUsers();
             }
         }
 
@@ -1278,6 +1399,13 @@
                 alert("Please fill in all fields to create a log.");
             }
         }
+
+       
+
+    // Initialize the app on page load
+    $(document).ready(() => {
+        loadUsers();
+    });
 
        // showAuthPopup();
     </script>
