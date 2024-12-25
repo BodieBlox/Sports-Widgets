@@ -1023,7 +1023,7 @@
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini", // Use the appropriate model
-                messages: [{ role: "user", content: question }]
+                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. If it is not mentioned in this note then tell the user you don't know the answer. Do not answer random questions. This site requires login, if a user wants to know how to create a login says its not possible." }, { role: "user", content: question }]
             })
         });
 
