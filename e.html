@@ -555,6 +555,15 @@
                     if (errorMessage == "USER_DISABLED") {
                         document.getElementById('login-error').textContent = 'Account Banned';
                     }
+                    if (errorMessage == "INVALID_EMAIL") {
+                        document.getElementById('login-error').textContent = 'Enter A Valid Email';
+                    }
+                    if (errorMessage == "INVALID_LOGIN_CREDENTIALS") {
+                        document.getElementById('login-error').textContent = 'Invalid Login Credentials';
+                    }
+                    if (errorMessage == "TOO_MANY_ATTEMPTS_TRY_LATER") {
+                        document.getElementById('login-error').textContent = 'Try Again Later';
+                    }
                     document.getElementById('login-error').style.display = 'block';
                 }
             });
