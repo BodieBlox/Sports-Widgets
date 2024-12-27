@@ -54,6 +54,87 @@
             z-index: 1000;
             width: 300px;
         }
+        /* AI Tab Container */
+#ai {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Title */
+.ai-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Description */
+.ai-description {
+    font-size: 1.2em;
+    color: #555;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Input Group */
+.ai-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Input Field */
+.ai-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.3s ease;
+}
+
+.ai-input:focus {
+    border-color: #007bff;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Submit Button */
+.ai-submit {
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.ai-submit:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+/* Response Section */
+.ai-response {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9ecef;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 1.1em;
+    color: #333;
+    min-height: 100px;
+    text-align: center;
+}
+
+.ai-placeholder {
+    color: #999;
+}
+
         .overlay {
             display: none;
             position: fixed;
@@ -426,11 +507,17 @@
         </div>
 
         <div id="ai" class="tab-content fade" style="display:none;">
-            <h2>AI Assistant</h2>
-            <p>Ask your question below:</p>
-            <input type="text" id="ai-question" class="form-control" placeholder="How do I name a team?" />
-            <button class="btn btn-primary" onclick="askAI()">Ask AI</button>
-            <div id="ai-response" class="mt-3"></div>
+            <h2 class="ai-title">AI Assistant</h2>
+            <div class="ai-container">
+                <p class="ai-description">Ask your question below, and the AI assistant will provide guidance.</p>
+                <div class="ai-input-group">
+                    <input type="text" id="ai-question" class="form-control ai-input" placeholder="Enter your question here..." />
+                    <button class="btn btn-primary ai-submit" onclick="askAI()">Ask AI</button>
+                </div>
+                <div id="ai-response" class="ai-response">
+                    <p class="ai-placeholder">Your response will appear here...</p>
+                </div>
+            </div>
         </div>
 
         <div id="info" class="tab-content fade" style="display:none;">
