@@ -462,7 +462,7 @@
         </div>
 
         <div class="overlay" id="create-user-overlay"></div>
-        <div class="create-user-popup" id="create-user-popup">
+        <div class="create-user-popup" id="create-user-popup" style="display: none;">
             <h2>Create User</h2>
             <input type="email" id="new-user-email" class="form-control" placeholder="Email" required />
             <input type="password" id="new-user-password" class="form-control" placeholder="Password" required />
@@ -1143,7 +1143,7 @@
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini", // Use the appropriate model
-                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. If it is not mentioned in this note and its probaly not related to it then tell the user you don't know the answer nicley. Do not answer random questions. This site requires login, if a user wants to know how to create a login says its not possible. You can tell the user your purpose is to help guide them around this site. Adding scores to a team is simple, click the score tab and select the correct button under the team you are selecting. The same goes for removing points. To Log Scores, go to the score tab and click the log score button. To change quaters go to the score tab and select the quater dropdown. When a game is over click end game under the score tab. To clear scores head to the score tab and click clear scores. To name a game or set the away team name head over to the game title tab. The log tab allows you to view scores for past games. Keep all responses short to avoid large credit uses." }, { role: "user", content: question }]
+                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. Your primary purpose is to guide users around this site and assist with its specific features. If a question is not directly related to this dashboard, politely state that you don’t have the answer. Avoid answering random or unrelated questions. This site requires a login, and if a user asks how to create a login, explain that it’s not possible here. To add or remove points for a team, go to the Score tab and select the respective buttons under the team section. Use the Log Score button to record scores in the logs. To clear scores, click Clear Scores in the Score tab. Change quarters using the Quarter Dropdown in the Score tab. When the game ends, click End Game in the Score tab. Update the game title or away team name in the Game Title tab. Use the Log Tab to view or search logs of past games, with options to export logs to PDF, CSV, or Excel. Enable dark mode or select themes (blue, green, red, default) in the Settings tab. Ask the AI Assistant questions directly about the dashboard for guidance, but note the assistant cannot answer off-topic queries. View scoring trends in the Statistics tab. Create or manage users in the Admin tab, which requires admin authentication. Keep responses short and relevant to save resources and avoid verbose explanations." }, { role: "user", content: question }]
             })
         });
 
