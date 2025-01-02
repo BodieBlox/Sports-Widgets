@@ -171,12 +171,14 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
-    height: 100vh;
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
     position: fixed;
     top: 0;
     left: 0;
     width: 260px;
-    background: linear-gradient(145deg, #343a40, #212529); /* Subtle gradient */
+    background: linear-gradient(145deg, #343a40, #212529); /* Gradient background */
     padding-top: 20px;
     display: flex;
     flex-direction: column;
@@ -187,6 +189,21 @@
     z-index: 1000;
 }
 
+/* Optional: Customize scrollbar appearance */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5); /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Round edges of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.8); /* Change color on hover */
+}
+
+
 .sidebar h2 {
     color: #ffc107; /* Gold color for the title */
     margin-bottom: 20px;
@@ -195,16 +212,16 @@
 }
 
 .sidebar a {
-    color: rgba(255, 255, 255, 0.8);
+    padding: 10px 15px;
+    margin: 5px 0;
     text-decoration: none;
-    font-size: 1.1em;
-    margin: 10px 0;
-    padding: 12px 20px;
+    color: white;
     border-radius: 5px;
-    width: 90%;
+    display: block;
     text-align: center;
-    transition: all 0.3s ease-in-out;
+    transition: background-color 0.3s;
 }
+
 
 .sidebar a:hover {
     background: rgba(255, 255, 255, 0.2);
