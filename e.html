@@ -913,7 +913,10 @@ function renderLogs(logs) {
     const container = document.getElementById("game-logs-container");
     container.innerHTML = ""; // Clear previous logs
 
-    logs.forEach((log) => {
+    // Convert logs to an array if it's an object
+    const logArray = Array.isArray(logs) ? logs : Object.values(logs);
+
+    logArray.forEach((log) => {
         const logCard = document.createElement("div");
         logCard.classList.add("log-card");
 
