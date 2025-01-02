@@ -788,6 +788,57 @@
             measurementId: "G-C7VBNTXM8R"
         };
 
+        let scoringTrendsChart;
+
+// Function to initialize the scoring trends graph
+function initScoringTrends() {
+    const ctx = document.getElementById('scoring-trends').getContext('2d');
+    scoringTrendsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // This will hold the time labels
+            datasets: [{
+                label: 'Home Team',
+                data: [], // This will hold the home scoring data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }, {
+                label: 'Away Team',
+                data: [], // This will hold the away scoring data
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+// Function to update the scoring trends
+function updateScoringTrends(homeScore, awayScore) {
+    if (scoringTrendsChart) {
+        const currentTime = new Date().toLocaleTimeString();
+        scoringTrendsChart.data.labels.push(currentTime); // Add the current time to labels
+        scoringTrendsChart.data.datasets[0].data.push(homeScore); // Add home score to data
+        scoringTrendsChart.data.datasets[1].data.push(awayScore); // Add away score to data
+        scoringTrendsChart.update(); // Update the chart
+    }
+}
+
+// Call the initialization function when the document is ready
+$(document).ready(() => {
+    initScoringTrends(); // Initialize the scoring trends graph
+    // Other initialization code...
+});
+
         function sendMessage() {
     const message = document.getElementById("message-input").value.trim();
     if (message === "") {
@@ -1708,56 +1759,7 @@ function filterLogs() {
         showTab('score'); // Show the score management tab by default
 
         // Function to initialize the scoring trends graph
-        let scoringTrendsChart;
-
-// Function to initialize the scoring trends graph
-function initScoringTrends() {
-    const ctx = document.getElementById('scoring-trends').getContext('2d');
-    scoringTrendsChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [], // This will hold the time labels
-            datasets: [{
-                label: 'Home Team',
-                data: [], // This will hold the home scoring data
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }, {
-                label: 'Away Team',
-                data: [], // This will hold the away scoring data
-                borderColor: 'rgba(255, 99, 132, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        },
-        options: {
-            responsive: true,
-            scales: {
-                y: {
-                    beginAtZero: true
-                }
-            }
-        }
-    });
-}
-
-// Function to update the scoring trends
-function updateScoringTrends(homeScore, awayScore) {
-    if (scoringTrendsChart) {
-        const currentTime = new Date().toLocaleTimeString();
-        scoringTrendsChart.data.labels.push(currentTime); // Add the current time to labels
-        scoringTrendsChart.data.datasets[0].data.push(homeScore); // Add home score to data
-        scoringTrendsChart.data.datasets[1].data.push(awayScore); // Add away score to data
-        scoringTrendsChart.update(); // Update the chart
-    }
-}
-
-// Call the initialization function when the document is ready
-$(document).ready(() => {
-    initScoringTrends(); // Initialize the scoring trends graph
-    // Other initialization code...
-});
+ 
 
         // Function to toggle projector mode
         function toggleProjectorMode() {
