@@ -171,57 +171,74 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 250px;
-            background-color: rgba(52, 58, 64, 0.8);
-            backdrop-filter: blur(10px);
-            padding-top: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* Center content vertically */
-            align-items: center; /* Center content horizontally */
-            transition: background-color 0.5s;
-        }
-        .sidebar a {
-            color: white;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            transition: background-color 0.3s;
-            margin: 5px 0; /* Add margin for spacing */
-        }
-        .sidebar a:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 260px;
+    background: linear-gradient(145deg, #343a40, #212529); /* Subtle gradient */
+    padding-top: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    z-index: 1000;
+}
+
+.sidebar h2 {
+    color: #ffc107; /* Gold color for the title */
+    margin-bottom: 20px;
+    font-size: 1.4em;
+    text-align: center;
+}
+
+.sidebar a {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+    font-size: 1.1em;
+    margin: 10px 0;
+    padding: 12px 20px;
+    border-radius: 5px;
+    width: 90%;
+    text-align: center;
+    transition: all 0.3s ease-in-out;
+}
+
+.sidebar a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.05);
+}
+
+.sidebar a.active {
+    background: #007bff; /* Highlight active link */
+    color: white;
+}
+
+.sidebar img.logo {
+    width: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar #connection-label {
+    font-size: 0.9em;
+    margin-top: 20px;
+}
+
+.sidebar #current-time {
+    font-size: 0.9em;
+    margin-top: 10px;
+}
+
         .content {
             margin-left: 260px;
             padding: 20px;
         }
-        .tab-bar {
-            overflow-x: auto;
-            white-space: nowrap;
-            margin-bottom: 20px;
-        }
-        .tab-bar a {
-            display: inline-block;
-            padding: 10px 15px;
-            border: 1px solid #007bff;
-            border-radius: 5px;
-            margin-right: 5px;
-            color: #007bff;
-            text-decoration: none;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        .tab-bar a.active {
-            background-color: #007bff;
-            color: white;
-        }
-        .tab-bar a:hover {
-            background-color: rgba(0, 123, 255, 0.1);
-        }
+       
         .navbar {
             position: fixed;
             bottom: 0;
@@ -425,6 +442,30 @@
     border-bottom: 1px solid #ccc;
 }
 
+#sidebar-search {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 90%;
+}
+
+.sidebar.collapsed {
+    width: 80px;
+    transition: width 0.3s;
+}
+
+.sidebar.collapsed a {
+    font-size: 0;
+    padding: 10px;
+}
+
+.sidebar.collapsed img.logo {
+    width: 50px;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -440,26 +481,26 @@
     </div>
 
     <div class="sidebar">
+        <input type="text" id="sidebar-search" placeholder="Search..." class="form-control">
         <img src="https://s3-us-west-2.amazonaws.com/sportshub2-uploads-prod/files/sites/230/2017/07/13191049/17688.png" alt="Winston Churchill High School Athletics" class="logo">
-        <h2 class="text-white text-center">Admin Dashboard</h2>
-        <div id="connection-label" class="text-center">Checking connection...</div>
-        <div id="current-time" class="text-white text-center" style="margin-top: 10px;">Current Time: --:--</div>
-        <div id="logins" class="text-white text-bottom" style="margin-top: 10px;">Loading User</div>
+        <h2>Admin Dashboard</h2>
+        <div id="connection-label">Checking connection...</div>
+        <div id="current-time">Current Time: --:--</div>
+        <a href="#score" onclick="showTab('score')">Score Management</a>
+        <a href="#title" onclick="showTab('title')">Game Title</a>
+        <a href="#stats" onclick="showTab('stats')">Statistics</a>
+        <a href="#logs" onclick="showTab('logs')">Logs</a>
+        <a href="#ai" onclick="showTab('ai')">AI Assistant</a>
+        <a href="#info" onclick="showTab('info')">Info</a>
+        <a href="#settings" onclick="showTab('settings')">Settings</a>
+        <a href="#admin" onclick="showTab('admin')">Admin</a>
+        <a href="#inbox" onclick="showTab('inbox')">Inbox</a>
     </div>
+    
 
     <div class="content">
         <h1>Winston Churchill High School Athletics Admin Dashboard</h1>
-        <div class="tab-bar">
-            <a href="#score" class="active" onclick="showTab('score')">Score Management</a>
-            <a href="#title" onclick="showTab('title')">Game Title</a>
-            <a href="#stats" onclick="showTab('stats')">Statistics</a>
-            <a href="#logs" onclick="showTab('logs')">Logs</a>
-            <a href="#ai" onclick="showTab('ai')">AI Assistant</a>
-            <a href="#info" onclick="showTab('info')">Info</a>
-            <a href="#settings" onclick="showTab('settings')">Settings</a>
-            <a href="#admin" onclick="showTab('admin')">Admin</a> <!-- New Admin Tab -->
-            <a href="#" onclick="showTab('inbox')">Inbox</a>
-        </div>
+        
 
         <div id="inbox" class="tab-content admin-tab fade" style="display:none;">
             <h2>Inbox</h2>
@@ -683,6 +724,11 @@
     });
 }
 
+document.querySelector('.sidebar').addEventListener('dblclick', function() {
+    this.classList.toggle('collapsed');
+});
+
+
 function loadMessages() {
     $.ajax({
         url: `https://test-71ecd-default-rtdb.firebaseio.com/messages.json`, // Firebase REST API endpoint
@@ -762,6 +808,15 @@ function sendMessageFromPopup() {
         }
     });
 }
+
+document.getElementById('sidebar-search').addEventListener('input', function() {
+    const query = this.value.toLowerCase();
+    const links = document.querySelectorAll('.sidebar a');
+    links.forEach(link => {
+        link.style.display = link.textContent.toLowerCase().includes(query) ? 'block' : 'none';
+    });
+});
+
 
 
         // Function to open the login popup
