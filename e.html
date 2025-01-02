@@ -171,69 +171,85 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
-    height: 100vh; /* Full height of the viewport */
-    width: 260px; /* Fixed width */
-    position: fixed; /* Stays in place while scrolling */
+    height: 100vh; /* Full viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+    position: fixed;
     top: 0;
     left: 0;
-    background: rgba(255, 255, 255, 0.1); /* Transparent white background */
-    backdrop-filter: blur(10px); /* Adds the glass blur effect */
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    border-right: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border on the right */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    width: 260px;
+    background: linear-gradient(145deg, #343a40, #212529); /* Gradient background */
+    padding-top: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1000; /* Ensure it appears on top */
-    padding-top: 20px; /* Add some spacing at the top */
-    overflow-y: auto; /* Enable scrolling for overflow content */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    color: white;
+    font-family: 'Roboto', sans-serif;
+    z-index: 1000;
 }
+
+/* Optional: Customize scrollbar appearance */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* Width of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5); /* Color of the scrollbar thumb */
+    border-radius: 4px; /* Round edges of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.8); /* Change color on hover */
+}
+
 
 .sidebar h2 {
-    color: #ffffff; /* White title text */
+    color: #ffc107; /* Gold color for the title */
     margin-bottom: 20px;
-    font-size: 1.5em;
+    font-size: 1.4em;
     text-align: center;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Slight glow effect */
-}
-
-.sidebar img.logo {
-    width: 120px; /* Size the logo appropriately */
-    margin-bottom: 15px;
-    border-radius: 50%; /* Circular logo */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
 }
 
 .sidebar a {
-    color: rgba(255, 255, 255, 0.8); /* Semi-transparent white links */
+    padding: 10px 15px;
+    margin: 5px 0;
     text-decoration: none;
-    font-size: 1.1em;
-    margin: 10px 0;
-    padding: 10px 20px;
-    border-radius: 8px;
-    transition: all 0.3s ease-in-out;
-    width: 90%; /* Ensures consistent width */
+    color: white;
+    border-radius: 5px;
+    display: block;
     text-align: center;
-    backdrop-filter: blur(5px); /* Slight blur on hover background */
+    transition: background-color 0.3s;
 }
 
+
 .sidebar a:hover {
-    background: rgba(255, 255, 255, 0.3); /* Lighten on hover */
-    color: white; /* Full white text */
-    transform: scale(1.05); /* Slight zoom on hover */
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    transform: scale(1.05);
 }
 
 .sidebar a.active {
-    background: rgba(0, 123, 255, 0.8); /* Highlight active link */
+    background: #007bff; /* Highlight active link */
     color: white;
 }
 
-.sidebar #connection-label, .sidebar #current-time {
-    color: rgba(255, 255, 255, 0.8); /* Semi-transparent text */
+.sidebar img.logo {
+    width: 150px;
+    border-radius: 50%;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.sidebar #connection-label {
+    font-size: 0.9em;
+    margin-top: 20px;
+}
+
+.sidebar #current-time {
     font-size: 0.9em;
     margin-top: 10px;
 }
-
 
         .content {
             margin-left: 260px;
