@@ -550,12 +550,91 @@
     background-color: #0056b3;
 }
 
+#toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; /* Space between toasts */
+}
+
+.toast {
+    background: rgba(255, 255, 255, 0.1); /* Transparent white background */
+    backdrop-filter: blur(10px); /* Glass effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    color: black;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 300px;
+    animation: fadeIn 0.5s ease, fadeOut 0.5s ease 3s forwards;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
+}
+
+.toast.success {
+    border-left: 4px solid #4caf50; /* Green accent for success */
+}
+
+.toast.error {
+    border-left: 4px solid #f44336; /* Red accent for errors */
+}
+
+.toast.warning {
+    border-left: 4px solid #ff9800; /* Orange accent for warnings */
+}
+
+.toast .close-btn {
+    background: none;
+    border: none;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    color: rgba(0, 0, 0, 0.7);
+    transition: color 0.3s ease;
+}
+
+.toast .close-btn:hover {
+    color: black;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+}
+
+
 
 
 
     </style>
 </head>
 <body>
+
+    <div id="toast-container"></div>
 
     <div class="overlay" id="login-overlay"></div>
     <div class="login-popup" id="login-popup">
@@ -821,6 +900,39 @@ function initScoringTrends() {
         }
     });
 }
+
+function showToast({ message, type = "success", duration = 3000 }) {
+    const toastContainer = document.getElementById("toast-container");
+
+    // Create a new toast element
+    const toast = document.createElement("div");
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <span>${message}</span>
+        <button class="close-btn">&times;</button>
+    `;
+
+    // Append the toast to the container
+    toastContainer.appendChild(toast);
+
+    // Remove the toast after the specified duration
+    setTimeout(() => {
+        toast.style.animation = "fadeOut 0.5s ease forwards";
+        toast.addEventListener("animationend", () => toast.remove());
+    }, duration);
+
+    // Add close button functionality
+    toast.querySelector(".close-btn").onclick = () => {
+        toast.style.animation = "fadeOut 0.5s ease forwards";
+        toast.addEventListener("animationend", () => toast.remove());
+    };
+}
+
+// Example usage:
+showToast({ message: "Operation successful!", type: "success" });
+showToast({ message: "Something went wrong!", type: "error", duration: 5000 });
+showToast({ message: "This is a warning!", type: "warning" });
+
 
 // Function to update the scoring trends
 function updateScoringTrends(homeScore, awayScore) {
