@@ -1708,30 +1708,32 @@ function filterLogs() {
         showTab('score'); // Show the score management tab by default
 
         // Function to initialize the scoring trends graph
-        function initScoringTrends() {
-            const ctx = document.getElementById('scoring-trends').getContext('2d');
-            const scoringTrendsChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: [], // Add labels for your data
-                    datasets: [{
-                        label: 'Scoring Trends',
-                        data: [], // Add your scoring data here
-                        borderColor: 'rgba(75, 192, 192, 1)',
-                        borderWidth: 2,
-                        fill: false
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true
-                        }
-                    }
+        let scoringTrendsChart;
+
+function initScoringTrends() {
+    const ctx = document.getElementById('scoring-trends').getContext('2d');
+    scoringTrendsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [], // This will hold the time labels
+            datasets: [{
+                label: 'Scoring Trends',
+                data: [], // This will hold the scoring data
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 2,
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
                 }
-            });
+            }
         }
+    });
+}
 
         // Function to update scoring trends
         function updateScoringTrends(data) {
