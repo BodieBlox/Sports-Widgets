@@ -894,7 +894,7 @@ function initScoringTrends() {
     });
 }
 
-function showToast({ message, type = "success", duration = 3000 }) {
+function showToast({ message, type = "success", duration = 5000 }) {
     const toastContainer = document.getElementById("toast-container");
 
     // Create a new toast element
@@ -909,7 +909,7 @@ function showToast({ message, type = "success", duration = 3000 }) {
     toastContainer.appendChild(toast);
 
     // Remove the toast after the duration + fadeOut time
-    const fadeOutDuration = 5000; // Match the fadeOut animation duration in CSS
+    const fadeOutDuration = 500; // Match the fadeOut animation duration in CSS
     setTimeout(() => {
         toast.style.animation = `fadeOut ${fadeOutDuration}ms ease forwards`;
         toast.addEventListener("animationend", () => toast.remove());
