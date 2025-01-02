@@ -562,7 +562,7 @@
     justify-content: space-between;
     align-items: center;
     width: 300px;
-    animation: fadeIn 0.5s ease, fadeOut 0.5s ease forwards;
+    animation: fadeIn 0.5s ease; /* Start with fadeIn */
     overflow: hidden;
     border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border */
     animation-fill-mode: forwards;
@@ -616,6 +616,7 @@
         transform: translateX(20px);
     }
 }
+
 
 
 
@@ -908,7 +909,7 @@ function showToast({ message, type = "success", duration = 3000 }) {
     toastContainer.appendChild(toast);
 
     // Remove the toast after the duration + fadeOut time
-    const fadeOutDuration = 500; // Match the fadeOut animation duration in CSS
+    const fadeOutDuration = 5000; // Match the fadeOut animation duration in CSS
     setTimeout(() => {
         toast.style.animation = `fadeOut ${fadeOutDuration}ms ease forwards`;
         toast.addEventListener("animationend", () => toast.remove());
