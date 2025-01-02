@@ -171,58 +171,48 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .sidebar {
-    height: 100vh; /* Full height of the viewport */
-    width: 260px; /* Fixed width */
-    position: fixed; /* Stays in place while scrolling */
+    height: 100vh;
+    width: 260px;
+    position: fixed;
     top: 0;
     left: 0;
-    background: rgba(255, 255, 255, 0.1); /* Transparent white background */
-    backdrop-filter: blur(10px); /* Adds the glass blur effect */
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    border-right: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border on the right */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-right: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    color: black; /* Dark text for better contrast */
     display: flex;
     flex-direction: column;
     align-items: center;
-    z-index: 1000; /* Ensure it appears on top */
-    padding-top: 20px; /* Add some spacing at the top */
-    overflow-y: auto; /* Enable scrolling for overflow content */
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
-}
-
-.sidebar h2 {
-    color: #ffffff; /* White title text */
-    margin-bottom: 20px;
-    font-size: 1.5em;
-    text-align: center;
-    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3); /* Slight glow effect */
-}
-
-.sidebar img.logo {
-    width: 120px; /* Size the logo appropriately */
-    margin-bottom: 15px;
-    border-radius: 50%; /* Circular logo */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
+    z-index: 1000;
+    padding-top: 20px;
+    overflow-y: auto;
 }
 
 .sidebar a {
-    color: rgba(255, 255, 255, 0.8); /* Semi-transparent white links */
+    color: rgba(0, 0, 0, 0.8); /* Semi-dark text for links */
     text-decoration: none;
     font-size: 1.1em;
     margin: 10px 0;
     padding: 10px 20px;
     border-radius: 8px;
+    background: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
     transition: all 0.3s ease-in-out;
-    width: 90%; /* Ensures consistent width */
-    text-align: center;
-    backdrop-filter: blur(5px); /* Slight blur on hover background */
 }
 
 .sidebar a:hover {
-    background: rgba(255, 255, 255, 0.3); /* Lighten on hover */
-    color: white; /* Full white text */
-    transform: scale(1.05); /* Slight zoom on hover */
+    background: rgba(255, 255, 255, 0.8); /* Brighten on hover */
+    color: black; /* Full black text */
 }
+
+.sidebar h2 {
+    color: black;
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.5); /* Subtle text shadow */
+}
+
 
 .sidebar a.active {
     background: rgba(0, 123, 255, 0.8); /* Highlight active link */
