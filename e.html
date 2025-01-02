@@ -1016,6 +1016,22 @@ function filterLogs() {
             document.getElementById('log-away-score').value = ''; // Clear away score input
         }
 
+        function updateScoringTrends(homeScore, awayScore) {
+    if (scoringTrendsChart) {
+        const currentTime = new Date().toLocaleTimeString();
+        scoringTrendsChart.data.labels.push(currentTime); // Add the current time to labels
+        scoringTrendsChart.data.datasets[0].data.push(homeScore); // Add home score to data
+        scoringTrendsChart.data.datasets[1] = {
+            label: 'Away Team',
+            data: awayScore, // Add away score to data
+            borderColor: 'rgba(255, 99, 132, 1)',
+            borderWidth: 2,
+            fill: false
+        };
+        scoringTrendsChart.update(); // Update the chart
+    }
+}
+
         var x = localStorage.getItem("name");
 
         // Function to handle login using AJAX
@@ -1086,6 +1102,8 @@ function filterLogs() {
                         awayScore += points;
                         sendScoreUpdate({ awayScore: awayScore });
                     }
+
+                    updateScoringTrends(homeScore, awayScore); // Update scoring trends chart
                 },
                 error: function(xhr, status, error) {
                     console.error("Error retrieving scores: " + error);
