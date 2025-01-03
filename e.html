@@ -20,6 +20,57 @@
             background-color: #f8f9fa;
             transition: background-color 0.5s;
         }
+        #message-container {
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #f9f9f9;
+}
+
+.message-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #007bff; /* Accent for visual distinction */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.message-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-timestamp {
+    font-size: 0.9em;
+    color: #777;
+    margin-left: 10px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+/* Dark mode compatibility */
+body.dark-mode #message-container {
+    background-color: #333;
+}
+
+body.dark-mode .message-card {
+    background-color: #444;
+    border-left: 4px solid #ffc107;
+    color: #ddd;
+}
+
+
         .admin-tab {
             display: none;
         }
@@ -453,11 +504,6 @@
             opacity: 1;
         }
 
-        #message-container div {
-    padding: 5px;
-    margin-bottom: 5px;
-    border-bottom: 1px solid #ccc;
-}
 
 #sidebar-search {
     margin: 10px 0;
@@ -664,10 +710,12 @@
 
         <div id="inbox" class="tab-content admin-tab fade" style="display:none;">
             <h2>Inbox</h2>
-            <div id="message-container" style="max-height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px; border-radius: 5px; margin-bottom: 20px;">
-                <!-- Messages will appear here -->
+            <!-- Message container for dynamically added messages -->
+            <div id="message-container">
+                <!-- Messages will be dynamically populated here via JavaScript -->
             </div>
         </div>
+        
 
         <div id="admin" class="tab-content admin-tab fade">
     <h2>User Management</h2>
@@ -981,7 +1029,7 @@ document.querySelector('.sidebar').addEventListener('dblclick', function() {
 
 function loadMessages() {
     $.ajax({
-        url: `https://test-71ecd-default-rtdb.firebaseio.com/messages.json`, // Firebase REST API endpoint
+        url: `https://test-71ecd-default-rtdb.firebaseio.com/messages.json`,
         type: "GET",
         success: function (data) {
             const messageContainer = document.getElementById("message-container");
@@ -991,19 +1039,36 @@ function loadMessages() {
                 // Sort messages by timestamp
                 const messages = Object.values(data).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-                // Append each message to the container
+                // Append each message as a styled card
                 messages.forEach((msg) => {
-                    const messageDiv = document.createElement("div");
-                    messageDiv.textContent = `[${new Date(msg.timestamp).toLocaleTimeString()}] ${msg.sender}: ${msg.content}`;
-                    messageContainer.appendChild(messageDiv);
+                    const messageCard = document.createElement("div");
+                    messageCard.classList.add("message-card");
+
+                    const messageContent = document.createElement("div");
+                    messageContent.classList.add("message-content");
+                    messageContent.innerHTML = `<strong>${msg.sender}:</strong> ${msg.content}`;
+
+                    const messageTimestamp = document.createElement("div");
+                    messageTimestamp.classList.add("message-timestamp");
+                    messageTimestamp.textContent = new Date(msg.timestamp).toLocaleTimeString([], { 
+                        hour: '2-digit', 
+                        minute: '2-digit', 
+                        hour12: true 
+                    });
+
+                    messageCard.appendChild(messageContent);
+                    messageCard.appendChild(messageTimestamp);
+
+                    messageContainer.appendChild(messageCard);
                 });
             }
         },
         error: function (err) {
             console.error("Error loading messages:", err);
-        }
+        },
     });
 }
+
 
 
         function openCreateUserPopup() {
