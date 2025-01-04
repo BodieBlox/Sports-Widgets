@@ -736,42 +736,61 @@ body.dark-mode .message-card {
         <div id="score" class="tab-content fade show">
             <h2>Score Management</h2>
             <div class="row">
-                <div class="col text-center">
-                    <h3>Home Team</h3>
-                    <p class="score" id="home-score">0</p>
-                    <button class="btn btn-success" onclick="updateScore('home', 1)">+1</button>
-                    <button class="btn btn-success" onclick="updateScore('home', 2)">+2</button>
-                    <button class="btn btn-success" onclick="updateScore('home', 3)">+3</button>
-                    <button class="btn btn-danger" onclick="updateScore('home', -1)">-1</button>
-                    <button class="btn btn-danger" onclick="updateScore('home', -2)">-2</button>
-                    <button class="btn btn-danger" onclick="updateScore('home', -3)">-3</button>
-                    <button class="btn btn-primary" onclick="">Enter Score</button>
+                <div class="col-md-6">
+                    <div class="card shadow p-4 mb-3">
+                        <h3 class="text-primary text-center">Home Team</h3>
+                        <p class="display-4 text-center font-weight-bold" id="home-score">0</p>
+                        <div class="btn-group d-flex justify-content-center">
+                            <button class="btn btn-success mx-1" onclick="updateScore('home', 1)"><i class="fas fa-plus-circle"></i> +1</button>
+                            <button class="btn btn-success mx-1" onclick="updateScore('home', 2)"><i class="fas fa-plus-circle"></i> +2</button>
+                            <button class="btn btn-success mx-1" onclick="updateScore('home', 3)"><i class="fas fa-plus-circle"></i> +3</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('home', -1)"><i class="fas fa-minus-circle"></i> -1</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('home', -2)"><i class="fas fa-minus-circle"></i> -2</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('home', -3)"><i class="fas fa-minus-circle"></i> -3</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="col text-center">
-                    <h3>Away Team</h3>
-                    <p class="score" id="away-score">0</p>
-                    <button class="btn btn-success" onclick="updateScore('away', 1)">+1</button>
-                    <button class="btn btn-success" onclick="updateScore('away', 2)">+2</button>
-                    <button class="btn btn-success" onclick="updateScore('away', 3)">+3</button>
-                    <button class="btn btn-danger" onclick="updateScore('away', -1)">-1</button>
-                    <button class="btn btn-danger" onclick="updateScore('away', -2)">-2</button>
-                    <button class="btn btn-danger" onclick="updateScore('away', -3)">-3</button>
-                    <button class="btn btn-primary" onclick="">Enter Score</button>
+                
+                <div class="col-md-6">
+                    <div class="card shadow p-4 mb-3">
+                        <h3 class="text-primary text-center">Away Team</h3>
+                        <p class="display-4 text-center font-weight-bold" id="away-score">0</p>
+                        <div class="btn-group d-flex justify-content-center">
+                            <button class="btn btn-success mx-1" onclick="updateScore('away', 1)"><i class="fas fa-plus-circle"></i> +1</button>
+                            <button class="btn btn-success mx-1" onclick="updateScore('away', 2)"><i class="fas fa-plus-circle"></i> +2</button>
+                            <button class="btn btn-success mx-1" onclick="updateScore('away', 3)"><i class="fas fa-plus-circle"></i> +3</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('away', -1)"><i class="fas fa-minus-circle"></i> -1</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('away', -2)"><i class="fas fa-minus-circle"></i> -2</button>
+                            <button class="btn btn-danger mx-1" onclick="updateScore('away', -3)"><i class="fas fa-minus-circle"></i> -3</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="form-group text-center">
-                <label for="quarter">Quarter:</label>
-                <select id="quarter" class="quarter-selector" onchange="updateQuarter()">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                </select>
+            
+            <div class="card shadow p-4 mb-4">
+                <div class="form-group text-center">
+                    <label for="quarter" class="font-weight-bold">Quarter:</label>
+                    <select id="quarter" class="form-control w-50 mx-auto" onchange="updateQuarterAndProgress()">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
             </div>
-            <button class="btn btn-info" onclick="logScore()">Log Score</button>
-            <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
-            <button class="btn btn-warning" onclick="endGame()">End Game</button>
-            <button class="btn btn-secondary" onclick="toggleProjectorMode()">Projector Mode</button>
+            
+            <div class="card shadow p-4">
+                <div class="d-flex justify-content-around">
+                    <button class="btn btn-info" onclick="logScore()">Log Score</button>
+                    <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
+                    <button class="btn btn-warning" onclick="endGame()">End Game</button>
+                    <button class="btn btn-secondary" onclick="toggleProjectorMode()">Projector Mode</button>
+                </div>
+            </div>
+            
+            <div class="progress mt-4">
+                <div id="score-progress" class="progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="1" aria-valuemin="0" aria-valuemax="4"></div>
+            </div>
         </div>
 
         <div id="title" class="tab-content fade" style="display:none;">
@@ -941,6 +960,23 @@ function initScoringTrends() {
         }
     });
 }
+
+function updateQuarterAndProgress() {
+        const quarter = parseInt(document.getElementById('quarter').value, 10);
+        const progressPercentage = (quarter / 4) * 100;
+
+        const progressBar = document.getElementById('score-progress');
+        progressBar.style.width = `${progressPercentage}%`;
+        progressBar.setAttribute('aria-valuenow', quarter);
+
+        if (quarter === 4) {
+            progressBar.className = 'progress-bar bg-success';
+        } else if (quarter === 3) {
+            progressBar.className = 'progress-bar bg-warning';
+        } else {
+            progressBar.className = 'progress-bar bg-primary';
+        }
+    }
 
 function showToast({ message, type = "success", duration = 5000 }) {
     const toastContainer = document.getElementById("toast-container");
@@ -1670,6 +1706,7 @@ function filterLogs() {
                 contentType: 'application/json',
                 success: function() {
                     console.log("Quarter updated successfully");
+                    updateQuarterAndProgress();
                 },
                 error: function(xhr, status, error) {
                     console.error("Error updating quarter: " + error);
