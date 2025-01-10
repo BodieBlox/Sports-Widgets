@@ -951,10 +951,14 @@ body.dark-mode .message-card {
         };
 
         // Initialize the neural network
-const net = new brain.NeuralNetwork();
+let net; // Declare net globally
 
-// Training data for brain.js
-const trainingData = [
+        $(document).ready(() => {
+            // Initialize the neural network
+            net = new brain.NeuralNetwork();
+
+            // Training data for brain.js
+           const trainingData = [
     { input: { question: "What is the score?" }, output: { answer: "The current score is 0 - 0." } },
     { input: { question: "How do I log a score?" }, output: { answer: "To log a score, click the Log Score button." } },
     { input: { question: "What is the current quarter?" }, output: { answer: "The current quarter is 1." } },
@@ -968,8 +972,15 @@ const trainingData = [
     // Add more scenarios as needed
 ];
 
+            // Train the network
+            net.train(trainingData);
+        });
+
+// Training data for brain.js
+
+
 // Train the network
-net.train(trainingData);
+
 
         let scoringTrendsChart;
 
