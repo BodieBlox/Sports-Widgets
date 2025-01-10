@@ -6,6 +6,7 @@
     <title>Winston Churchill High School Athletics Admin Dashboard</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/brain.js/1.6.1/brain.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
@@ -949,6 +950,27 @@ body.dark-mode .message-card {
             measurementId: "G-C7VBNTXM8R"
         };
 
+        // Initialize the neural network
+const net = new brain.NeuralNetwork();
+
+// Training data for brain.js
+const trainingData = [
+    { input: { question: "What is the score?" }, output: { answer: "The current score is 0 - 0." } },
+    { input: { question: "How do I log a score?" }, output: { answer: "To log a score, click the Log Score button." } },
+    { input: { question: "What is the current quarter?" }, output: { answer: "The current quarter is 1." } },
+    { input: { question: "How do I change the team name?" }, output: { answer: "You can change the team name in the Game Title tab." } },
+    { input: { question: "What is the AI assistant?" }, output: { answer: "The AI assistant helps you navigate the dashboard." } },
+    { input: { question: "How do I clear scores?" }, output: { answer: "Click the Clear Scores button in the Score tab." } },
+    { input: { question: "How do I view past games?" }, output: { answer: "You can view past games in the Logs tab." } },
+    { input: { question: "What themes are available?" }, output: { answer: "You can choose from blue, green, red, or default themes." } },
+    { input: { question: "How do I enable dark mode?" }, output: { answer: "Toggle the dark mode switch in the Settings tab." } },
+    { input: { question: "What is the purpose of the dashboard?" }, output: { answer: "The dashboard is designed to manage athletics events and scores." } },
+    // Add more scenarios as needed
+];
+
+// Train the network
+net.train(trainingData);
+
         let scoringTrendsChart;
 
 // Function to initialize the scoring trends graph
@@ -1832,7 +1854,7 @@ function filterLogs() {
 });
 
         // Function to ask AI
-        async function askAI() {
+      async function askAI() {
     const question = document.getElementById('ai-question').value;
     const responseDiv = document.getElementById('ai-response');
     responseDiv.innerHTML = ""; // Clear previous response
@@ -1850,13 +1872,12 @@ function filterLogs() {
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini", // Use the appropriate model
-                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. Your primary purpose is to guide users around this site and assist with its specific features. If a question is not directly related to this dashboard, politely state that you don’t have the answer. Avoid answering random or unrelated questions. This site requires a login, and if a user asks how to create a login, explain that it’s not possible here. To add or remove points for a team, go to the Score tab and select the respective buttons under the team section. Use the Log Score button to record scores in the logs. To clear scores, click Clear Scores in the Score tab. Change quarters using the Quarter Dropdown in the Score tab. When the game ends, click End Game in the Score tab. Update the game title or away team name in the Game Title tab. Use the Log Tab to view or search logs of past games, with options to export logs to PDF, CSV, or Excel. Enable dark mode or select themes (blue, green, red, default) in the Settings tab. Ask the AI Assistant questions directly about the dashboard for guidance, but note the assistant cannot answer off-topic queries. View scoring trends in the Statistics tab. Create or manage users in the Admin tab, which requires admin authentication. Keep responses short and relevant to save resources and avoid verbose explanations. You were coded using OpenAI API. You are allowed to answer any sports related question that may come up during a game like how many points is a fouls shot. Do not waste tokens or provide long responses." }, { role: "user", content: question }]
+                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. Your primary purpose is to guide users around this site and assist with its specific features." }, { role: "user", content: question }]
             })
         });
 
         if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error.message); // Throw an error if the response is not ok
+            throw new Error("Failed to fetch from OpenAI API");
         }
 
         const data = await response.json();
@@ -1867,7 +1888,9 @@ function filterLogs() {
         }
     } catch (error) {
         console.error("Error fetching AI response:", error);
-        responseDiv.innerHTML = `<p>There was an error connecting to the AI service: ${error.message}</p>`;
+        // Fallback to brain.js
+        const brainResponse = net.run({ question: question.toLowerCase() });
+        responseDiv.innerHTML = `<p>${brainResponse.answer || "I'm sorry, I don't know the answer."}</p>`;
     }
 }
 
