@@ -658,6 +658,77 @@ body.dark-mode .message-card {
     color: black;
 }
 
+.login-popup {
+    display: none;
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, #007bff, #0056b3);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 350px;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.login-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.login-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+}
+
+.login-subtitle {
+    margin-top: 5px;
+    color: #777;
+    font-size: 0.9em;
+}
+
+.login-input {
+    margin: 10px 0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 5px;
+    width: 100%;
+    transition: box-shadow 0.3s ease;
+}
+
+.login-input:focus {
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: #007bff;
+    outline: none;
+}
+
+.login-actions {
+    margin-top: 15px;
+}
+
+.login-error {
+    color: red;
+    margin-top: 10px;
+    font-size: 0.85em;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -55%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
+}
+
+
 /* Animations */
 @keyframes fadeIn {
     from {
@@ -694,14 +765,20 @@ body.dark-mode .message-card {
     <div id="toast-container"></div>
 
     <div class="overlay" id="login-overlay"></div>
-    <div class="login-popup" id="login-popup">
-        <h2>Login</h2>
-        <input type="email" id="login-email" class="form-control" placeholder="Email" required />
-        <input type="password" id="login-password" class="form-control" placeholder="Password" required />
-        <button class="btn btn-success" id="login-button">Login</button>
-        <button class="btn btn-secondary" id="c" onclick="closeLoginPopup()">Cancel</button>
-        <div id="login-error" style="color: red; display: none;"></div>
+<div class="login-popup" id="login-popup">
+    <div class="login-card">
+        <h2 class="login-title">Welcome Back</h2>
+        <p class="login-subtitle">Please login to continue</p>
+        <input type="email" id="login-email" class="form-control login-input" placeholder="Email" required />
+        <input type="password" id="login-password" class="form-control login-input" placeholder="Password" required />
+        <div class="login-actions">
+            <button class="btn btn-primary" id="login-button">Login</button>
+            <button class="btn btn-secondary" id="c" onclick="closeLoginPopup()">Cancel</button>
+        </div>
+        <div id="login-error" class="login-error" style="display: none;"></div>
     </div>
+</div>
+
 
     <div class="sidebar">
         <input type="text" id="sidebar-search" placeholder="Search..." class="form-control">
