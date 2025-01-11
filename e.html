@@ -753,6 +753,108 @@ body.dark-mode .message-card {
 }
 
 
+/* Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease-in-out;
+}
+
+/* Popup Container */
+.popup-container {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 400px;
+  animation: slideIn 0.3s ease;
+}
+
+/* Header */
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.popup-header h2 {
+  margin: 0;
+  font-size: 1.5em;
+  color: #333;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.5em;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.close-btn:hover {
+  color: #333;
+}
+
+/* Content */
+.popup-content {
+  padding: 20px;
+  font-size: 1em;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* Footer */
+.popup-footer {
+  padding: 20px;
+  text-align: center;
+  border-top: 1px solid #f0f0f0;
+}
+
+.btn-primary {
+  padding: 10px 20px;
+  font-size: 1em;
+  color: white;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Animations */
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Show popup */
+.popup-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
 
 
 
@@ -778,6 +880,26 @@ body.dark-mode .message-card {
         <div id="login-error" class="login-error" style="display: none;"></div>
     </div>
 </div>
+
+<div id="whats-new-popup" class="popup-overlay">
+    <div class="popup-container">
+      <div class="popup-header">
+        <h2>What's New</h2>
+        <button class="close-btn" onclick="closePopup()">×</button>
+      </div>
+      <div class="popup-content">
+        <ul>
+          <li><strong>New Feature 1:</strong> Description of the first feature.</li>
+          <li><strong>Improved Feature 2:</strong> Description of the second feature.</li>
+          <li><strong>Bug Fixes:</strong> Description of fixes or improvements.</li>
+        </ul>
+      </div>
+      <div class="popup-footer">
+        <button class="btn-primary" onclick="closePopup()">Got it!</button>
+      </div>
+    </div>
+  </div>
+  
 
 
     <div class="sidebar">
@@ -1257,6 +1379,28 @@ function loadMessages() {
             function openMessagePopup() {
     document.getElementById("message-popup").style.display = "block";
 }
+
+// Show the popup
+function showPopup() {
+  const popup = document.getElementById("whats-new-popup");
+  popup.classList.add("active");
+}
+
+// Close the popup
+function closePopup() {
+  const popup = document.getElementById("whats-new-popup");
+  popup.classList.remove("active");
+}
+
+// Automatically show the popup when the app loads
+document.addEventListener("DOMContentLoaded", () => {
+  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+  if (!hasSeenPopup) {
+    showPopup();
+    localStorage.setItem("hasSeenPopup", "true");
+  }
+});
+
 
 function closeMessagePopup() {
     document.getElementById("message-popup").style.display = "none";
