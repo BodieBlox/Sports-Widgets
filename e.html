@@ -1489,10 +1489,10 @@ function sendMessageFromPopup() {
         const file = imageInput.files[0];
         uploadImageToFirebase(file, (downloadURL) => {
             messageData.image = downloadURL; // Add image URL to the message data
-            sendMessageToFirebase(messageData); // Send the message
+            sendToFirebase(messageData); // Send the message
         });
     } else {
-        sendMessageToFirebase(messageData); // Send the message without an image
+        sendToFirebase(messageData); // Send the message without an image
     }
 }
 
