@@ -1139,10 +1139,7 @@ body.dark-mode .message-card {
         </div>
     </div>
 
-    <script type="module" src="https://cdn.jsdelivr.net/npm/brain.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script type="module" src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>    
+    <script  src="https://cdn.jsdelivr.net/npm/brain.js"></script>
 
 
 
@@ -1159,8 +1156,7 @@ body.dark-mode .message-card {
             measurementId: "G-C7VBNTXM8R"
         };
 
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage();
+       
 
 
         // Initialize the neural network
@@ -1279,6 +1275,34 @@ function showToast({ message, type = "success", duration = 5000 }) {
  //   showToast({ message: "Error notification!", type: "error", duration: 4000 });
    // showToast({ message: "Warning notification!", type: "warning", duration: 2000 });
 
+
+
+   function uploadImageToFirebase(file, callback) {
+    const storageBucketURL = "https://firebasestorage.googleapis.com/v0/b/test-71ecd.appspot.com/o";
+    const token = localStorage.getItem('token'); // Ensure the user is authenticated and the token is available
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    $.ajax({
+        url: `${storageBucketURL}/messages%2F${encodeURIComponent(file.name)}?uploadType=media`,
+        type: "POST",
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": file.type
+        },
+        data: file,
+        processData: false,
+        success: function (response) {
+            const downloadURL = `${storageBucketURL}/messages%2F${encodeURIComponent(file.name)}?alt=media&token=${response.downloadTokens}`;
+            callback(downloadURL); // Return the image URL via the callback
+        },
+        error: function (error) {
+            console.error("Error uploading image:", error);
+            alert("Image upload failed. Please try again.");
+        }
+    });
+}
 
 
 // Function to update the scoring trends
@@ -1444,7 +1468,7 @@ function closeMessagePopup() {
 }
 
 
-function sendMessageFromPopup() {
+function sendMessage() {
     const message = document.getElementById("popup-message-input").value.trim();
     const imageInput = document.getElementById("popup-image-input");
     const recipient = document.getElementById("popup-recipient-input").value;
@@ -1455,25 +1479,23 @@ function sendMessageFromPopup() {
     }
 
     const messageData = {
-        sender: "Admin",
+        sender: "Admin", // Default sender
         content: message,
         timestamp: new Date().toISOString(),
-        recipient: recipient,
+        recipient: recipient // "all" or a specific user ID
     };
 
     if (imageInput.files.length) {
         const file = imageInput.files[0];
-        const storageRef = firebase.storage().ref(`messages/${file.name}`);
-        storageRef.put(file).then((snapshot) => {
-            snapshot.ref.getDownloadURL().then((url) => {
-                messageData.image = url;
-                sendToFirebase(messageData);
-            }).catch(console.error);
-        }).catch(console.error);
+        uploadImageToFirebase(file, (downloadURL) => {
+            messageData.image = downloadURL; // Add image URL to the message data
+            sendMessageToFirebase(messageData); // Send the message
+        });
     } else {
-        sendToFirebase(messageData);
+        sendMessageToFirebase(messageData); // Send the message without an image
     }
 }
+
 
 function sendToFirebase(messageData) {
     $.ajax({
