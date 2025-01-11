@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1158,6 +1158,10 @@ body.dark-mode .message-card {
             measurementId: "G-C7VBNTXM8R"
         };
 
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
+
+
         // Initialize the neural network
 let net; // Declare net globally
 
@@ -1449,30 +1453,27 @@ function sendMessageFromPopup() {
         return;
     }
 
-    // Prepare message data
     const messageData = {
-        sender: "Admin", // Default sender
+        sender: "Admin",
         content: message,
         timestamp: new Date().toISOString(),
-        recipient: recipient, // "all" or a specific user ID
+        recipient: recipient,
     };
 
-    // If an image is attached, upload it to Firebase Storage
     if (imageInput.files.length) {
         const file = imageInput.files[0];
         const storageRef = firebase.storage().ref(`messages/${file.name}`);
         storageRef.put(file).then((snapshot) => {
             snapshot.ref.getDownloadURL().then((url) => {
-                messageData.image = url; // Add the image URL to the message data
+                messageData.image = url;
                 sendToFirebase(messageData);
-            });
-        });
+            }).catch(console.error);
+        }).catch(console.error);
     } else {
         sendToFirebase(messageData);
     }
 }
 
-// Helper function to send the message to Firebase Realtime Database
 function sendToFirebase(messageData) {
     $.ajax({
         url: `https://test-71ecd-default-rtdb.firebaseio.com/messages.json`,
@@ -1482,7 +1483,7 @@ function sendToFirebase(messageData) {
         success: function () {
             alert("Message sent successfully!");
             closeMessagePopup();
-            loadMessages(); // Refresh messages in the inbox
+            loadMessages();
         },
         error: function (err) {
             console.error("Error sending message:", err);
@@ -1490,6 +1491,7 @@ function sendToFirebase(messageData) {
         },
     });
 }
+
 
 
 document.getElementById('sidebar-search').addEventListener('input', function() {
