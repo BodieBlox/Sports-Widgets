@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/material-ui/4.12.4/index.js" integrity="sha512-wEnX3bNd/CdyrOFR0KIGlHihK/w9x3/It8Vc18aymEF/F/f1q0Mq8T+GSxF1wYUACLEGECapuIYQdQlKY1LBJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -25,6 +27,10 @@
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     background-color: #f9f9f9;
 }
+
+.swal2-container {
+    backdrop-filter: blur(5px);
+  }
 
 .message-card {
     display: flex;
@@ -1225,6 +1231,21 @@ function initScoringTrends() {
     });
 }
 
+function showBan() {
+    Swal.fire({
+    title: 'Banned',
+    text: 'You have been banned from accessing this platform.',
+    iconHtml: '<img src="https://cdn-icons-png.flaticon.com/512/189/189061.png" style="width: 50px; height: 50px;" alt="Gavel Icon">',
+    customClass: {
+      popup: 'swal2-blur-background',
+    },
+    showConfirmButton: false,
+    allowOutsideClick: false,
+    allowEscapeKey: false,
+    allowEnterKey: false
+  });
+}
+
 function updateQuarterAndProgress() {
         const quarter = parseInt(document.getElementById('quarter').value, 10);
         const progressPercentage = (quarter / 4) * 100;
@@ -1673,6 +1694,7 @@ function filterLogs() {
                     document.getElementById('login-error').textContent = errorMessage;
                     if (errorMessage == "USER_DISABLED") {
                         document.getElementById('login-error').textContent = 'Account Banned';
+                        showBan();
                     }
                     if (errorMessage == "INVALID_EMAIL") {
                         document.getElementById('login-error').textContent = 'Enter A Valid Email';
