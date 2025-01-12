@@ -922,6 +922,7 @@ body.dark-mode .message-card {
         <a href="#settings" onclick="showTab('settings')">Settings</a>
         <a href="#admin" onclick="showTab('admin')">Admin</a>
         <a href="#inbox" onclick="showTab('inbox')">Inbox</a>
+        <a href="#roster" onclick="showTab('roster')">Rosters</a>
     </div>
     
 
@@ -1078,6 +1079,16 @@ body.dark-mode .message-card {
             </div>
         </div>
 
+        <div id="roster" class="tab-content fade" style="display:none;">
+            <h2>Rosters</h2>
+            <div class="info-section">
+                <button class="btn btn-primary" onclick="jvb()">JV Boys Basketball</button>
+                <button class="btn btn-primary" onclick="vb()">Varsity Boys Basketball</button>
+                <button class="btn btn-primary" onclick="jvg()">JV Girls Basketball</button>
+                <button class="btn btn-primary" onclick="vg()">Varsity Girls Basketball</button>
+            </div>
+        </div>
+
         <div id="settings" class="tab-content fade" style="display:none;">
             <h2>Settings</h2>
             <div class="card shadow mb-3 p-3">
@@ -1229,6 +1240,26 @@ function initScoringTrends() {
             }
         }
     });
+}
+
+function jvb() {
+    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_34_2=http://apache-perl:10771/g5-bin/client.cgi?G5genie=2031;G5button=15&ffAdditionalInfo=1");
+    nw.focus;
+}
+
+function vb() {
+    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_35_2=Basketball%20Boys%20Varsity&ffAdditionalInfo=1");
+    nw.focus;
+}
+
+function jvg() {
+    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_34_3=Basketball%20Girls%20JV&ffAdditionalInfo=1");
+    nw.focus;
+}
+
+function vg() {
+    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1");
+    nw.focus;
 }
 
 function showBan() {
