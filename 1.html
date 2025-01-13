@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upcoming Basketball
+
+ Games</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Upcoming Basketball Games</h1>
+        <ul id="upcomingGames" class="list-group">
+            <!-- Upcoming games will be populated here -->
+        </ul>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            getUpcomingGames(24); // Fetch games for school ID 34
+        });
+
+        function getUpcomingGames(schoolId) {
+            const apiUrl = `https://www.montgomeryschoolsmdcalendar.org/public/schoolactivities/genie/2031/school/${schoolId}/`;
+
+            $.ajax({
+                type: 'GET',
+                url: apiUrl,
+                success: function(response) {
+                    if (response && response.activities) {
+                        // Filter for basketball games
+                        const basketballGames = response.activities.filter(activity => activity.activityName === "Basketball");
+                        populateGames(basketballGames);
+                    } else {
+                        $('#upcomingGames').append('<li class="list-group-item">No upcoming games found.</li>');
+                    }
+                },
+                error: function(jqXHR, exception) {
+                    $('#upcomingGames').append('<li class="list-group-item">Error fetching games. Please try again later.</li>');
+                }
+            });
+        }
+
+        function populateGames(games) {
+            if (games.length === 0) {
+                $('#upcomingGames').append('<li class="list-group-item">No upcoming basketball games found.</li>');
+                return;
+            }
+
+            games.forEach(function(game) {
+                const gameDate = new Date(game.date).toLocaleDateString(); // Format the date
+                const gameTime = new Date(game.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); // Format the time
+                const homeTeam = game.homeSchool; // Assuming homeSchool ID is used
+                const awayTeam = game.awaySchools; // Assuming awaySchools ID is used
+                const gameItem = `<li class="list-group-item">${gameDate} at ${gameTime}: ${game.activityList} (Home: ${homeTeam}, Away: ${awayTeam})</li>`;
+                $('#upcomingGames').append(gameItem);
+            });
+        }
+    </script>
+</body>
+</html>
