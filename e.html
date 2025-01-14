@@ -1083,6 +1083,20 @@ body.dark-mode .message-card {
 
         <div id="roster" class="tab-content fade" style="display:none;">
             <h2>Rosters</h2>
+            <select id="rosterchange" class="form-control w-50 mx-auto" onchange="updateQuarterAndProgress()">
+                <option value="1">Albert Einstein</option>
+                <option value="2">Bethesda-Chevy Chase</option>
+                <option value="4">Col. Zadok Magruder</option>
+                <option value="5">Damascus</option>
+                <option value="7">James Hubert Blake</option>
+                <option value="14">Quince Orchard</option>
+                <option value="19">Springbrook</option>
+                <option value="25">Thomas S. Wootton</option>
+                <option value="20">Walt Whitman</option>
+                <option value="21">Walter Johnson</option>
+                <option value="22">Watkins Mill</option>
+                <option value="24">Winston Churchill</option>
+            </select>
             <div class="info-section">
                 <button class="btn btn-primary" onclick="jvb()">JV Boys Basketball</button>
                 <button class="btn btn-primary" onclick="vb()">Varsity Boys Basketball</button>
@@ -1163,6 +1177,9 @@ body.dark-mode .message-card {
 
 
     <script>
+
+        const currentroster = 0
+
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
@@ -1245,22 +1262,22 @@ function initScoringTrends() {
 }
 
 function jvb() {
-    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_34_2=http://apache-perl:10771/g5-bin/client.cgi?G5genie=2031;G5button=15&ffAdditionalInfo=1", "_blank", "width=500,height=500");
+    nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_2=http://apache-perl:10771/g5-bin/client.cgi?G5genie=2031;G5button=15&ffAdditionalInfo=1", "_blank", "width=500,height=500`);
     nw.focus;
 }
 
 function vb() {
-    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_35_2=Basketball%20Boys%20Varsity&ffAdditionalInfo=1", "_blank", "width=500,height=500");
+    nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_2=Basketball%20Boys%20Varsity&ffAdditionalInfo=1", "_blank", "width=500,height=500`);
     nw.focus;
 }
 
 function jvg() {
-    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_34_3=Basketball%20Girls%20JV&ffAdditionalInfo=1", "_blank", "width=500,height=500");
+    nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_3=Basketball%20Girls%20JV&ffAdditionalInfo=1", "_blank", "width=500,height=500`);
     nw.focus;
 }
 
 function vg() {
-    nw=window.open("https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=24&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1", "_blank", "width=500,height=500");
+    nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1", "_blank", "width=500,height=500`);
     nw.focus;
 }
 
@@ -1278,6 +1295,36 @@ function showBan() {
     allowEnterKey: false
   });
 }
+
+function rostercheck() {
+    const rosters = parseInt(document.getElementById('rosterchange').value, 10);
+    if (roosters == 1) {
+        currentroster = 1
+      }  else if (roosters == 2) {
+            currentroster = 2
+        } else if (roosters == 4) {
+            currentroster = 4
+        } else if (roosters == 5) {
+            currentroster = 5
+        } else if (roosters == 7) {
+            currentroster = 7
+        } else if (roosters == 14) {
+            currentroster = 14
+        } else if (roosters == 19) {
+            currentroster = 19
+        } else if (roosters == 25) {
+            currentroster = 25
+        } else if (roosters == 20) {
+            currentroster = 20
+        } else if (roosters == 21) {
+            currentroster = 21
+        } else if (roosters == 22) {
+            currentroster = 22
+        } else if (roosters == 24) {
+            currentroster = 24
+        }
+}
+
 
 function updateQuarterAndProgress() {
         const quarter = parseInt(document.getElementById('quarter').value, 10);
