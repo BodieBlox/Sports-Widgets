@@ -8,7 +8,7 @@
  Games</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-</head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.4/jquery.xdomainrequest.min.js" integrity="sha512-AqrEfeiUZBu9nWx7jHZlve8pPY3Mavhhwobv+pVxTSc10vpElmhFNDqe8DopVSvApKGfUrOQO3OshR8avd+pTw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script></head>
 <body>
     <div class="container mt-5">
         <h1>Upcoming Basketball Games</h1>
@@ -23,15 +23,11 @@
         });
 
         function getUpcomingGames(schoolId) {
-            const apiUrl = `https://cors-proxy1.p.rapidapi.com/https://www.montgomeryschoolsmdcalendar.org/public/schoolactivities/genie/2031/school/24/`;
+            const apiUrl = `https://www.montgomeryschoolsmdcalendar.org/public/schoolactivities/genie/2031/school/24/`;
 
             $.ajax({
                 type: 'GET',
                 url: apiUrl,
-                headers: {
-    'x-rapidapi-key': '099ec55a5cmsh1f87339bc43bd12p182b4fjsn946d025cdcd1',
-    'x-rapidapi-host': 'cors-proxy1.p.rapidapi.com'
-  },
                 success: function(response) {
                     if (response && response.activities) {
                         // Filter for basketball games
