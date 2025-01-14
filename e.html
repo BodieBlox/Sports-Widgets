@@ -924,6 +924,7 @@ body.dark-mode .message-card {
         <a href="#admin" onclick="showTab('admin')">Admin</a>
         <a href="#inbox" onclick="showTab('inbox')">Inbox</a>
         <a href="#roster" onclick="showTab('roster')">Rosters</a>
+        <button class="btn btn-primary" onclick="logout()">Logout</button>
     </div>
     
 
@@ -1162,6 +1163,8 @@ body.dark-mode .message-card {
 
 
     <script>
+
+localStorage.clear();
         // Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyBLknke4IwRj2g0zqsp6CDZxDDxePY3qI8",
@@ -1892,6 +1895,10 @@ function filterLogs() {
             closeCreateUserPopup();
             loadUsers();
         });
+    }
+
+    function logout() {
+        localStorage.clear();
     }
 
     // Function to load users from Firebase Realtime Database
