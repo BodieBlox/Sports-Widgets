@@ -23,11 +23,15 @@
         });
 
         function getUpcomingGames(schoolId) {
-            const apiUrl = `https://thingproxy.freeboard.io/fetch/https://www.montgomeryschoolsmdcalendar.org/public/schoolactivities/genie/2031/school/24/`;
+            const apiUrl = `https://cors-proxy1.p.rapidapi.com/https://www.montgomeryschoolsmdcalendar.org/public/schoolactivities/genie/2031/school/24/`;
 
             $.ajax({
                 type: 'GET',
                 url: apiUrl,
+                headers: {
+    'x-rapidapi-key': '099ec55a5cmsh1f87339bc43bd12p182b4fjsn946d025cdcd1',
+    'x-rapidapi-host': 'cors-proxy1.p.rapidapi.com'
+  },
                 success: function(response) {
                     if (response && response.activities) {
                         // Filter for basketball games
