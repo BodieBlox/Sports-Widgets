@@ -1227,6 +1227,7 @@ let net; // Declare net globally
         });
 
 // Training data for brain.js
+   //         net.train(trainingData);
 
 
 // Train the network
@@ -1578,7 +1579,7 @@ document.getElementById("message-popup").addEventListener("show", loadRecipients
 
 // Automatically show the popup when the app loads
 document.addEventListener("DOMContentLoaded", () => {
-  const hasSeenPopup = localStorage.getItem("hasSeenPopup");
+  const hasSeenPopup = localStorage.getItem("updatelogs");
   if (!hasSeenPopup) {
     showPopup();
     localStorage.setItem("updatelogs", "true");
@@ -2332,7 +2333,7 @@ function filterLogs() {
     } catch (error) {
         console.error("Error fetching AI response:", error);
         // Fallback to brain.js
-        const brainResponse = net.run({ question: question.toLowerCase() });
+        const brainResponse = net.run({ question: question });
         responseDiv.innerHTML = `<p>${brainResponse.answer || "I'm sorry, I don't know the answer."}</p>`;
     }
 }
