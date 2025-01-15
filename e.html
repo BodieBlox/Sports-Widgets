@@ -1969,6 +1969,7 @@ function filterLogs() {
 
     function logout() {
         localStorage.clear();
+        location.reload();
     }
 
     // Function to load users from Firebase Realtime Database
@@ -2432,9 +2433,6 @@ function filterLogs() {
                     break;
                 case '7':
                     showTab('settings');
-                    break;
-                case 'Escape':
-                    closeLoginPopup();
                     break;
                 default:
                     break;
