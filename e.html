@@ -892,9 +892,8 @@ body.dark-mode .message-card {
       </div>
       <div class="popup-content">
         <ul>
-          <li><strong>Rosters Page:</strong> View team rosters</li>
-          <li><strong>Inbox Update:</strong> Messages can now include images</li>
-          <li><strong>Security Upgrade:</strong> Added a stronger login system</li>
+          <li><strong>Rosters Page:</strong> View any county team rosters and standings</li>
+          <li><strong>Login System Update:</strong> Logout button added</li>
           <li><strong>Bug Fixes:</strong> Fixed Bugs</li>
           <li><strong>Next Update:</strong> School Search(Return Info On Any School In MCPS) and Updated Digital Scoreboard</li>
         </ul>
@@ -1102,6 +1101,12 @@ body.dark-mode .message-card {
                 <button class="btn btn-primary" onclick="vb()">Varsity Boys Basketball</button>
                 <button class="btn btn-primary" onclick="jvg()">JV Girls Basketball</button>
                 <button class="btn btn-primary" onclick="vg()">Varsity Girls Basketball</button>
+                <br>
+                <button class="btn btn-primary" onclick="standingsjvboysbasketball()">JV Boys Basketball Standings</button>
+                <button class="btn btn-primary" onclick="standingsvboysbaketball()">Varsity Boys Basketball Standings</button>
+                <button class="btn btn-primary" onclick="standingsjvgirlsbasketball()">JV Girls Basketball Standings</button>
+                <button class="btn btn-primary" onclick="standingsvboysbaketball()">Varsity Girls Basketball Standings</button>
+                <br>
             </div>
         </div>
 
@@ -1278,6 +1283,26 @@ function jvg() {
 
 function vg() {
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
+    nw.focus;
+}
+
+function standingsjvboysbasketball() {
+    nw=window.open(`https://www.montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=47&name_63_2_34_166_=Winter%202024-25%20Boys%20JV%20Basketball%20%20&school_id=${currentroster}&vw_agl=1`, "_blank", "width=500,height=500");
+    nw.focus;
+}
+
+function standingsjvgirlsbasketball() {
+    nw=window.open(`https://www.montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=47&name_63_3_34_166_=Winter%202024-25%20Girls%20JV%20Basketball%20%20&school_id=${currentroster}&vw_agl=1`, "_blank", "width=500,height=500");
+    nw.focus;
+}
+
+function standingsvboysbaketball() {
+    nw=window.open(`https://www.montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=47&name_63_2_35_166=Winter+2024-25+Boys+Varsity+Basketball&school_id=${currentroster}&vw_agl=1`, "_blank", "width=500,height=500");
+    nw.focus;
+}
+
+function standingsvgirlsbaketball() {
+    nw=window.open(`https://www.montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=47&name_63_3_35_166=Winter+2024-25+Girls+Varsity+Basketball&school_id=${currentroster}&vw_agl=1`, "_blank", "width=500,height=500");
     nw.focus;
 }
 
