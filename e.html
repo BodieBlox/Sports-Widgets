@@ -755,6 +755,19 @@ body.dark-mode .message-card {
     }
 }
 
+.card h3 {
+    font-size: 1.5rem;
+}
+
+.btn-group .btn {
+    font-size: 1.2rem;
+}
+
+.display-4 {
+    font-size: 2.5rem;
+}
+
+
 
 /* Overlay */
 .popup-overlay {
@@ -995,6 +1008,32 @@ body.dark-mode .message-card {
                     </div>
                 </div>
             </div>
+
+            <div class="row">
+                <!-- Home Team Fouls -->
+                <div class="col-md-6">
+                    <div class="card shadow p-4 mb-3">
+                        <h3 class="text-primary text-center">Home Team Fouls</h3>
+                        <p class="display-4 text-center font-weight-bold" id="home-fouls">0</p>
+                        <div class="btn-group d-flex justify-content-center">
+                            <button class="btn btn-success mx-1" onclick="updateFouls('home', 1)"><i class="fas fa-plus-circle"></i> +1</button>
+                            <button class="btn btn-danger mx-1" onclick="updateFouls('home', -1)"><i class="fas fa-minus-circle"></i> -1</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Away Team Fouls -->
+                <div class="col-md-6">
+                    <div class="card shadow p-4 mb-3">
+                        <h3 class="text-primary text-center">Away Team Fouls</h3>
+                        <p class="display-4 text-center font-weight-bold" id="away-fouls">0</p>
+                        <div class="btn-group d-flex justify-content-center">
+                            <button class="btn btn-success mx-1" onclick="updateFouls('away', 1)"><i class="fas fa-plus-circle"></i> +1</button>
+                            <button class="btn btn-danger mx-1" onclick="updateFouls('away', -1)"><i class="fas fa-minus-circle"></i> -1</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             
             <div class="card shadow p-4 mb-4">
                 <div class="form-group text-center">
@@ -1552,6 +1591,67 @@ function closePopup() {
   const popup = document.getElementById("whats-new-popup");
   popup.classList.remove("active");
 }
+
+function updateFouls(team, change) {
+    // Get the current foul count
+    const foulsElement = document.getElementById(`${team}-fouls`);
+    let currentFouls = parseInt(foulsElement.textContent, 10);
+
+    // Update the foul count
+    currentFouls += change;
+
+    // Ensure fouls don't go below 0
+    if (currentFouls < 0) currentFouls = 0;
+
+    // Update the displayed fouls
+    foulsElement.textContent = currentFouls;
+
+    // Optional: Add logic to handle foul limits
+    if (currentFouls >= 5) {
+        alert(`${team === 'home' ? 'Home' : 'Away'} team is in the penalty!`);
+    }
+
+    // Optional: Save fouls to a database
+    saveFoulsToDatabase(team, currentFouls);
+}
+
+function saveFoulsToDatabase(team, fouls) {
+    // Replace this with your Firebase or API logic
+    const data = {};
+    data[`${team}Fouls`] = fouls;
+
+    $.ajax({
+        url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`, // Replace with your Firebase database URL
+        type: 'PATCH',
+        data: JSON.stringify(data),
+        contentType: 'application/json',
+        success: function () {
+            console.log(`${team} fouls updated successfully.`);
+        },
+        error: function (err) {
+            console.error(`Error updating ${team} fouls:`, err);
+        },
+    });
+}
+
+function loadFouls() {
+    $.ajax({
+        url: `https://test-71ecd-default-rtdb.firebaseio.com/.json`, // Replace with your database URL
+        type: 'GET',
+        success: function (data) {
+            document.getElementById('home-fouls').textContent = data.homeFouls || 0;
+            document.getElementById('away-fouls').textContent = data.awayFouls || 0;
+        },
+        error: function (err) {
+            console.error("Error loading fouls:", err);
+        },
+    });
+}
+
+// Call loadFouls when the page is ready
+$(document).ready(loadFouls);
+
+
 
 function loadRecipients() {
     $.ajax({
