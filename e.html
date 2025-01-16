@@ -2764,10 +2764,6 @@ function filterLogs() {
             customClass: {
                 popup: 'maintenance-popup', // Custom class for styling
             },
-            willOpen: () => {
-                const popup = Swal.getPopup();
-                popup.classList.add('animate__animated', 'animate__fadeIn'); // Add animation
-            }
         });
     }
 
