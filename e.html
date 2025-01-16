@@ -1666,18 +1666,20 @@ function generateGameSummary() {
     callAI(query);
 }
 
-function callAI(prompt) {
-    const t = "sk-proj-EEjjzkk2";
-    const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
 
-    const apiKey = t + v; // Combine the two parts of the API key
-    const apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions"; // The same API as askAI
+   
+    function callAI(prompt) {
+
+        const t = "sk-proj-EEjjzkk2";
+    const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
+    const apiKey = t+v; // Replace with your OpenAI API key
+    const apiUrl = "https://api.openai.com/v1/chat/completions"; // Endpoint for GPT-4 Turbo
 
     // Display loading state
     const summaryElement = document.getElementById('game-summary');
     summaryElement.textContent = "Generating summary... Please wait.";
 
-    // Send API request
+    // Send the request to OpenAI's API
     $.ajax({
         url: apiUrl,
         type: "POST",
@@ -1686,19 +1688,26 @@ function callAI(prompt) {
             "Content-Type": "application/json"
         },
         data: JSON.stringify({
-            prompt: prompt,
-            max_tokens: 150
+            model: "gpt-4o-mini", // Use GPT-4 Turbo Mini
+            messages: [
+                { role: "system", content: "You are an assistant specialized in sports game analytics." },
+                { role: "user", content: prompt }
+            ],
+            max_tokens: 300, // Adjust token limit based on expected response size
+            temperature: 0.7 // Adjust for creativity
         }),
         success: function (response) {
-            const aiResponse = response.choices[0].text.trim();
-            summaryElement.textContent = aiResponse; // Display the AI response
+            // Extract and display the AI's response
+            const aiResponse = response.choices[0].message.content.trim();
+            summaryElement.textContent = aiResponse;
         },
-        error: function (error) {
-            console.error("Error generating AI summary:", error);
-            summaryElement.textContent = "Failed to generate summary. Please try again.";
+        error: function (xhr) {
+            console.error("Error:", xhr);
+            summaryElement.textContent = `Error ${xhr.status}: ${xhr.statusText}`;
         }
     });
 }
+
 
 
 function saveFoulsToDatabase(team, fouls) {
