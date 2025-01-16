@@ -872,6 +872,26 @@ body.dark-mode .message-card {
   pointer-events: all;
 }
 
+#game-summary-container {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+#game-summary-container h3 {
+    color: #007bff;
+    margin-bottom: 10px;
+}
+
+#game-summary {
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.5;
+}
+
+
 
 
 
@@ -1053,9 +1073,15 @@ body.dark-mode .message-card {
                     <button class="btn btn-danger" onclick="clearScores()">Clear Scores</button>
                     <button class="btn btn-warning" onclick="endGame()">End Game</button>
                     <button class="btn btn-secondary" onclick="toggleProjectorMode()">Projector Mode</button>
+                    <button class="btn btn-primary" onclick="generateGameSummary()">Generate AI Summary</button>
                 </div>
             </div>
-            
+
+            <div id="game-summary-container" class="mt-4">
+                <h3>Game Summary</h3>
+                <p id="game-summary" class="text-muted">Click "Generate AI Summary" to analyze the game.</p>
+            </div>
+
             <div class="progress mt-4">
                 <div id="score-progress" class="progress-bar bg-primary" role="progressbar" style="width: 25%" aria-valuenow="1" aria-valuemin="0" aria-valuemax="4"></div>
             </div>
@@ -1614,6 +1640,66 @@ function updateFouls(team, change) {
     // Optional: Save fouls to a database
     saveFoulsToDatabase(team, currentFouls);
 }
+
+function generateGameSummary() {
+    // Gather game data
+    const homeScore = parseInt(document.getElementById('home-score').textContent, 10);
+    const awayScore = parseInt(document.getElementById('away-score').textContent, 10);
+    const homeFouls = parseInt(document.getElementById('home-fouls')?.textContent || 0, 10);
+    const awayFouls = parseInt(document.getElementById('away-fouls')?.textContent || 0, 10);
+    const currentQuarter = document.getElementById('quarter').value;
+    const gameTitle = document.getElementById('game-title').value || "Untitled Game";
+
+    // Construct the query for the AI
+    const query = `
+        Analyze the game "${gameTitle}". 
+        Details:
+        - Home Team Score: ${homeScore}
+        - Away Team Score: ${awayScore}
+        - Home Team Fouls: ${homeFouls}
+        - Away Team Fouls: ${awayFouls}
+        - Peak Quarter: ${currentQuarter}
+        Provide insights, such as the team's performance, key trends, and significant moments.
+    `;
+
+    // Use the API to get the AI-generated summary
+    callAI(query);
+}
+
+function callAI(prompt) {
+    const t = "sk-proj-EEjjzkk2";
+    const v = "VwP5Q_oBh4nw5Vg64Lc0BZ8wtDlRmWybsaY-_6mdm2FOG3a_rxfg2bga7ZeU1ifWwLT3BlbkFJmQ2tniHtKqe86RAMbl2wjrsyEXip1A46Re1U51_Dgo3Z7TZmfZ5TPt17L000L2NHUMbFTpUiAA";
+
+    const apiKey = t + v; // Combine the two parts of the API key
+    const apiUrl = "https://api.openai.com/v1/engines/davinci-codex/completions"; // The same API as askAI
+
+    // Display loading state
+    const summaryElement = document.getElementById('game-summary');
+    summaryElement.textContent = "Generating summary... Please wait.";
+
+    // Send API request
+    $.ajax({
+        url: apiUrl,
+        type: "POST",
+        headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json"
+        },
+        data: JSON.stringify({
+            prompt: prompt,
+            max_tokens: 150
+        }),
+        success: function (response) {
+            const aiResponse = response.choices[0].text.trim();
+            summaryElement.textContent = aiResponse; // Display the AI response
+        },
+        error: function (error) {
+            console.error("Error generating AI summary:", error);
+            summaryElement.textContent = "Failed to generate summary. Please try again.";
+        }
+    });
+}
+
 
 function saveFoulsToDatabase(team, fouls) {
     // Replace this with your Firebase or API logic
