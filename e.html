@@ -904,6 +904,54 @@ body.dark-mode .message-card {
 }
 
 
+/* General Styling for Rosters Page */
+#roster {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Center Text and Spacing */
+#roster h2 {
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.roster-controls select {
+    font-size: 1.1em;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-group button {
+    margin: 5px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+.btn-group button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Section Dividers */
+.roster-controls, .standings {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.info-section p {
+    font-size: 0.9em;
+    color: #777;
+}
+
+
 
 
 
@@ -1158,35 +1206,47 @@ body.dark-mode .message-card {
         </div>
 
         <div id="roster" class="tab-content fade" style="display:none;">
-            <h2>Rosters</h2>
-            <select id="rosterchange" class="form-control w-50 mx-auto" onchange="rostercheck()">
-                <option value="1">Albert Einstein</option>
-                <option value="2">Bethesda-Chevy Chase</option>
-                <option value="4">Col. Zadok Magruder</option>
-                <option value="5">Damascus</option>
-                <option value="7">James Hubert Blake</option>
-                <option value="12">Paint Branch</option>
-                <option value="14">Quince Orchard</option>
-                <option value="19">Springbrook</option>
-                <option value="25">Thomas S. Wootton</option>
-                <option value="20">Walt Whitman</option>
-                <option value="21">Walter Johnson</option>
-                <option value="22">Watkins Mill</option>
-                <option value="24">Winston Churchill</option>
-            </select>
-            <div class="info-section">
-                <button class="btn btn-primary" onclick="jvb()">JV Boys Basketball</button>
-                <button class="btn btn-primary" onclick="vb()">Varsity Boys Basketball</button>
-                <button class="btn btn-primary" onclick="jvg()">JV Girls Basketball</button>
-                <button class="btn btn-primary" onclick="vg()">Varsity Girls Basketball</button>
-                <br>
-                <button class="btn btn-primary" onclick="standingsjvboysbasketball()">JV Boys Basketball Standings</button>
-                <button class="btn btn-primary" onclick="standingsvboysbaketball()">Varsity Boys Basketball Standings</button>
-                <button class="btn btn-primary" onclick="standingsjvgirlsbasketball()">JV Girls Basketball Standings</button>
-                <button class="btn btn-primary" onclick="standingsvgirlsbaketball()">Varsity Girls Basketball Standings</button>
-                <br>
+            <h2 class="text-center text-primary">Team Rosters</h2>
+            <div class="roster-controls my-4 text-center">
+                <select id="rosterchange" class="form-control w-50 mx-auto" onchange="rostercheck()">
+                    <option value="1">Albert Einstein</option>
+                    <option value="2">Bethesda-Chevy Chase</option>
+                    <option value="4">Col. Zadok Magruder</option>
+                    <option value="5">Damascus</option>
+                    <option value="7">James Hubert Blake</option>
+                    <option value="12">Paint Branch</option>
+                    <option value="14">Quince Orchard</option>
+                    <option value="19">Springbrook</option>
+                    <option value="25">Thomas S. Wootton</option>
+                    <option value="20">Walt Whitman</option>
+                    <option value="21">Walter Johnson</option>
+                    <option value="22">Watkins Mill</option>
+                    <option value="24">Winston Churchill</option>
+                </select>
             </div>
+        
+            <div class="text-center my-4">
+                <h4>Select a Team Category:</h4>
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="jvb()">JV Boys Basketball</button>
+                    <button class="btn btn-primary" onclick="vb()">Varsity Boys Basketball</button>
+                    <button class="btn btn-primary" onclick="jvg()">JV Girls Basketball</button>
+                    <button class="btn btn-primary" onclick="vg()">Varsity Girls Basketball</button>
+                </div>
+            </div>
+        
+            <div class="standings text-center my-4">
+                <h4>View Standings:</h4>
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="standingsjvboysbasketball()">JV Boys Basketball Standings</button>
+                    <button class="btn btn-secondary" onclick="standingsvboysbaketball()">Varsity Boys Basketball Standings</button>
+                    <button class="btn btn-secondary" onclick="standingsjvgirlsbasketball()">JV Girls Basketball Standings</button>
+                    <button class="btn btn-secondary" onclick="standingsvgirlsbaketball()">Varsity Girls Basketball Standings</button>
+                </div>
+            </div>
+        
         </div>
+        
 
         <div id="settings" class="tab-content fade" style="display:none;">
             <h2>Settings</h2>
