@@ -1774,10 +1774,10 @@ document.getElementById("message-popup").addEventListener("show", loadRecipients
 
 // Automatically show the popup when the app loads
 document.addEventListener("DOMContentLoaded", () => {
-  const hasSeenPopup = localStorage.getItem("updatelogs");
+  const hasSeenPopup = localStorage.getItem("updatelogs2");
   if (!hasSeenPopup) {
     showPopup();
-    localStorage.setItem("updatelogs", "true");
+    localStorage.setItem("updatelogs2", "true");
   }
 });
 
