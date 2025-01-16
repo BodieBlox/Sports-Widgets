@@ -710,6 +710,19 @@ body.dark-mode .message-card {
     outline: none;
 }
 
+         .maintenance-popup {
+        background-color: #343a40; /* Dark background */
+        color: white; /* White text */
+        border-radius: 10px; /* Rounded corners */
+        padding: 20px; /* Padding inside the popup */
+        text-align: center; /* Center text */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Shadow effect */
+    }
+
+    /* Add some cool animations */
+    @import url('https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css');
+
+
 .login-actions {
     margin-top: 15px;
 }
@@ -1153,6 +1166,7 @@ body.dark-mode .message-card {
                 <option value="4">Col. Zadok Magruder</option>
                 <option value="5">Damascus</option>
                 <option value="7">James Hubert Blake</option>
+                <option value="12">Paint Branch</option>
                 <option value="14">Quince Orchard</option>
                 <option value="19">Springbrook</option>
                 <option value="25">Thomas S. Wootton</option>
@@ -1399,6 +1413,8 @@ function rostercheck() {
             currentroster = 5
         } else if (roosters == 7) {
             currentroster = 7
+        } else if (roosters == 12) {
+            currentroster = 12
         } else if (roosters == 14) {
             currentroster = 14
         } else if (roosters == 19) {
@@ -2735,6 +2751,29 @@ function filterLogs() {
 
        
 
+   function showMaintenancePopup() {
+        Swal.fire({
+            title: 'Maintenance Mode',
+            text: 'This page is currently closed for maintenance. Please check back later.',
+            icon: 'info',
+            backdrop: 'rgba(0, 0, 0, 0.7)', // Dark background with transparency
+            allowOutsideClick: false, // Prevent closing by clicking outside
+            allowEscapeKey: false, // Prevent closing by pressing escape
+            showCloseButton: false, // Hide close button
+            showConfirmButton: false, // Hide confirm button
+            customClass: {
+                popup: 'maintenance-popup', // Custom class for styling
+            },
+            willOpen: () => {
+                const popup = Swal.getPopup();
+                popup.classList.add('animate__animated', 'animate__fadeIn'); // Add animation
+            }
+        });
+    }
+
+    // Call the function to show the popup when the app starts
+    window.onload = showMaintenancePopup;
+        
     // Initialize the app on page load
     $(document).ready(() => {
         loadUsers();
