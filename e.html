@@ -1400,6 +1400,22 @@ body.dark-mode .message-card {
 
 //showMaintenancePopup();
 
+var timeInterval = 20000;
+	  
+	$('#msgBtn').live('click', function(){ 
+		$("#msgBtn").hide();
+		$(".emergency").slideDown(800); 
+	 
+		setTimeout(function(){ 
+			
+			$(".emergency").slideUp(800); 
+			$("#msgBtn").show();
+			 
+			}, 
+	  timeInterval);
+
+	});
+
 getAPIdata();
 
 
@@ -1839,9 +1855,13 @@ function getAPIdata() {
 
                 if (message.indexOf('emer-code-green') < 0) {
                     $(".emergency").show();
+                    $("#msgBtn").hide();
+
 
                     setTimeout(function() {
                         $(".emergency").slideUp(800);
+                        $("#msgBtn").show();
+
                     }, timeInterval2);
                 }
             }
