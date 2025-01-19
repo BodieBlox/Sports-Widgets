@@ -953,6 +953,79 @@ body.dark-mode .message-card {
 
 
 
+/* ==========================================================================
+   Emergency Message
+   ========================================================================== */
+   MSG_EMER
+#emer-code-green{    padding-left: 3rem!important;     padding-right: 3rem!important;}
+	.MSG_EMER h3, .MSG_EMER p {color: #04444e;}
+.MSG_EMER h3 {  font-size:1.2em;  border-bottom:1px dotted #04444e;}
+.MSG_EMER p {margin-bottom:10px;     line-height: 1.5em;}
+
+		
+		#emer-code-red .emr-color-box, #emer-code-red .emr-btn-color { background-color:#ba1e21; color:#fff } 
+		#emer-code-red .emr-color-box h2 { color:#fff } 
+		
+		#emer-code-yellow .emr-color-box, #emer-code-yellow .emr-btn-color { background-color:#f5c500; color:#000!important;  } 
+		#emer-code-yellow .emr-color-box h2 { color:#000 } 
+		
+			#emer-code-orange .emr-color-box, #emer-code-orange .emr-btn-color { background-color:#e97601; } 
+		#emer-code-orange .emr-color-box h2 { color:#fff } 
+			
+		#emer-code-blue .emr-color-box, #emer-code-blue .emr-btn-color { background-color:#0068a7; color:#fff } 
+		#emer-code-blue .emr-color-box h2 { color:#fff } 
+		
+			
+		#emer-code-green .emr-color-box, #emer-code-green .emr-btn-color { background-color:#007356; } 
+        #emer-code-green .emr-btn-color {  padding: 5px 10px;    font-size: 12px; color:#fff;} 
+		#emer-code-green .emr-color-box h2 { color:#fff } 
+		
+			
+		#emer-code-purple .emr-color-box, #emer-code-purple .emr-btn-color { background-color:#944f8e; color:#fff } 
+		#emer-code-purple .emr-color-box h2 { color:#fff } 
+
+		#emer-code-black .emr-color-box, #emer-code-black .emr-btn-color { background-color:#28282B; color:#fff } 
+		#emer-code-black .emr-color-box h2 { color:#fff } 
+		/*#msgBtn { display: none;}*/
+        .emergency { display: none;} 
+
+
+/* ==========================================================================
+  Redesign 2023
+   ========================================================================== */
+
+#header .emergency{ display: none;} 
+#header .emergency {background-color: #fff;}
+	#header .MSG_EMER h3, .MSG_EMER p {color: #04444e;}
+#header .MSG_EMER h3 {  font-size:1.2em;  border-bottom:1px dotted #04444e;}
+#header .MSG_EMER p {margin-bottom:10px;  color: #04444e;    line-height: 1.5em;}
+
+
+ 
+/* ==========================================================================
+    Media Queries for Responsive Design.
+   ========================================================================== */
+@media only screen and (max-width:575.98px) {
+
+	/* ==========================================================================
+   END Redesign 2023
+   ========================================================================== */
+
+ .emergency{width:100%; margin:50px 0 0 0 ;padding:0; display:none;  backgroun-color:#fff; }
+.MSG_INFO {  backgroun-color:#fff; overflow:hidden;display:block; }
+	#homepageEmergencyContent{position:relative; top:0px;}
+	
+	#emer-code-green{    padding-left: 15px!important;     padding-right: 15px!important;}
+}
+ /*Small devices (landscape phones, 576px and up)*/
+@media (min-width: 576px) and (max-width: 767.98px) {
+	
+.MSG_INFO { position:relative; top:50px;  backgroun-color:#fff; overflow:hidden; }
+	
+}
+
+
+
 
 
 
@@ -1022,6 +1095,10 @@ body.dark-mode .message-card {
 
     <div class="content">
         <h1>Winston Churchill High School Athletics Admin Dashboard</h1>
+
+        <div id="homepageEmergencyContent">
+
+        </div>
         
 
         <div id="inbox" class="tab-content admin-tab fade" style="display:none;">
@@ -1743,6 +1820,34 @@ function generateGameSummary() {
     // Use the API to get the AI-generated summary
     callAI(query);
 }
+
+function getAPIdata() {
+    var xhr = new XMLHttpRequest();
+    var url = 'https://api.cors.lol/?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
+    xhr.open("GET", url, true);
+    xhr.responseType = 'json';
+    xhr.onreadystatechange = function () {
+        if (this.readyState == 4 && this.status == 200) {
+            // populate homepage emergency message
+            const emergencyDiv = document.getElementById('homepageEmergencyContent');
+            if (emergencyDiv) {
+                var message = xhr.response.emsg;
+                var timeInterval2 = 20000;
+                emergencyDiv.innerHTML = message;
+
+                if (message.indexOf('emer-code-green') < 0) {
+                    $(".emergency").show();
+
+                    setTimeout(function() {
+                        $(".emergency").slideUp(800);
+                    }, timeInterval2);
+                }
+            }
+        }
+    };
+    xhr.send();
+}
+
 
 
    
@@ -2865,6 +2970,7 @@ showMaintenancePopup();
     // Initialize the app on page load
     $(document).ready(() => {
         loadUsers();
+        getAPIdata();
     });
 
        // showAuthPopup();
