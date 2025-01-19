@@ -1402,19 +1402,17 @@ body.dark-mode .message-card {
 
 var timeInterval = 20000;
 	  
-	$('#msgBtn').on('click', function(){ 
-		$("#msgBtn").hide();
-		$(".emergency").slideDown(800); 
-	 
-		setTimeout(function(){ 
-			
-			$(".emergency").slideUp(800); 
-			$("#msgBtn").show();
-			 
-			}, 
-	  timeInterval);
+document.getElementById('msgBtn').addEventListener('click', function() {
+    document.getElementById('msgBtn').style.display = 'none';
+    document.querySelector('.emergency').style.display = 'block';
+    document.querySelector('.emergency').style.transition = 'height 0.8s';
 
-	});
+    setTimeout(function() {
+        document.querySelector('.emergency').style.display = 'none';
+        document.getElementById('msgBtn').style.display = 'block';
+    }, timeInterval);
+});
+
 
 getAPIdata();
 
