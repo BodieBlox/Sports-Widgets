@@ -1845,6 +1845,20 @@ function getAPIdata() {
                 var timeInterval2 = 20000;
                 emergencyDiv.innerHTML = message;
 
+                var msgBtn = document.getElementById('msgBtn');
+    if (msgBtn) {
+        msgBtn.addEventListener('click', function() {
+            document.getElementById('msgBtn').style.display = 'none';
+            document.querySelector('.emergency').style.display = 'block';
+            document.querySelector('.emergency').style.transition = 'height 0.8s';
+
+            setTimeout(function() {
+                document.querySelector('.emergency').style.display = 'none';
+                document.getElementById('msgBtn').style.display = 'block';
+            }, timeInterval);
+        });
+    }
+
                 if (message.indexOf('emer-code-green') < 0) {
                     $(".emergency").show();
                     $("#msgBtn").hide();
