@@ -14,6 +14,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/material-ui/4.12.4/index.js" integrity="sha512-wEnX3bNd/CdyrOFR0KIGlHihK/w9x3/It8Vc18aymEF/F/f1q0Mq8T+GSxF1wYUACLEGECapuIYQdQlKY1LBJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
     <style>
         body {
             background-color: #f8f9fa;
@@ -1407,6 +1408,16 @@ body.dark-mode .message-card {
 
 getAPIdata();
 
+butterup.toast({
+    title: 'Hooray!',
+    message: 'Your payment was successful.',
+    location: 'top-right',
+    icon: true,
+    dismissable: false,
+    type: 'success',
+    theme: 'glass',
+});
+
 
         let currentroster = 1
 
@@ -2262,6 +2273,8 @@ function filterLogs() {
                 }
             });
         }
+
+       
 
         // Function to send score update to Firebase
         function sendScoreUpdate(scoreData) {
