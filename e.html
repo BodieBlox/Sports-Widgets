@@ -1412,6 +1412,7 @@ getAPIdata();
 
 
         let currentroster = 1
+        let rosterenabled = false
 
         // Firebase configuration
         const firebaseConfig = {
@@ -1496,21 +1497,37 @@ function initScoringTrends() {
 }
 
 function jvb() {
+    if (rosterenabled == false) {
+        window.alert("Roster Not Available");
+        return;
+    }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_2=http://apache-perl:10771/g5-bin/client.cgi?G5genie=2031;G5button=15&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
     nw.focus;
 }
 
 function vb() {
+    if (rosterenabled == false) {
+        window.alert("Roster Not Available");
+        return;
+    }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_2=Basketball%20Boys%20Varsity&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
     nw.focus;
 }
 
 function jvg() {
+    if (rosterenabled == false) {
+        window.alert("Roster Not Available");
+        return;
+    }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_3=Basketball%20Girls%20JV&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
     nw.focus;
 }
 
 function vg() {
+    if (rosterenabled == false) {
+        window.alert("Roster Not Available");
+        return;
+    }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
     nw.focus;
 }
@@ -1553,30 +1570,43 @@ function showBan() {
 function rostercheck() {
     const roosters = parseInt(document.getElementById('rosterchange').value, 10);
     if (roosters == 1) {
+        rosterenabled = true
         currentroster = 1
       }  else if (roosters == 2) {
+        rosterenabled = true
             currentroster = 2
         } else if (roosters == 4) {
+            rosterenabled = true
             currentroster = 4
         } else if (roosters == 5) {
+            rosterenabled = true
             currentroster = 5
         } else if (roosters == 7) {
+            rosterenabled = true
             currentroster = 7
         } else if (roosters == 12) {
+            rosterenabled = false
             currentroster = 12
         } else if (roosters == 14) {
+            rosterenabled = true
             currentroster = 14
         } else if (roosters == 19) {
+            rosterenabled = true
             currentroster = 19
         } else if (roosters == 25) {
+            rosterenabled = true
             currentroster = 25
         } else if (roosters == 20) {
+            rosterenabled = true
             currentroster = 20
         } else if (roosters == 21) {
+            rosterenabled = true
             currentroster = 21
         } else if (roosters == 22) {
+            rosterenabled = true
             currentroster = 22
         } else if (roosters == 24) {
+            rosterenabled = true
             currentroster = 24
         }
 }
