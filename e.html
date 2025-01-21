@@ -1724,7 +1724,7 @@ function updateQuarterAndProgress() {
 
     function setActiveTab(element) {
     // Remove 'active' class from all sidebar links
-    document.querySelectorAll('.sidebar-link').forEach(link => {
+    document.querySelectorAll('.sidebar a').forEach(link => {
         link.classList.remove('active');
     });
 
@@ -1734,7 +1734,7 @@ function updateQuarterAndProgress() {
 
 function edit() {
     const hash = window.location.hash;
-    const activeLink = document.querySelector(`.sidebar-link[href="${hash}"]`);
+    const activeLink = document.querySelector(`.sidebar a[href="${hash}"]`);
     if (activeLink) setActiveTab(activeLink);
 }
 
