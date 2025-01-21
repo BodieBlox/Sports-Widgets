@@ -1890,57 +1890,13 @@ function generateGameSummary() {
     callAI(query);
 }
 
-	    function backupAPI() {
-		    var xhr = new XMLHttpRequest();
-    var url = 'http://api.allorigins.win/get?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
-    xhr.open("GET", url, true);
-    xhr.responseType = 'json';
-	xhr.onreadystatechange = function () {
-        if (this.readyState == 4 && this.status == 200) {
-            // populate homepage emergency message
-            const emergencyDiv = document.getElementById('homepageEmergencyContent');
-            if (emergencyDiv) {
-                var message = xhr.response.emsg;
-                var timeInterval2 = 20000;
-                emergencyDiv.innerHTML = message;
 
-                var msgBtn = document.getElementById('msgBtn');
-    if (msgBtn) {
-        msgBtn.addEventListener('click', function() {
-            document.getElementById('msgBtn').style.display = 'none';
-            document.querySelector('.emergency').style.display = 'block';
-            document.querySelector('.emergency').style.transition = 'height 0.8s';
-
-            setTimeout(function() {
-                document.querySelector('.emergency').style.display = 'none';
-                document.getElementById('msgBtn').style.display = 'block';
-            }, timeInterval);
-        });
-    }
-
-                if (message.indexOf('emer-code-green') < 0) {
-                    $(".emergency").show();
-                    $("#msgBtn").hide();
-
-
-                    setTimeout(function() {
-                        $(".emergency").slideUp(800);
-                        $("#msgBtn").show();
-
-                    }, timeInterval2);
-                }
-            }
-        }
-    };
-    xhr.send();
-	    }
 
 function getAPIdata() {
     var xhr = new XMLHttpRequest();
-    var url = 'https://api.cors.lol/?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
+    var url = 'http://api.allorigins.win/get?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
     xhr.open("GET", url, true);
     xhr.responseType = 'json';
- xhr.addEventListener("error", backupAPI);
 	xhr.onreadystatechange = function () {
         if (this.readyState == 4 && this.status == 200) {
             // populate homepage emergency message
