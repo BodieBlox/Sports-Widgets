@@ -1413,10 +1413,13 @@ body.dark-mode .message-card {
 
 getAPIdata();
 
-new Notify ({
-    status: 'success',
-    title: 'Notify Title',
-    text: 'Notify text lorem ipsum',
+
+
+  function errorpopup(error) {
+    new Notify ({
+    status: 'error',
+    title: 'Error',
+    text: error,
     effect: 'fade',
     speed: 300,
     customClass: 'glass',
@@ -1431,6 +1434,7 @@ new Notify ({
     position: 'right top',
     customWrapper: '',
   })
+  }
 
 
 
@@ -1522,7 +1526,7 @@ function initScoringTrends() {
 
 function jvb() {
     if (rosterenabled == false) {
-        window.alert("Roster Not Available");
+        errorpopup("Roster Not Available");
         return;
     }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_2=http://apache-perl:10771/g5-bin/client.cgi?G5genie=2031;G5button=15&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
@@ -1531,7 +1535,7 @@ function jvb() {
 
 function vb() {
     if (rosterenabled == false) {
-        window.alert("Roster Not Available");
+        errorpopup("Roster Not Available");
         return;
     }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_2=Basketball%20Boys%20Varsity&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
@@ -1540,7 +1544,7 @@ function vb() {
 
 function jvg() {
     if (rosterenabled == false) {
-        window.alert("Roster Not Available");
+        errorpopup("Roster Not Available");
         return;
     }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_34_3=Basketball%20Girls%20JV&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
@@ -1549,7 +1553,7 @@ function jvg() {
 
 function vg() {
     if (rosterenabled == false) {
-        window.alert("Roster Not Available");
+       errorpopup("Roster Not Available");
         return;
     }
     nw=window.open(`https://montgomeryschoolsmdcalendar.org/g5-bin/client.cgi?G5genie=2031&cwellOnly=1&G5button=1546&school_id=${currentroster}&activity_63_35_3=Basketball%20Girls%20Varsity&ffAdditionalInfo=1`, "_blank", "width=500,height=500");
