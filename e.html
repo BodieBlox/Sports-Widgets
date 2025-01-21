@@ -1437,6 +1437,48 @@ getAPIdata();
   })
   }
 
+  function successpopup(error) {
+    new Notify ({
+    status: 'success',
+    title: 'Success',
+    text: error,
+    effect: 'fade',
+    speed: 300,
+    customClass: 'glass',
+    customIcon: '',
+    showIcon: true,
+    showCloseButton: true,
+    autoclose: true,
+    autotimeout: 3000,
+    notificationsGap: null,
+    notificationsPadding: null,
+    type: 'outline',
+    position: 'right top',
+    customWrapper: '',
+  })
+  }
+
+  function infopopup(error) {
+    new Notify ({
+    status: 'info',
+    title: 'Info',
+    text: error,
+    effect: 'fade',
+    speed: 300,
+    customClass: 'glass',
+    customIcon: '',
+    showIcon: true,
+    showCloseButton: true,
+    autoclose: true,
+    autotimeout: 3000,
+    notificationsGap: null,
+    notificationsPadding: null,
+    type: 'outline',
+    position: 'right top',
+    customWrapper: '',
+  })
+  }
+
 
 
 
@@ -2944,6 +2986,8 @@ function filterLogs() {
 
         // Function to toggle projector mode
         function toggleProjectorMode() {
+            infopopup("This feature is currently disabled");
+            return;
             const projector = document.getElementById('projector-mode');
             if (projector.style.display === 'none') {
                 projector.style.display = 'flex';
