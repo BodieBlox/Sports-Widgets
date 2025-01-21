@@ -1722,6 +1722,22 @@ function updateQuarterAndProgress() {
         }
     }
 
+    function setActiveTab(element) {
+    // Remove 'active' class from all sidebar links
+    document.querySelectorAll('.sidebar-link').forEach(link => {
+        link.classList.remove('active');
+    });
+
+    // Add 'active' class to the clicked link
+    element.classList.add('active');
+}
+
+function edit() {
+    const hash = window.location.hash;
+    const activeLink = document.querySelector(`.sidebar-link[href="${hash}"]`);
+    if (activeLink) setActiveTab(activeLink);
+}
+
 function showToast({ message, type = "success", duration = 5000 }) {
     const toastContainer = document.getElementById("toast-container");
 
@@ -2815,6 +2831,7 @@ function filterLogs() {
             $('#' + tabId).fadeIn(500).addClass('show'); // Show the selected tab with fade-in effect
             $('.tab-bar a').removeClass('active'); // Remove active class from all tabs
             $('.tab-bar a[href="#' + tabId + '"]').addClass('active'); // Add active class to the clicked tab
+            edit();
             if (tabId === 'logs') {
                 fetchGameLogs(); // Fetch logs when the logs tab is shown
             } else if (tabId === 'score') {
