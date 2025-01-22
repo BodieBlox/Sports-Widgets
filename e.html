@@ -2074,8 +2074,8 @@ function showToast({ message, type = "success", duration = 5000 }) {
     };
 }
 
-let currentAudio = null; // Keep track of the currently playing sound
-let isPlaying = false; // Prevent multiple sounds from playing at the same time
+let currentAudio = null; // To track the currently playing sound
+let isPlaying = false; // Prevent concurrent playback
 
 // Function to play a sound effect
 function playSoundEffect(effectValue) {
@@ -2106,6 +2106,7 @@ function playSoundEffect(effectValue) {
   const soundFile = soundMap[effectValue];
   if (!soundFile) {
     console.error("Invalid sound effect value:", effectValue);
+    isPlaying = false;
     return;
   }
 
@@ -2120,7 +2121,7 @@ function playSoundEffect(effectValue) {
   currentAudio.volume = 0;
   const fadeDuration = 2000; // 2 seconds
   const fadeInterval = setInterval(() => {
-    if (currentAudio.volume < 1) {
+    if (currentAudio && currentAudio.volume < 1) {
       currentAudio.volume = Math.min(currentAudio.volume + 0.05, 1);
     } else {
       clearInterval(fadeInterval);
@@ -2133,7 +2134,7 @@ function playSoundEffect(effectValue) {
   // Add fade-out effect and reset state
   currentAudio.addEventListener("ended", () => {
     const fadeOutInterval = setInterval(() => {
-      if (currentAudio.volume > 0) {
+      if (currentAudio && currentAudio.volume > 0) {
         currentAudio.volume = Math.max(currentAudio.volume - 0.05, 0);
       } else {
         clearInterval(fadeOutInterval);
@@ -2142,6 +2143,13 @@ function playSoundEffect(effectValue) {
       }
     }, fadeDuration / 20);
   });
+
+  // Handle error or interruption during playback
+  currentAudio.addEventListener("error", () => {
+    console.error("Error playing sound effect.");
+    isPlaying = false;
+    currentAudio = null;
+  });
 }
 
 // Function to stop the current sound
@@ -2149,11 +2157,14 @@ function stopCurrentSound() {
   if (currentAudio) {
     currentAudio.pause();
     currentAudio.currentTime = 0; // Reset playback position
-    isPlaying = false;
     currentAudio = null;
+    isPlaying = false;
     console.log("Current sound effect stopped.");
+  } else {
+    console.log("No sound is currently playing.");
   }
 }
+
 
 
 // Example usage:
