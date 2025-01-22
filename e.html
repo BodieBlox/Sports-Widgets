@@ -1038,6 +1038,50 @@ body.dark-mode .message-card {
   font-weight: bold;
 }
 
+/* General Styling for Neptune Page */
+#neptune {
+  padding: 20px;
+}
+
+.sound-buttons-container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.sound-btn {
+  width: 100px;
+  height: 50px;
+  font-size: 1em;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.sound-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Playback Speed Selector */
+.playback-speed-container {
+  margin-bottom: 20px;
+}
+
+#playback-speed {
+  border-radius: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* End Effect Button */
+.btn-danger {
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(255, 0, 0, 0.2);
+}
+
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
   #title {
@@ -1472,6 +1516,44 @@ body.dark-mode .message-card {
                 </div>
             </div>
         </div>
+
+        <div id="neptune" class="tab-content fade">
+            <h2 class="text-primary text-center">Neptune Sound Effects</h2>
+            <p class="text-center text-muted">Click a button to play a sound effect. Only one effect can be played at a time.</p>
+          
+            <!-- Playback Speed Selector -->
+            <div class="playback-speed-container text-center my-3">
+              <label for="playback-speed" class="font-weight-bold">Playback Speed:</label>
+              <select id="playback-speed" class="form-control w-25 mx-auto">
+                <option value="0.5">0.5x</option>
+                <option value="1" selected>1x</option>
+                <option value="1.5">1.5x</option>
+                <option value="2">2x</option>
+              </select>
+            </div>
+          
+            <!-- Sound Effect Buttons -->
+            <div class="sound-buttons-container d-flex flex-wrap justify-content-center">
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(1)">Effect 1</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(2)">Effect 2</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(3)">Effect 3</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(4)">Effect 4</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(5)">Effect 5</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(6)">Effect 6</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(7)">Effect 7</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(8)">Effect 8</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(9)">Effect 9</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(10)">Effect 10</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(11)">Effect 11</button>
+              <button class="btn btn-primary sound-btn m-2" onclick="playSoundEffect(12)">Effect 12</button>
+            </div>
+          
+            <!-- End Sound Effect Button -->
+            <div class="text-center mt-4">
+              <button class="btn btn-danger" onclick="stopCurrentSound()">End Effect</button>
+            </div>
+          </div>
+          
 
         <div id="info" class="tab-content fade" style="display:none;">
             <h2>Info</h2>
@@ -1991,6 +2073,88 @@ function showToast({ message, type = "success", duration = 5000 }) {
         toast.addEventListener("animationend", () => toast.remove());
     };
 }
+
+let currentAudio = null; // Keep track of the currently playing sound
+let isPlaying = false; // Prevent multiple sounds from playing at the same time
+
+// Function to play a sound effect
+function playSoundEffect(effectValue) {
+  if (isPlaying) {
+    alert("A sound effect is already playing. Please wait for it to finish or press 'End Effect'.");
+    return;
+  }
+
+  // Prevent concurrent playback
+  isPlaying = true;
+
+  // Map effectValue to a sound file
+  const soundMap = {
+    1: "sounds/effect1.mp3",
+    2: "sounds/effect2.mp3",
+    3: "sounds/effect3.mp3",
+    4: "sounds/effect4.mp3",
+    5: "sounds/effect5.mp3",
+    6: "sounds/effect6.mp3",
+    7: "sounds/effect7.mp3",
+    8: "sounds/effect8.mp3",
+    9: "sounds/effect9.mp3",
+    10: "sounds/effect10.mp3",
+    11: "sounds/effect11.mp3",
+    12: "sounds/effect12.mp3",
+  };
+
+  const soundFile = soundMap[effectValue];
+  if (!soundFile) {
+    console.error("Invalid sound effect value:", effectValue);
+    return;
+  }
+
+  // Create audio element
+  currentAudio = new Audio(soundFile);
+
+  // Get playback speed
+  const playbackSpeed = parseFloat(document.getElementById("playback-speed").value);
+  currentAudio.playbackRate = playbackSpeed;
+
+  // Add fade-in effect
+  currentAudio.volume = 0;
+  const fadeDuration = 2000; // 2 seconds
+  const fadeInterval = setInterval(() => {
+    if (currentAudio.volume < 1) {
+      currentAudio.volume = Math.min(currentAudio.volume + 0.05, 1);
+    } else {
+      clearInterval(fadeInterval);
+    }
+  }, fadeDuration / 20);
+
+  // Play sound
+  currentAudio.play();
+
+  // Add fade-out effect and reset state
+  currentAudio.addEventListener("ended", () => {
+    const fadeOutInterval = setInterval(() => {
+      if (currentAudio.volume > 0) {
+        currentAudio.volume = Math.max(currentAudio.volume - 0.05, 0);
+      } else {
+        clearInterval(fadeOutInterval);
+        isPlaying = false;
+        currentAudio = null;
+      }
+    }, fadeDuration / 20);
+  });
+}
+
+// Function to stop the current sound
+function stopCurrentSound() {
+  if (currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0; // Reset playback position
+    isPlaying = false;
+    currentAudio = null;
+    console.log("Current sound effect stopped.");
+  }
+}
+
 
 // Example usage:
   //  showToast({ message: "Success notification!", type: "success", duration: 3000 });
