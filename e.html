@@ -36,9 +36,7 @@
     background-color: #f9f9f9;
 }
 
-.swal2-container {
-    backdrop-filter: blur(5px);
-  }
+.swal2-container {background-color:rgba(255,255,255,.42)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:none;box-shadow:0 4px 12px #0000001a;color:#282828}  
 
 .message-card {
     display: flex;
@@ -1691,10 +1689,7 @@ body.dark-mode .message-card {
 
 getAPIdata();
 
-	    butterup.toast({
-  title: "Custom Content",
-  customHTML: '<p>This is <strong>custom HTML</strong> content!</p>'
-});
+
 
 
 
@@ -1705,7 +1700,7 @@ getAPIdata();
     text: error,
     effect: 'fade',
     speed: 300,
-    customClass: 'glass',
+    customClass: 'swal2-container',
     customIcon: '',
     showIcon: true,
     showCloseButton: true,
@@ -1726,7 +1721,7 @@ getAPIdata();
     text: error,
     effect: 'fade',
     speed: 300,
-    customClass: 'glass',
+    customClass: 'swal2-container',
     customIcon: '',
     showIcon: true,
     showCloseButton: true,
