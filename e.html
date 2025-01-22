@@ -1948,7 +1948,7 @@ function saveGameDetailsToDatabase() {
     .then((response) => response.json())
     .then(() => {
       console.log("Game details saved successfully!");
-      showToast({ message: "Game details updated!", type: "success", duration: 3000 });
+     // showToast({ message: "Game details updated!", type: "success", duration: 3000 });
     })
     .catch((error) => console.error("Error saving game details:", error));
 }
