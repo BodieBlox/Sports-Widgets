@@ -1007,6 +1007,53 @@ body.dark-mode .message-card {
   color: #888;
 }
 
+/* General Styling for Game Titles */
+#title {
+  padding: 20px;
+}
+
+.title-input {
+  border-radius: 5px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: border-color 0.3s ease;
+}
+
+.title-input:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Card Styling for Preview */
+.card {
+  border-radius: 10px;
+  background-color: #f8f9fa;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card h4 {
+  color: #007bff;
+  font-weight: bold;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  #title {
+    padding: 10px;
+  }
+
+  .title-input {
+    font-size: 0.9em;
+  }
+
+  .card {
+    padding: 15px;
+  }
+}
+
+
 /* Pagination Controls */
 #pagination-controls .btn {
   border-radius: 20px;
@@ -1339,17 +1386,54 @@ body.dark-mode .message-card {
             </div>
         </div>
 
-        <div id="title" class="tab-content fade" style="display:none;">
-            <h2>Game Title</h2>
-            <div class="form-group">
-                <label for="game-title">Game Title:</label>
-                <input type="text" id="game-title" class="form-control title-input" placeholder="Enter game title" oninput="updateGameTitle()">
+        <div id="title" class="tab-content fade">
+            <h2 class="text-primary text-center">Game Title Management</h2>
+          
+            <!-- Game Title Section -->
+            <div class="form-group mt-4">
+              <label for="game-title" class="font-weight-bold">Game Title:</label>
+              <input
+                type="text"
+                id="game-title"
+                class="form-control title-input"
+                placeholder="Enter game title"
+                oninput="updateGameDetails('gameTitle', this.value)"
+              />
             </div>
-            <div class="form-group">
-                <label for="away-team-name">Away Team Name:</label>
-                <input type="text" id="away-team-name" class="form-control title-input" placeholder="Enter Away Team Name" oninput="updateAwayTeamName()">
+          
+            <!-- Away Team Name -->
+            <div class="form-group mt-4">
+              <label for="away-team-name" class="font-weight-bold">Away Team Name:</label>
+              <input
+                type="text"
+                id="away-team-name"
+                class="form-control title-input"
+                placeholder="Enter Away Team Name"
+                oninput="updateGameDetails('awayTeam', this.value)"
+              />
             </div>
-        </div>
+          
+            <!-- Home Team Name -->
+            <div class="form-group mt-4">
+              <label for="home-team-name" class="font-weight-bold">Home Team Name:</label>
+              <input
+                type="text"
+                id="home-team-name"
+                class="form-control title-input"
+                placeholder="Enter Home Team Name"
+                oninput="updateGameDetails('homeTeam', this.value)"
+              />
+            </div>
+          
+            <!-- Preview of Game Details -->
+            <div class="card mt-4 p-4 shadow">
+              <h4 class="text-center text-success">Preview</h4>
+              <p><strong>Game Title:</strong> <span id="preview-game-title">Not Set</span></p>
+              <p><strong>Home Team:</strong> <span id="preview-home-team">Not Set</span></p>
+              <p><strong>Away Team:</strong> <span id="preview-away-team">Not Set</span></p>
+            </div>
+          </div>
+          
 
         <div id="stats" class="tab-content fade" style="display:none;">
             <h2>Statistics</h2>
@@ -1746,6 +1830,77 @@ function showBan() {
     allowEnterKey: false
   });
 }
+
+// Initialize Firebase configuration (already in your project)
+const firebaseDatabaseURL = "https://test-71ecd-default-rtdb.firebaseio.com";
+
+// Game details object to store input values dynamically
+const gameDetails = {
+  gameTitle: "Not Set",
+  homeTeam: "Not Set",
+  awayTeam: "Not Set",
+};
+
+// Function to update game details dynamically
+function updateGameDetails(key, value) {
+  gameDetails[key] = value.trim() || "Not Set";
+
+  // Update the preview section dynamically
+  document.getElementById("preview-game-title").textContent = gameDetails.gameTitle;
+  document.getElementById("preview-home-team").textContent = gameDetails.homeTeam;
+  document.getElementById("preview-away-team").textContent = gameDetails.awayTeam;
+
+  // Save the updated details to the Firebase database
+  saveGameDetailsToDatabase();
+}
+
+// Function to save game details to Firebase
+function saveGameDetailsToDatabase() {
+  fetch(`${firebaseDatabaseURL}/gameDetails.json`, {
+    method: "PUT",
+    body: JSON.stringify(gameDetails),
+    headers: {
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => response.json())
+    .then(() => {
+      console.log("Game details saved successfully!");
+      showToast({ message: "Game details updated!", type: "success", duration: 3000 });
+    })
+    .catch((error) => console.error("Error saving game details:", error));
+}
+
+// Function to load game details from Firebase on page load
+function loadGameDetails() {
+  fetch(`${firebaseDatabaseURL}/gameDetails.json`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data) {
+        // Update the gameDetails object and preview section with fetched data
+        gameDetails.gameTitle = data.gameTitle || "Not Set";
+        gameDetails.homeTeam = data.homeTeam || "Not Set";
+        gameDetails.awayTeam = data.awayTeam || "Not Set";
+
+        // Populate input fields with loaded data
+        document.getElementById("game-title").value = gameDetails.gameTitle !== "Not Set" ? gameDetails.gameTitle : "";
+        document.getElementById("home-team-name").value = gameDetails.homeTeam !== "Not Set" ? gameDetails.homeTeam : "";
+        document.getElementById("away-team-name").value = gameDetails.awayTeam !== "Not Set" ? gameDetails.awayTeam : "";
+
+        // Update the preview section
+        updateGameDetails("gameTitle", gameDetails.gameTitle);
+        updateGameDetails("homeTeam", gameDetails.homeTeam);
+        updateGameDetails("awayTeam", gameDetails.awayTeam);
+      } else {
+        console.log("No existing game details found.");
+      }
+    })
+    .catch((error) => console.error("Error loading game details:", error));
+}
+
+// Load game details when the page is fully loaded
+document.addEventListener("DOMContentLoaded", loadGameDetails);
+
 
 function rostercheck() {
     const roosters = parseInt(document.getElementById('rosterchange').value, 10);
