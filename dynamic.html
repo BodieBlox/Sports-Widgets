@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dynamic Island Trigger</title>
+</head>
+<body>
+  <h1>Trigger Dynamic Island</h1>
+  <button id="triggerButton">Send Signal to Phone</button>
+
+  <script>
+    document.getElementById("triggerButton").addEventListener("click", async () => {
+      try {
+        const response = await fetch("https://your-backend-url/send-signal", {
+          method: "POST",
+        });
+        const result = await response.json();
+        alert(result.message);
+      } catch (error) {
+        console.error("Error sending signal:", error);
+        alert("Failed to send signal.");
+      }
+    });
+  </script>
+</body>
+</html>
