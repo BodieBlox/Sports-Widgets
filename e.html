@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
+	    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
 	<script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
 <link href="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/src/butterup.min.css" rel="stylesheet">
 <!-- CSS -->
@@ -1293,6 +1294,12 @@ body.dark-mode .message-card {
         <div id="connection-label">Checking connection...</div>
         <div id="current-time">Current Time: --:--</div>
         <div id="logins" class="text-white text-bottom" style="margin-top: 10px;">Loading User</div>
+	    <div class="flex gap-2">
+  <div class="rounded-md flex items-center bg-green-100 py-0.5 px-2.5 border border-transparent text-sm text-green-800 transition-all shadow-sm">
+    <div class="mx-auto block h-2 w-2 rounded-full bg-green-800 mr-2"></div>
+    Online 
+  </div>
+		    </div>
         <input type="text" id="sidebar-search" placeholder="Search..." class="form-control">
         <a href="#score" onclick="showTab('score')"><i class="fas fa-trophy"></i> Score Management</a>
         <a href="#title" onclick="showTab('title')"><i class="fas fa-edit"></i> Game Title</a>
