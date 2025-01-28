@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live Game Scoreboard</title>
+    <title>Scoreboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -368,11 +368,19 @@
         <div class="team-card">
             <h2>Home Team</h2>
             <p class="score">Score: <strong id="home-score">Connecting to database</strong></p>
+            <div class="team-card">
+                <h3>Team Fouls</h3>
+                <p class="score">Fouls: <strong id="home-fouls">Connecting to database</strong></p>
+            </div>
         </div>
         
         <div class="team-card">
             <h2>Away Team</h2>
             <p class="score">Score: <strong id="away-score">Connecting to database</strong></p>
+            <div class="team-card">
+                <h3>Team Fouls</h3>
+                <p class="score">Fouls: <strong id="away-fouls">Connecting to database</strong></p>
+            </div>
         </div>
         
         <hr />
@@ -538,6 +546,8 @@
                     updateScoreWithAnimation('#away-score', data.awayScore);
                     scorea = data.awayScore;
                     $('#quarter').text(data.quarter);
+                    $('#home-fouls').text(data.homeFouls);
+                    $('#away-fouls').text(data.awayFouls);
                     
                     if (data.logsEnabled) {
                         if (Array.isArray(data.goalLogs)) {
