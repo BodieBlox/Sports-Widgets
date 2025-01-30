@@ -232,22 +232,7 @@ body.dark-mode .message-card {
         }
     
 
-/* Optional: Customize scrollbar appearance */
-.sidebar::-webkit-scrollbar {
-    width: 8px; /* Width of the scrollbar */
-}
-
-.sidebar::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.5); /* Color of the scrollbar thumb */
-    border-radius: 4px; /* Round edges of the scrollbar */
-}
-
-.sidebar::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.8); /* Change color on hover */
-}
-
-
-.sidebar {
+        .sidebar {
     height: 100vh;
     width: 260px;
     position: fixed;
@@ -262,7 +247,24 @@ body.dark-mode .message-card {
     color: white;
     font-family: 'Roboto', sans-serif;
     transition: width 0.3s ease-in-out;
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: hidden; /* Prevents horizontal scrolling */
 }
+
+/* Optional: Customize scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 8px; /* Set the width of the scrollbar */
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.8);
+}
+
 
 .sidebar h2 {
     font-size: 1.5em;
