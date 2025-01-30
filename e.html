@@ -1137,6 +1137,14 @@ body.dark-mode .message-card {
     background-color: #f8f9fa;
 }
 
+#scoring-trends {
+    max-width: 100%;
+    height: 300px !important; /* Prevents excessive height expansion */
+    display: block;
+    margin: auto;
+}
+
+
 #stats {
     padding: 20px;
 }
@@ -1972,7 +1980,7 @@ function initScoringTrends() {
     scoringTrendsChart = new Chart(ctx, {
         type: 'line',
         data: {
-            labels: [], // Time labels
+            labels: [],
             datasets: [
                 {
                     label: 'Home Team',
@@ -1992,13 +2000,19 @@ function initScoringTrends() {
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: false, /* Prevents auto-stretching */
             scales: {
                 y: { beginAtZero: true }
+            },
+            layout: {
+                padding: {
+                    left: 10, right: 10, top: 10, bottom: 10
+                }
             }
         }
     });
 }
+
 
 // Function to update the chart with scores
 function updateScoringChart(homeScore, awayScore, timeLabel) {
