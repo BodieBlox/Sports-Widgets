@@ -1330,86 +1330,6 @@ body.dark-mode .message-card {
 	
 }
 
-.ai-assistant {
-        padding: 20px;
-        background-color: #f4f4f4;
-        border-radius: 8px;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        margin-left: 270px; /* Adjusted to avoid overlap with sidebar */
-    }
-
-    .header {
-        text-align: center;
-        margin-bottom: 20px;
-    }
-
-    .input-section {
-        margin-bottom: 20px;
-    }
-
-    .input-section textarea {
-        width: 100%;
-        height: 100px;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
-    .btn-generate {
-        background-color: #4CAF50;
-        color: white;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        position: relative;
-        overflow: hidden;
-    }
-
-    .btn-generate::before {
-        content: '';
-        position: absolute;
-        top: -50%;
-        left: -50%;
-        width: 200%;
-        height: 200%;
-        background: linear-gradient(45deg, green, blue);
-        transition: all 0.5s;
-        z-index: 0;
-    }
-
-    .btn-generate:hover::before {
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-    }
-
-    .btn-generate::after {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: white;
-        border-radius: 4px;
-        z-index: 1;
-    }
-
-    .btn-generate span {
-        position: relative;
-        z-index: 2;
-    }
-
-    .response-section {
-        background-color: white;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
-
     </style>
 </head>
 <body>
@@ -1752,19 +1672,16 @@ body.dark-mode .message-card {
 
         <div id="ai" class="tab-content fade" style="display:none;">
             <h2 class="ai-title">AI Assistant</h2>
-            <div class="ai-assistant">
-                <div class="header">
-                    <h1>AI Assistant</h1>
+            <div class="ai-container">
+                <p class="ai-description">Ask your question below, and the AI assistant will provide guidance.</p>
+                <div class="ai-input-group">
+                    <input type="text" id="ai-question" class="form-control ai-input" placeholder="Enter your question here..." />
+                    <button class="btn btn-primary ai-submit" onclick="askAI()">Ask AI</button>
                 </div>
-                <div class="input-section">
-                    <textarea id="askAI" placeholder="Ask me anything..."></textarea>
-                    <button id="submitButton" class="btn-generate" onclick="askAI()">Generate</button>
-                </div>
-                <div class="response-section" id="response">
-                    <!-- Assistant's responses will be displayed here -->
+                <div id="ai-response" class="ai-response">
+                    <p class="ai-placeholder">Your response will appear here...</p>
                 </div>
             </div>
-            
         </div>
 
         <div id="neptune" class="tab-content fade">
