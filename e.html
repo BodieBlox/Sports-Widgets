@@ -157,15 +157,22 @@ body.dark-mode .message-card {
         outline: none;
         box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
     }
+    @keyframes glowing {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
     .ai-submit {
         padding: 12px 25px;
         border-radius: 8px;
         font-size: 1.1em;
         font-weight: bold;
-        background: linear-gradient(135deg, #00c6ff, #0072ff);
+        background: linear-gradient(270deg, #00c6ff, #0072ff, #00ff00);
+        background-size: 400% 400%;
         color: white;
         border: none;
         box-shadow: 0 0 10px rgba(0, 255, 255, 0.8), 0 0 20px rgba(0, 255, 0, 0.8);
+        animation: glowing 3s infinite;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .ai-submit:hover {
