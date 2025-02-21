@@ -3927,7 +3927,7 @@ $(document).ready(() => {
     } catch (error) {
         console.error("Error fetching AI response:", error);
         // Fallback to brain.js
-        const brainResponse = net.run({ question: question });
+        const brainResponse = net.run({ question });
         responseDiv.innerHTML = `<p>${brainResponse.answer || "I'm sorry, I don't know the answer."}</p>`;
     }
 }
