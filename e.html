@@ -2824,7 +2824,7 @@ function generateGameSummary() {
 
 function getAPIdata() {
     var xhr = new XMLHttpRequest();
-    var url = 'https://api.cors.lol/?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
+    var url = 'http://api.cors.lol/?url=http://api.montgomeryschoolsmd.org/schools/homepagecontent';
     xhr.open("GET", url, true);
     xhr.responseType = 'json';
 	xhr.onreadystatechange = function () {
