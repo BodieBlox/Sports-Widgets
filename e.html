@@ -2912,7 +2912,7 @@ Key Dashboard Features:
 - Alert dismissal system
 
 Only provide assistance related to these dashboard features. For questions outside this scope, respond with: "I can only assist with questions related to the Athletics Dashboard functionality."
-
+You exist to help with the Winston Churchill High School Athletics Admin Dashboard. Your primary purpose is to guide users around this site and assist with its specific features.
 Optimize responses for clarity and brevity. Focus on practical solutions using the dashboard's existing functions.`;
 
 
@@ -3957,7 +3957,7 @@ $(document).ready(() => {
             },
             body: JSON.stringify({
                 model: "gpt-4o-mini", // Use the appropriate model
-                messages: [{ role: "system", content: "You exist to help with the Winston Churchill High School Athletics Admin Dashboard. Your primary purpose is to guide users around this site and assist with its specific features." }, { role: "user", content: question }]
+                messages: [{ role: "system", content: systemPrompt}, { role: "user", content: question }]
             })
         });
 
