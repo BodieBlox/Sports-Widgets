@@ -570,8 +570,8 @@
                     
                     document.getElementById("playoffs-label").style.display = data.playoffs ? 'block' : 'none';
                     
-                   // showScoreboard();
-                   showErrorScreen();
+                  showScoreboard();
+                   //showErrorScreen();
 
                 },
                 error: function() {
@@ -726,14 +726,14 @@
             } else {
                 clearInterval(loadingInterval);
                 document.querySelector('.loading').style.display = 'none';
-            //    document.getElementById('scoreboard').style.display = 'block';
+               document.getElementById('scoreboard').style.display = 'block';
             }
         }
         let loadingInterval = setInterval(updateLoadingText, 350);
 
         setTimeout(() => {
             document.querySelector('.loading').style.display = 'none'; // Hide loading on timeout
-           // document.getElementById('scoreboard').style.display = 'block'; // Show scoreboard
+            document.getElementById('scoreboard').style.display = 'block'; // Show scoreboard
         }, 2000);
         setInterval(displayTime, 1000);
         setInterval(updateScoreboard, 4000);
