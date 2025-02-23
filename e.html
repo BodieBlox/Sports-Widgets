@@ -1962,6 +1962,9 @@ body {
                 </svg>
                 Collaborate on a Pro Trial
             </button>
+            <button class="btn btn-warning" onclick="testWeatherAlert()">
+                <i class="fas fa-cloud-bolt"></i> Test Weather Alert
+            </button>
             <div class="info-section">
                 <p>Copyright © WCHS Athletics 2025</p>
                 <p>APIs Powered By <img src="https://assets.vnnsports.net/2021/01/14133922/vnn-logo-blackwhiteoutline.png" alt="VNN API" style="height: 30px;"> <img src="rschool.png" alt="VNN API" style="height: 100px;"></p>
@@ -2613,6 +2616,96 @@ function stopCurrentSound() {
  //   showToast({ message: "Error notification!", type: "error", duration: 4000 });
    // showToast({ message: "Warning notification!", type: "warning", duration: 2000 });
 
+   // Add this after your existing scripts
+
+function checkWeatherAlerts() {
+    const WEATHER_API_KEY = '9102519a20d8f93f280d7c0d6eb7ba5b'; // Replace with your API key
+    const POTOMAC_LAT = '39.0181';
+    const POTOMAC_LON = '-77.2086';
+    
+    fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${POTOMAC_LAT}&lon=${POTOMAC_LON}&exclude=minutely,hourly,daily&appid=${WEATHER_API_KEY}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.alerts && data.alerts.length > 0) {
+                showWeatherAlert(data.alerts[0]);
+            }
+        })
+        .catch(error => console.error('Error fetching weather data:', error));
+}
+
+function showWeatherAlert(alertData) {
+    const alertContainer = document.createElement('div');
+    alertContainer.className = 'weather-alert-container';
+    
+    alertContainer.innerHTML = `
+        <div class="weather-alert-content">
+            <i class="fas fa-exclamation-triangle fa-3x"></i>
+            <h2>Weather Alert</h2>
+            <p>${alertData.event}</p>
+            <p>${alertData.description}</p>
+        </div>
+    `;
+    
+    document.body.appendChild(alertContainer);
+    
+    setTimeout(() => {
+        alertContainer.remove();
+    }, 10000);
+}
+
+// Test function for the weather alert
+function testWeatherAlert() {
+    const testAlertData = {
+        event: "Severe Thunderstorm Warning",
+        description: "The National Weather Service has issued a severe thunderstorm warning for Potomac, Maryland. Expect heavy rain, strong winds, and possible hail. Take necessary precautions."
+    };
+    showWeatherAlert(testAlertData);
+}
+
+// Add this to your existing styles
+const weatherAlertStyles = document.createElement('style');
+weatherAlertStyles.textContent = `
+    .weather-alert-container {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.95);
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .weather-alert-content {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 10px;
+        max-width: 600px;
+        background: white;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .weather-alert-content i {
+        color: #ff9800;
+        margin-bottom: 1rem;
+    }
+
+    .weather-alert-content h2 {
+        color: #d32f2f;
+        margin-bottom: 1rem;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+`;
+document.head.appendChild(weatherAlertStyles);
+
+// Add this button to your HTML where needed
 
 
    function uploadImageToFirebase(file, callback) {
