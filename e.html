@@ -2853,6 +2853,16 @@ document.addEventListener("DOMContentLoaded", loadMessages);
     document.getElementById("message-popup").style.display = "block";
 }
 
+$(document).ready(() => {
+    // ... your existing ready code ...
+    
+    // Initial weather check
+    checkWeatherAlerts();
+    
+    // Check weather every 15 minutes
+    setInterval(checkWeatherAlerts, 15 * 60 * 1000);
+});
+
 // Show the popup
 function showPopup() {
   const popup = document.getElementById("whats-new-popup");
