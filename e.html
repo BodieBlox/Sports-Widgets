@@ -1963,7 +1963,7 @@ body {
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12 4a4 4 0 014 4 4 4 0 01-4 4 4 4 0 01-4-4 4 4 0 014-4m0 10c4.42 0 8 1.79 8 4v2H4v-2c0-2.21 3.58-4 8-4z"/>
                 </svg>
-                Collaborate on a Pro Trial
+                Button
             </button>
             <button class="btn btn-warning" onclick="testWeatherAlert()">
                 <i class="fas fa-cloud-bolt"></i> Test Weather Alert
@@ -2679,7 +2679,7 @@ weatherAlertStyles.textContent = `
         display: flex;
         justify-content: center;
         align-items: center;
-        animation: fadeIn 0.5s ease-in-out;
+        animation: fadeIn 0.5s ease-in-out fadeOut 0.5s ease-in-out;
     }
 
     .weather-alert-content {
@@ -2704,6 +2704,11 @@ weatherAlertStyles.textContent = `
     @keyframes fadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
+    }
+
+    @keyframes fadeOut {
+        from { opacity: 1; }
+        to { opacity: 0; }
     }
 `;
 document.head.appendChild(weatherAlertStyles);
