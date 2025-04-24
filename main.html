@@ -421,8 +421,8 @@
     </div>
 
     <div class="error-screen fade-in" id="error-screen">
-        <h1>Game Not Found!</h1>
-        <h4>No game is active or check your connection!</h4>
+        <h1>No Game Found!</h1>
+        <h4>No active game has been found in our database! This could be because of your connection or no game is active! Check back later!</h4>
         <h5>Current Weather: <span id="weather">Loading...</span></h5>
         <h5>Current Time: <span id="error-time">Loading...</span></h5>
     </div>
@@ -438,8 +438,8 @@
         <p>Browser Version: <strong><span id="browser-version"></span></strong></p>
         <p>IP Address: <strong><span id="ip-address"></span></strong></p>
         <p>Current Weather: <strong><span id="weather-admin">Loading...</span></strong></p>
-        <p>Site Version: <strong><span id="site-version">1.0.0</span></strong></p> <!-- Added site version -->
-        <p>&copy; WCHS Athletics 2024</p> <!-- Moved copyright here -->
+        <p>Site Version: <strong><span id="site-version">1.0.1</span></strong></p> <!-- Added site version -->
+        <p>&copy; WCHS Athletics 2025-2026. All Rights Reserved.</p> <!-- Moved copyright here -->
         <button class="button" onclick="openFirebaseDatabase();"><i class="fas fa-database"></i> Open Firebase Database</button>
         <button class="button" onclick="testNotification();"><i class="fas fa-bell"></i> Test Notification</button>
         <button class="button" onclick="viewErrorScreen()">View Error Screen</button> <!-- Added button to view error screen -->
@@ -655,7 +655,7 @@
 
         function checkAdminPassword() {
             const password = document.getElementById("admin-password").value;
-            if (password === "1234") {
+            if (password === "4224") {
                 showAdminStats();
                 closeLoginPopup();
             } else {
