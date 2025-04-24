@@ -3419,7 +3419,7 @@ function filterLogs() {
                     const errorMessage = xhr.responseJSON.error.message;
                     document.getElementById('login-error').textContent = errorMessage;
                     if (errorMessage == "USER_DISABLED") {
-                        document.getElementById('login-error').textContent = 'Account Banned';
+                        document.getElementById('login-error').textContent = 'Account Disabled- Try Again Later';
                         showBan();
                     }
                     if (errorMessage == "INVALID_EMAIL") {
