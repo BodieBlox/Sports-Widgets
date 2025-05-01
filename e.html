@@ -3,29 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Winston Churchill High School Athletics Admin Dashboard for managing sports events and statistics">
     <title>Winston Churchill High School Athletics Admin Dashboard</title>
+    
+    <!-- Core CSS Libraries -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> <!-- Chart.js for graphs -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/material-ui/4.12.4/index.js" integrity="sha512-wEnX3bNd/CdyrOFR0KIGlHihK/w9x3/It8Vc18aymEF/F/f1q0Mq8T+GSxF1wYUACLEGECapuIYQdQlKY1LBJw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/src/butterup.min.css" rel="stylesheet">
-<!-- CSS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css" />
-
-<!-- JS -->
-<script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.css">
+    <link href="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/src/butterup.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Core JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.16.9/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-notify/dist/simple-notify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/butteruptoasts@2.0.1/dist/butterup.min.js"></script>
     <style>
+        :root {
+            /* Color System */
+            --primary: #1a56db;
+            --primary-dark: #0d47a1;
+            --primary-light: #4f83cc;
+            --secondary: #6c757d;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+            --light: #f8f9fa;
+            --dark: #1f2937;
+            --gray-100: #f9fafb;
+            --gray-200: #f3f4f6;
+            --gray-300: #e5e7eb;
+            --gray-400: #d1d5db;
+            --gray-500: #9ca3af;
+            --gray-600: #6b7280;
+            --gray-700: #4b5563;
+            --gray-800: #374151;
+            --gray-900: #1f2937;
+            
+            /* Typography */
+            --font-primary: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --font-heading: 'Montserrat', -apple-system, BlinkMacSystemFont, sans-serif;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-2xl: 3rem;
+            
+            /* Borders */
+            --border-radius-sm: 0.25rem;
+            --border-radius: 0.5rem;
+            --border-radius-lg: 0.75rem;
+            --border-radius-xl: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            --shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06);
+            
+            /* Transitions */
+            --transition-fast: 150ms ease;
+            --transition: 300ms ease;
+            --transition-slow: 500ms ease;
+        }
+        
+        /* Base Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
-            background-color: #f8f9fa;
-            transition: background-color 0.5s;
+            font-family: var(--font-primary);
+            background-color: var(--gray-100);
+            color: var(--gray-900);
+            line-height: 1.5;
+            transition: background-color var(--transition);
         }
         #message-container {
     max-height: 400px;
@@ -91,16 +158,87 @@ body.dark-mode .message-card {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.5s;
         }
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            color: var(--gray-900);
+            margin-bottom: var(--space-md);
+            font-weight: 600;
+            line-height: 1.3;
+        }
+        
         h1 {
-            color: #007bff;
+            color: var(--primary);
             text-align: center;
+            font-size: 2rem;
+            margin-bottom: var(--space-xl);
+            position: relative;
+            padding-bottom: var(--space-md);
+        }
+        
+        h1:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--primary);
+            border-radius: 3px;
         }
         .score {
             font-size: 2em;
             margin: 20px 0;
         }
-        .button {
-            margin: 5px;
+        .btn, .button {
+            margin: var(--space-xs);
+            padding: 0.5rem 1.25rem;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+            border: none;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-primary);
+        }
+        
+        .btn:hover, .button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        .btn:active, .button:active {
+            transform: translateY(0);
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+        
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: var(--secondary);
+            color: white;
         }
         .enter-score-popup, .login-popup, .create-log-popup {
             display: none;
@@ -114,6 +252,19 @@ body.dark-mode .message-card {
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             width: 300px;
+        }
+        .card {
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+            background-color: white;
+            border: none;
+            transition: transform var(--transition), box-shadow var(--transition);
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
         }
         /* AI Tab Container */
         #ai {
@@ -218,35 +369,26 @@ body.dark-mode .message-card {
         .logins {
             margin-top: 20px;
             font-size: 1.2em;
-            text-align: bottom;
         }
-        .title-input {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            margin-top: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-    
 
-        .sidebar {
+.sidebar {
     height: 100vh;
-    width: 260px;
+    width: 280px;
     position: fixed;
     top: 0;
     left: 0;
-    background: linear-gradient(145deg, #2c3e50, #1c2833);
-    padding-top: 20px;
+    background: linear-gradient(145deg, var(--primary-dark), var(--dark));
+    padding-top: var(--space-xl);
     display: flex;
     flex-direction: column;
     align-items: center;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow-lg);
     color: white;
-    font-family: 'Roboto', sans-serif;
-    transition: width 0.3s ease-in-out;
-    overflow-y: auto; /* Enables vertical scrolling */
-    overflow-x: hidden; /* Prevents horizontal scrolling */
+    font-family: var(--font-primary);
+    transition: width var(--transition);
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 100;
 }
 
 /* Optional: Customize scrollbar */
@@ -280,32 +422,47 @@ body.dark-mode .message-card {
 
 .sidebar a {
     width: 90%;
-    padding: 12px 15px;
-    margin: 5px 0;
+    padding: var(--space-md) var(--space-lg);
+    margin: var(--space-xs) 0;
     text-decoration: none;
-    color: #ecf0f1;
-    border-radius: 5px;
+    color: var(--gray-100);
+    border-radius: var(--border-radius);
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    transition: background 0.3s, transform 0.2s;
-    font-size: 1em;
+    transition: all var(--transition-fast);
+    font-size: 0.95rem;
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
 }
 
 .sidebar a i {
-    margin-right: 10px;
+    margin-right: var(--space-md);
     font-size: 1.2em;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform var(--transition-fast);
 }
 
 .sidebar a:hover {
-    background: rgba(255, 255, 255, 0.2);
-    transform: scale(1.05);
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar a:hover i {
+    transform: scale(1.2);
+    color: var(--primary-light);
 }
 
 .sidebar a.active {
-    background: #007bff;
+    background: var(--primary);
     color: white;
-    font-weight: bold;
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
 }
 
 .sidebar button {
@@ -351,8 +508,11 @@ body.dark-mode .message-card {
 }
 
         .content {
-            margin-left: 260px;
-            padding: 20px;
+            margin-left: 280px;
+            padding: var(--space-xl);
+            min-height: 100vh;
+            background-color: var(--gray-100);
+            position: relative;
         }
        
         .navbar {
@@ -4429,17 +4589,11 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Trigger the popup
 showMaintenancePopup();
-
-        
-    // Initialize the app on page load
     $(document).ready(() => {
         loadUsers();
         getAPIdata();
     });
-
-       // showAuthPopup();
     </script>
 </body>
 </html>
