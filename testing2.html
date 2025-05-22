@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Modern Basketball Scoreboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Optional: Orbitron font for digital scoreboard look -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #10151c, #233554 80%);
+      font-family: 'Segoe UI', Arial, sans-serif;
+      height: 100vh;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .scoreboard-container {
+      display: flex;
+      align-items: center;
+      background: rgba(28, 41, 56, 0.97);
+      border-radius: 25px;
+      box-shadow: 0 4px 32px 0 #0008;
+      padding: 2rem 3rem;
+      gap: 3rem;
+    }
+
+    .team {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .team-name {
+      font-size: 1.5rem;
+      color: #fff;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: 1rem;
+    }
+
+    .score {
+      font-size: 4rem;
+      background: linear-gradient(90deg, #e13d3d 60%, #f6bf3f 100%);
+      color: #fff;
+      width: 120px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 18px;
+      box-shadow: 0 2px 16px 0 #f6bf3f55;
+      margin-bottom: 1rem;
+      font-family: 'Orbitron', 'Segoe UI', Arial, sans-serif;
+      transition: box-shadow 0.2s;
+      animation: popIn 0.6s cubic-bezier(.68,-0.55,.27,1.55);
+    }
+
+    .score.animated {
+      animation: flipScore 0.5s;
+    }
+
+    @keyframes flipScore {
+      0%   { transform: rotateX(0deg); }
+      50%  { transform: rotateX(90deg) scale(1.15); }
+      100% { transform: rotateX(0deg); }
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.7) rotate(-7deg); opacity: 0; }
+      80% { transform: scale(1.1) rotate(2deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    .score-buttons button {
+      background: linear-gradient(90deg, #45aaf2, #4b7bec);
+      border: none;
+      border-radius: 8px;
+      color: #fff;
+      font-size: 1.2rem;
+      padding: 0.5rem 1.2rem;
+      margin: 0 0.3rem;
+      cursor: pointer;
+      transition: transform 0.18s, box-shadow 0.18s;
+      box-shadow: 0 2px 8px #1e272e33;
+    }
+
+    .score-buttons button:hover {
+      transform: scale(1.15) translateY(-2px);
+      box-shadow: 0 4px 14px #45aaf288;
+    }
+
+    .vs {
+      font-size: 2.2rem;
+      color: #f6bf3f;
+      font-weight: bold;
+      letter-spacing: 4px;
+      text-shadow: 0 2px 8px #10151c88;
+    }
+  </style>
+</head>
+<body>
+  <div class="scoreboard-container">
+    <div class="team">
+      <div class="team-name">Home</div>
+      <div class="score" id="homeScore">0</div>
+      <div class="score-buttons">
+        <button onclick="updateScore('home', 1)">+1</button>
+        <button onclick="updateScore('home', -1)">-1</button>
+      </div>
+    </div>
+    <div class="vs">VS</div>
+    <div class="team">
+      <div class="team-name">Away</div>
+      <div class="score" id="awayScore">0</div>
+      <div class="score-buttons">
+        <button onclick="updateScore('away', 1)">+1</button>
+        <button onclick="updateScore('away', -1)">-1</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    let scores = { home: 0, away: 0 };
+
+    function updateScore(team, amount) {
+      const scoreId = team + 'Score';
+      const scoreElem = document.getElementById(scoreId);
+      let newScore = scores[team] + amount;
+      if (newScore < 0) newScore = 0;
+      if (newScore > 999) newScore = 999;
+      if (newScore !== scores[team]) {
+        scores[team] = newScore;
+        animateScore(scoreElem, newScore);
+      }
+    }
+
+    function animateScore(elem, value) {
+      elem.classList.remove('animated');
+      void elem.offsetWidth; // Force reflow
+      elem.textContent = value;
+      elem.classList.add('animated');
+      setTimeout(() => elem.classList.remove('animated'), 500);
+    }
+  </script>
+</body>
+</html>
